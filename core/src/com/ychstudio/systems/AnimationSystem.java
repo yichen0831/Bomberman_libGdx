@@ -23,7 +23,7 @@ public class AnimationSystem extends IteratingSystem {
         Anim anim = mAnim.get(i);
         State state = mState.get(i);
         
-        renderer.setRegion(anim.getTextureRegion(state.getCurrentState(), state.getStateTime(), true));
+        renderer.setRegion(anim.getTextureRegion(state.getCurrentState(), state.getStateTime(), state.isLooping()));
     }
     
 }
