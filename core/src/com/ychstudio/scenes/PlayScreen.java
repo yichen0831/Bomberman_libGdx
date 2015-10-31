@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.ychstudio.Bomberman;
+import com.ychstudio.systems.AnimationSystem;
 import com.ychstudio.systems.PhysicsSystem;
 import com.ychstudio.systems.RenderSystem;
 import com.ychstudio.systems.StateSystem;
@@ -20,6 +21,8 @@ public class PlayScreen extends ScreenAdapter {
 
     private World b2dWorld;
     private com.artemis.World world;
+
+    private float b2dTimer;
 
     public PlayScreen(Bomberman game) {
         this.game = game;
@@ -34,12 +37,14 @@ public class PlayScreen extends ScreenAdapter {
                 .with(
                         new PhysicsSystem(),
                         new StateSystem(),
+                        new AnimationSystem(),
                         new RenderSystem(batch)
                 )
                 .build();
-        
+
         world = new com.artemis.World(worldConfiguration);
 
+        b2dTimer = 0;
     }
 
     @Override
@@ -50,6 +55,15 @@ public class PlayScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        b2dTimer += delta;
+        if (b2dTimer > 1 / 60.0f) {
+            b2dWorld.step(1 / 60.0f, 8, 3);
+            b2dTimer -= 1 / 60.0f;
+        }
+
+        world.setDelta(delta);
+        world.process();
 
     }
 

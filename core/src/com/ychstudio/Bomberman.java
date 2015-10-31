@@ -2,6 +2,7 @@ package com.ychstudio;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.ychstudio.gamesys.GameManager;
 import com.ychstudio.scenes.PlayScreen;
 
 public class Bomberman extends Game {
@@ -26,6 +27,7 @@ public class Bomberman extends Game {
     @Override
     public void dispose() {
         batch.dispose();
+        GameManager.getInstance().getAssetManager().dispose();
     }
 
 }

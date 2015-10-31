@@ -18,6 +18,10 @@ public class Renderer extends Component {
         sprite.setSize(width, height);
     }
     
+    public void setRegion(TextureRegion textureRegion) {
+        sprite.setRegion(textureRegion);
+    }
+    
     public void setCenter(float x, float y) {
         sprite.setCenter(x, y);
     }
@@ -32,6 +36,22 @@ public class Renderer extends Component {
     
     public void setRotation(float degrees) {
         sprite.setRotation(degrees);
+    }
+    
+    public void setScale(float x, float y) {
+        sprite.setScale(x, y);
+    }
+    
+    public void setFlip(boolean x, boolean y) {
+        sprite.setFlip(x, y);
+    }
+    
+    public boolean isFlipX() {
+        return sprite.isFlipX();
+    }
+    
+    public boolean isFlipY() {
+        return sprite.isFlipY();
     }
     
     public void draw(SpriteBatch batch) {
