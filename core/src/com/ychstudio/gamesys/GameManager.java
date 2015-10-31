@@ -1,6 +1,7 @@
 package com.ychstudio.gamesys;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
 
 public class GameManager implements Disposable {
@@ -8,9 +9,15 @@ public class GameManager implements Disposable {
     
     private AssetManager assetManager;
     
+    public static final float PPM = 16.0f;
+    
     private GameManager() {
         // load resources
         assetManager = new AssetManager();
+        
+        assetManager.load("img/actors.pack", TextureAtlas.class);
+        
+        assetManager.finishLoading();
     }
     
     public static GameManager getInstance() {

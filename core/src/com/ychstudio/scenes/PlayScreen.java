@@ -5,12 +5,17 @@ import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
+import com.ychstudio.builders.WorldBuilder;
 import com.ychstudio.systems.AnimationSystem;
 import com.ychstudio.systems.PhysicsSystem;
+import com.ychstudio.systems.PlayerSystem;
 import com.ychstudio.systems.RenderSystem;
 import com.ychstudio.systems.StateSystem;
 
@@ -18,10 +23,15 @@ public class PlayScreen extends ScreenAdapter {
 
     private final Bomberman game;
     private final SpriteBatch batch;
+    
+    private OrthographicCamera camera;
+    private FitViewport viewport;
 
     private World b2dWorld;
     private com.artemis.World world;
 
+    private Box2DDebugRenderer b2dRenderer;
+    
     private float b2dTimer;
 
     public PlayScreen(Bomberman game) {
@@ -31,10 +41,16 @@ public class PlayScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(20.0f, 15.0f, camera);
+        camera.position.set(10.0f, 7.5f, 0);
+        
         b2dWorld = new World(new Vector2(), true);
+        b2dRenderer = new Box2DDebugRenderer();
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
+                        new PlayerSystem(),
                         new PhysicsSystem(),
                         new StateSystem(),
                         new AnimationSystem(),
@@ -44,11 +60,14 @@ public class PlayScreen extends ScreenAdapter {
 
         world = new com.artemis.World(worldConfiguration);
 
+        new WorldBuilder(b2dWorld, world).build();
+        
         b2dTimer = 0;
     }
 
     @Override
     public void resize(int width, int height) {
+        viewport.update(width, height);
     }
 
     @Override
@@ -64,6 +83,8 @@ public class PlayScreen extends ScreenAdapter {
 
         world.setDelta(delta);
         world.process();
+        
+        b2dRenderer.render(b2dWorld, camera.combined);
 
     }
 
@@ -77,6 +98,7 @@ public class PlayScreen extends ScreenAdapter {
 
         b2dWorld.dispose();
         world.dispose();
+        b2dRenderer.dispose();
     }
 
 }

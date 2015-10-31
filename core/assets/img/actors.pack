@@ -1,0 +1,12 @@
+
+actors.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Bomberman1
+  rotate: false
+  xy: 1, 1
+  size: 336, 24
+  orig: 336, 24
+  offset: 0, 0
+  index: -1
