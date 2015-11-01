@@ -22,7 +22,7 @@ public class Player extends Component {
     public Player() {
         state = State.IDLING_DOWN;
         maxSpeed = 3.0f;
-        acceleration = 10.0f;
+        acceleration = 1.0f;
     }
     
 }

@@ -21,6 +21,16 @@ public class RenderSystem extends IteratingSystem {
     }
 
     @Override
+    protected void begin() {
+        batch.begin();
+    }
+    
+    @Override
+    protected void end() {
+        batch.end();
+    }
+
+    @Override
     protected void process(int i) {
         Transform transform = mTransform.get(i);
         Renderer renderer = mRenderer.get(i);

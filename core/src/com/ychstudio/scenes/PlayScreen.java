@@ -81,6 +81,7 @@ public class PlayScreen extends ScreenAdapter {
             b2dTimer -= 1 / 60.0f;
         }
 
+        batch.setProjectionMatrix(camera.combined);
         world.setDelta(delta);
         world.process();
         

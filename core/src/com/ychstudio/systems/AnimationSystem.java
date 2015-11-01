@@ -12,7 +12,7 @@ public class AnimationSystem extends IteratingSystem {
     ComponentMapper<Renderer> mRenderer;
     ComponentMapper<Anim> mAnim;
     ComponentMapper<State> mState;
-    
+
     public AnimationSystem() {
         super(Aspect.all(Renderer.class, Anim.class, State.class));
     }
@@ -22,8 +22,9 @@ public class AnimationSystem extends IteratingSystem {
         Renderer renderer = mRenderer.get(i);
         Anim anim = mAnim.get(i);
         State state = mState.get(i);
-        
-        renderer.setRegion(anim.getTextureRegion(state.getCurrentState(), state.getStateTime(), state.isLooping()));
+
+        renderer.setRegion(anim.getTextureRegion(state.getCurrentState(), state.getStateTime()));
+
     }
-    
+
 }
