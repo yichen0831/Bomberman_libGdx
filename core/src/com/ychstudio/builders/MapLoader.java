@@ -52,7 +52,7 @@ public class MapLoader {
 
     protected TextureAtlas tileTextureAtlas;
     protected Pixmap pixmap;
-    
+
     protected int mapWidth;
     protected int mapHeight;
 
@@ -65,14 +65,14 @@ public class MapLoader {
         this.world = world;
         this.level = level;
         assetManager = GameManager.getInstance().getAssetManager();
-        
+
         assetManager.load("maps/" + level + ".png", Pixmap.class);
         assetManager.load("maps/" + level + "_tiles.pack", TextureAtlas.class);
         assetManager.finishLoading();
-        
+
         pixmap = assetManager.get("maps/" + level + ".png", Pixmap.class);
         tileTextureAtlas = assetManager.get("maps/" + level + "_tiles.pack", TextureAtlas.class);
-        
+
         mapWidth = pixmap.getWidth();
         mapHeight = pixmap.getHeight();
     }
@@ -98,32 +98,22 @@ public class MapLoader {
         }
 
     }
-    
+
     public int getMapWidth() {
         return mapWidth;
     }
-    
+
     public int getMapHeight() {
         return mapHeight;
     }
 
-    protected TextureRegion createGroundTextureRegion() {
-        // TODO: assign ground tile, create background texture
-        
-        int width = pixmap.getWidth() * 16;
-        int height = pixmap.getHeight() * 16;
+    protected Sprite createGroundSprite() {
         TextureRegion textureRegion = tileTextureAtlas.findRegion("ground");
 
-        return textureRegion;
-    }
-    
-        protected Sprite createGroundSprite() {
-        TextureRegion textureRegion = tileTextureAtlas.findRegion("ground");
-        
         Sprite sprite = new Sprite();
         sprite.setRegion(textureRegion);
         sprite.setBounds(0, 0, 1, 1);
-        
+
         return sprite;
     }
 
@@ -136,6 +126,52 @@ public class MapLoader {
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(0.5f, 0.5f);
         body.createFixture(polygonShape, 1);
+
+        Renderer renderer;
+
+        if (x < 1.0f) {
+            if (y < 1.0f) {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 0, 16 * 2, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+            } else if (y > mapHeight - 1) {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 0, 16 * 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            } else {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 0, 16 * 1, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            }
+        } else if (x > mapWidth - 1) {
+            if (y < 1.0f) {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 2, 16 * 2, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            } else if (y > mapHeight - 1) {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 2, 16 * 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            } else {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 2, 16 * 1, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            }
+        } else {
+            if (y < 1.0f) {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 1, 16 * 2, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            } else if (y > mapHeight - 1) {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 1, 16 * 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+            } else {
+                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+            }
+
+        }
+
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+        Entity e = new EntityBuilder(world)
+                .with(
+                        new Transform(x, y, 1f, 1f, 0),
+                        renderer
+                )
+                .build();
+
+        body.setUserData(e);
     }
 
     protected void createIndestructible(float x, float y) {
@@ -149,6 +185,16 @@ public class MapLoader {
         body.createFixture(polygonShape, 1);
 
         polygonShape.dispose();
+
+        Renderer renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("indestructible"), 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+
+        new EntityBuilder(world)
+                .with(
+                        new Transform(x, y, 1f, 1f, 0),
+                        renderer
+                )
+                .build();
     }
 
     protected void createBreakable(float x, float y) {

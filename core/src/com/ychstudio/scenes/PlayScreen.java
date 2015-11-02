@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -34,7 +33,6 @@ public class PlayScreen extends ScreenAdapter {
 
     private Box2DDebugRenderer b2dRenderer;
 
-    private TextureRegion groundTextureRegion;
     private Sprite groundSprite;
 
     private int mapWidth;
@@ -70,7 +68,6 @@ public class PlayScreen extends ScreenAdapter {
 
         WorldBuilder worldBuilder = new WorldBuilder(b2dWorld, world);
         worldBuilder.build("level_1");
-        groundTextureRegion = worldBuilder.getGroundTextureRegion();
         groundSprite = worldBuilder.getGroundSprite();
 
         mapWidth = worldBuilder.getMapWidth();

@@ -1,7 +1,6 @@
 package com.ychstudio.builders;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class WorldBuilder {
@@ -9,7 +8,6 @@ public class WorldBuilder {
     private final World b2dWorld;
     private final com.artemis.World world;
     
-    private TextureRegion groundTextureRegion;
     private Sprite groundSprite;
     
     private int mapWidth;
@@ -21,11 +19,10 @@ public class WorldBuilder {
     }
 
     public void build(String level) {
-        MapLoader mapLoader = null;
+        MapLoader mapLoader;
         if (level.equals("level_1")) {
             mapLoader = new MapLoader(b2dWorld, world, level);
             mapLoader.loadMap();
-            groundTextureRegion = mapLoader.createGroundTextureRegion();
             groundSprite = mapLoader.createGroundSprite();
             
             mapWidth = mapLoader.getMapWidth();
@@ -40,10 +37,6 @@ public class WorldBuilder {
     
     public int getMapHeight() {
         return mapHeight;
-    }
-    
-    public TextureRegion getGroundTextureRegion() {
-        return groundTextureRegion;
     }
     
     public Sprite getGroundSprite() {
