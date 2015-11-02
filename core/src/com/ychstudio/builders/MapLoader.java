@@ -2,10 +2,10 @@ package com.ychstudio.builders;
 
 import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -49,7 +49,13 @@ public class MapLoader {
     protected final World b2dWorld;
     protected final com.artemis.World world;
     protected final AssetManager assetManager;
+
+    protected TextureAtlas tileTextureAtlas;
+    protected Pixmap pixmap;
     
+    protected int mapWidth;
+    protected int mapHeight;
+
     protected String level;
 
     protected final float radius = 0.46f;
@@ -59,16 +65,24 @@ public class MapLoader {
         this.world = world;
         this.level = level;
         assetManager = GameManager.getInstance().getAssetManager();
-
+        
+        assetManager.load("maps/" + level + ".png", Pixmap.class);
+        assetManager.load("maps/" + level + "_tiles.pack", TextureAtlas.class);
+        assetManager.finishLoading();
+        
+        pixmap = assetManager.get("maps/" + level + ".png", Pixmap.class);
+        tileTextureAtlas = assetManager.get("maps/" + level + "_tiles.pack", TextureAtlas.class);
+        
+        mapWidth = pixmap.getWidth();
+        mapHeight = pixmap.getHeight();
     }
 
     public void loadMap() {
-        Pixmap pixmap = new Pixmap(Gdx.files.internal("maps/" + level + ".png"));
 
         int color;
-        for (int y = 0; y < pixmap.getHeight(); y++) {
-            for (int x = 0; x < pixmap.getWidth(); x++) {
-                color = pixmap.getPixel(x, pixmap.getHeight() - y - 1);
+        for (int y = 0; y < mapHeight; y++) {
+            for (int x = 0; x < mapWidth; x++) {
+                color = pixmap.getPixel(x, mapHeight - y - 1);
                 if (BLOCK.WALL.sameColor(color)) {
                     createWall(x + 0.5f, y + 0.5f);
                 } else if (BLOCK.BREAKABLE.sameColor(color)) {
@@ -82,13 +96,35 @@ public class MapLoader {
                 }
             }
         }
-        pixmap.dispose();
+
+    }
+    
+    public int getMapWidth() {
+        return mapWidth;
+    }
+    
+    public int getMapHeight() {
+        return mapHeight;
     }
 
-    protected TextureRegion createBackgroundTextureRegion() {
-        // TODO: assign background tile, create background texture
+    protected TextureRegion createGroundTextureRegion() {
+        // TODO: assign ground tile, create background texture
+        
+        int width = pixmap.getWidth() * 16;
+        int height = pixmap.getHeight() * 16;
+        TextureRegion textureRegion = tileTextureAtlas.findRegion("ground");
 
-        return new TextureRegion();
+        return textureRegion;
+    }
+    
+        protected Sprite createGroundSprite() {
+        TextureRegion textureRegion = tileTextureAtlas.findRegion("ground");
+        
+        Sprite sprite = new Sprite();
+        sprite.setRegion(textureRegion);
+        sprite.setBounds(0, 0, 1, 1);
+        
+        return sprite;
     }
 
     protected void createWall(float x, float y) {

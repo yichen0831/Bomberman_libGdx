@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,7 +25,7 @@ public class PlayScreen extends ScreenAdapter {
 
     private final Bomberman game;
     private final SpriteBatch batch;
-    
+
     private OrthographicCamera camera;
     private FitViewport viewport;
 
@@ -31,7 +33,13 @@ public class PlayScreen extends ScreenAdapter {
     private com.artemis.World world;
 
     private Box2DDebugRenderer b2dRenderer;
-    
+
+    private TextureRegion groundTextureRegion;
+    private Sprite groundSprite;
+
+    private int mapWidth;
+    private int mapHeight;
+
     private float b2dTimer;
 
     public PlayScreen(Bomberman game) {
@@ -44,7 +52,7 @@ public class PlayScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         viewport = new FitViewport(20.0f, 15.0f, camera);
         camera.position.set(10.0f, 7.5f, 0);
-        
+
         b2dWorld = new World(new Vector2(), true);
         b2dRenderer = new Box2DDebugRenderer();
 
@@ -60,8 +68,14 @@ public class PlayScreen extends ScreenAdapter {
 
         world = new com.artemis.World(worldConfiguration);
 
-        new WorldBuilder(b2dWorld, world).build("level_1");
-        
+        WorldBuilder worldBuilder = new WorldBuilder(b2dWorld, world);
+        worldBuilder.build("level_1");
+        groundTextureRegion = worldBuilder.getGroundTextureRegion();
+        groundSprite = worldBuilder.getGroundSprite();
+
+        mapWidth = worldBuilder.getMapWidth();
+        mapHeight = worldBuilder.getMapHeight();
+
         b2dTimer = 0;
     }
 
@@ -82,9 +96,20 @@ public class PlayScreen extends ScreenAdapter {
         }
 
         batch.setProjectionMatrix(camera.combined);
+
+        // draw ground
+        batch.begin();
+        for (int y = 0; y < mapHeight; y++) {
+            for (int x = 0; x < mapWidth; x++) {
+                groundSprite.setPosition(x, y);
+                groundSprite.draw(batch);
+            }
+        }
+        batch.end();
+
         world.setDelta(delta);
         world.process();
-        
+
         b2dRenderer.render(b2dWorld, camera.combined);
 
     }
