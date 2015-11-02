@@ -60,7 +60,7 @@ public class PlayScreen extends ScreenAdapter {
 
         world = new com.artemis.World(worldConfiguration);
 
-        new WorldBuilder(b2dWorld, world).build();
+        new WorldBuilder(b2dWorld, world).build("level_1");
         
         b2dTimer = 0;
     }

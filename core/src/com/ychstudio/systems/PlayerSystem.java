@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.ychstudio.components.Player;
-import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
 import com.ychstudio.components.Transform;
@@ -26,32 +25,31 @@ public class PlayerSystem extends IteratingSystem {
     @Override
     protected void process(int i) {
         Player player = mPlayer.get(i);
-//        Transform transform = mTransform.get(i);
         RigidBody rigidBody = mRigidBody.get(i);
         State state = mState.get(i);
 
         Vector2 linearVelocity = rigidBody.body.getLinearVelocity();
 
         float maxSpeed = player.maxSpeed;
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
             if (Math.abs(linearVelocity.y) < maxSpeed) {
                 rigidBody.body.applyLinearImpulse(new Vector2(0, player.acceleration * rigidBody.body.getMass()), rigidBody.body.getWorldCenter(), true);
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             if (Math.abs(linearVelocity.y) < maxSpeed) {
                 rigidBody.body.applyLinearImpulse(new Vector2(0, -player.acceleration * rigidBody.body.getMass()), rigidBody.body.getWorldCenter(), true);
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (Math.abs(linearVelocity.x) < maxSpeed) {
                 rigidBody.body.applyLinearImpulse(new Vector2(-player.acceleration * rigidBody.body.getMass(), 0), rigidBody.body.getWorldCenter(), true);
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if (Math.abs(linearVelocity.x) < maxSpeed) {
                 rigidBody.body.applyLinearImpulse(new Vector2(player.acceleration * rigidBody.body.getMass(), 0), rigidBody.body.getWorldCenter(), true);
             }
