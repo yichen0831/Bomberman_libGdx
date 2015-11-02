@@ -49,4 +49,12 @@ public class Enemy extends Component {
     public void setHp(int hp) {
         this.hp = hp;
     }
+    
+    public float getSpeed() {
+        return speed;
+    }
+    
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 }
