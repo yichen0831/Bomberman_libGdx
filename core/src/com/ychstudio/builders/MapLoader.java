@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.ychstudio.components.Anim;
+import com.ychstudio.components.Breakable;
 import com.ychstudio.components.Player;
 import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
@@ -215,7 +216,7 @@ public class MapLoader {
         for (int i = 0; i < 4; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
         }
-        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
+        anim = new Animation(0.15f, keyFrames, Animation.PlayMode.LOOP);
         anims.put("normal", anim);
 
         keyFrames.clear();
@@ -230,6 +231,7 @@ public class MapLoader {
 
         Entity e = new EntityBuilder(world)
                 .with(
+                        new Breakable(),
                         new Transform(x, y, 1, 1, 0),
                         new RigidBody(body),
                         new State("normal"),
@@ -245,6 +247,7 @@ public class MapLoader {
     protected void createEnemy1(float x, float y) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = 12.0f;
         bodyDef.position.set(x, y);
 
         Body body = b2dWorld.createBody(bodyDef);

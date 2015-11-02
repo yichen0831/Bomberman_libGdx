@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
 import com.ychstudio.systems.AnimationSystem;
+import com.ychstudio.systems.BreakableSystem;
 import com.ychstudio.systems.PhysicsSystem;
 import com.ychstudio.systems.PlayerSystem;
 import com.ychstudio.systems.RenderSystem;
@@ -57,6 +58,7 @@ public class PlayScreen extends ScreenAdapter {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
                         new PlayerSystem(),
+                        new BreakableSystem(),
                         new PhysicsSystem(),
                         new StateSystem(),
                         new AnimationSystem(),

@@ -6,10 +6,9 @@ public class State extends Component {
 
     private float stateTime;
     private String currentState;
-    private String previousState;
 
     public State(String state) {
-        previousState = currentState = state;
+        currentState = state;
         stateTime = 0;
     }
 
@@ -22,12 +21,12 @@ public class State extends Component {
     }
 
     public void setCurrentState(String currentState) {
-        this.currentState = currentState;
-        
-        if (!previousState.equals(currentState)) {
-            previousState = currentState;
-            resetStateTime();
+        if (this.currentState.equals(currentState)) {
+            return;
         }
+        
+        this.currentState = currentState;
+        resetStateTime();
     }
     
     public float getStateTime() {
