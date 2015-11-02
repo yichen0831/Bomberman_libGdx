@@ -164,14 +164,12 @@ public class MapLoader {
         }
 
         renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
-        Entity e = new EntityBuilder(world)
+        new EntityBuilder(world)
                 .with(
                         new Transform(x, y, 1f, 1f, 0),
                         renderer
                 )
                 .build();
-
-        body.setUserData(e);
     }
 
     protected void createIndestructible(float x, float y) {
@@ -208,6 +206,40 @@ public class MapLoader {
         body.createFixture(polygonShape, 1);
 
         polygonShape.dispose();
+
+        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        TextureRegion textureRegion = tileTextureAtlas.findRegion("breakable");
+
+        Animation anim;
+        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        for (int i = 0; i < 4; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
+        anims.put("normal", anim);
+
+        keyFrames.clear();
+        for (int i = 4; i < 10; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("exploding", anim);
+
+        Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+
+        Entity e = new EntityBuilder(world)
+                .with(
+                        new Transform(x, y, 1, 1, 0),
+                        new RigidBody(body),
+                        new State("normal"),
+                        renderer,
+                        new Anim(anims)
+                )
+                .build();
+
+        body.setUserData(e);
+
     }
 
     protected void createEnemy1(float x, float y) {
@@ -311,7 +343,7 @@ public class MapLoader {
                         new Player(),
                         new Transform(x, y, 1, 1, 0),
                         new RigidBody(body),
-                        new State("IDLING_DOWN"),
+                        new State("idling_down"),
                         renderer,
                         new Anim(anims)
                 )
