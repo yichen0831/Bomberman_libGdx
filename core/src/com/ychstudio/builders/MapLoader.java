@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.ychstudio.components.Anim;
 import com.ychstudio.components.Breakable;
+import com.ychstudio.components.Enemy;
 import com.ychstudio.components.Player;
 import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
@@ -245,6 +246,7 @@ public class MapLoader {
     }
 
     protected void createEnemy1(float x, float y) {
+        // box2d
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.linearDamping = 12.0f;
@@ -258,6 +260,64 @@ public class MapLoader {
         body.createFixture(fixtureDef);
 
         circleShape.dispose();
+
+        // animation
+        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
+        TextureRegion textureRegion = textureAtlas.findRegion("Octopus");
+        Animation anim;
+
+        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        // walking down
+        for (int i = 0; i < 4; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
+        anims.put("walking_down", anim);
+
+        keyFrames.clear();
+        // walking up
+        for (int i = 4; i < 8; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
+        anims.put("walking_up", anim);
+
+        keyFrames.clear();
+        // walking left
+        for (int i = 8; i < 12; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
+        anims.put("walking_left", anim);
+
+        keyFrames.clear();
+        // walking right
+        for (int i = 8; i < 12; i++) {
+            TextureRegion textureRegionRight = new TextureRegion(textureRegion, i * 16, 0, 16, 24);
+            textureRegionRight.flip(true, false);
+            keyFrames.add(textureRegionRight);
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
+        anims.put("walking_right", anim);
+
+        Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 24), 16 / GameManager.PPM, 24 / GameManager.PPM);
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+
+        // entity
+        Entity e = new EntityBuilder(world)
+                .with(
+                        new Enemy(1),
+                        new Transform(x, y, 1, 1, 0),
+                        new RigidBody(body),
+                        new State("walking_down"),
+                        renderer,
+                        new Anim(anims)
+                )
+                .build();
+
+        body.setUserData(e);
+
     }
 
     protected void createPlayer(float x, float y) {

@@ -3,6 +3,7 @@ package com.ychstudio.scenes;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,6 +17,7 @@ import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
 import com.ychstudio.systems.AnimationSystem;
 import com.ychstudio.systems.BreakableSystem;
+import com.ychstudio.systems.EnemySystem;
 import com.ychstudio.systems.PhysicsSystem;
 import com.ychstudio.systems.PlayerSystem;
 import com.ychstudio.systems.RenderSystem;
@@ -33,6 +35,7 @@ public class PlayScreen extends ScreenAdapter {
     private com.artemis.World world;
 
     private Box2DDebugRenderer b2dRenderer;
+    private boolean showB2DRenderer;
 
     private Sprite groundSprite;
 
@@ -44,6 +47,8 @@ public class PlayScreen extends ScreenAdapter {
     public PlayScreen(Bomberman game) {
         this.game = game;
         this.batch = game.getSpriteBatch();
+
+        showB2DRenderer = true;
     }
 
     @Override
@@ -58,6 +63,7 @@ public class PlayScreen extends ScreenAdapter {
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
                 .with(
                         new PlayerSystem(),
+                        new EnemySystem(),
                         new BreakableSystem(),
                         new PhysicsSystem(),
                         new StateSystem(),
@@ -82,9 +88,17 @@ public class PlayScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
+    
+    public void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            showB2DRenderer = !showB2DRenderer;
+        }
+    }
 
     @Override
     public void render(float delta) {
+        handleInput();
+        
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -109,7 +123,9 @@ public class PlayScreen extends ScreenAdapter {
         world.setDelta(delta);
         world.process();
 
-        b2dRenderer.render(b2dWorld, camera.combined);
+        if (showB2DRenderer) {
+            b2dRenderer.render(b2dWorld, camera.combined);
+        }
 
     }
 

@@ -10,3 +10,10 @@ Bomberman1
   orig: 336, 24
   offset: 0, 0
   index: -1
+Octopus
+  rotate: false
+  xy: 339, 1
+  size: 192, 24
+  orig: 192, 24
+  offset: 0, 0
+  index: -1
