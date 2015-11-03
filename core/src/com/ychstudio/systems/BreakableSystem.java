@@ -29,6 +29,8 @@ public class BreakableSystem extends IteratingSystem {
                 if (state.getStateTime() > 0.6f) {
                     rigidBody.body.getWorld().destroyBody(rigidBody.body);
                     world.delete(entityId);
+                    
+                    // TODO: chance to create power-up item
                 }
                 break;
             case NORMAL:

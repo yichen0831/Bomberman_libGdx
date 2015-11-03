@@ -11,12 +11,14 @@ public class GameManager implements Disposable {
     
     public static final float PPM = 16.0f;
     
-    public static final short NOTHING_BIT            = 0;
-    public static final short INDESTRUCTIIBLE_BIT    = 1;
-    public static final short BREAKABLE_BIT          = 1 << 1;
-    public static final short PLAYER_BIT             = 1 << 2;
-    public static final short BOMB_BIT               = 1 << 3;
-    public static final short ENEMY_BIT              = 1 << 4;
+    public static final short NOTHING_BIT           = 0;
+    public static final short INDESTRUCTIIBLE_BIT   = 1;
+    public static final short BREAKABLE_BIT         = 1 << 1;
+    public static final short PLAYER_BIT            = 1 << 2;
+    public static final short BOMB_BIT              = 1 << 3;
+    public static final short EXPLOSION_BIT         = 1 << 4;
+    public static final short ENEMY_BIT             = 1 << 5;
+    public static final short EVERYTHING_BIT        = 0xff;
     
     private GameManager() {
         // load resources
