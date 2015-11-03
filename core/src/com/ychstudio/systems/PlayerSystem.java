@@ -106,8 +106,14 @@ public class PlayerSystem extends IteratingSystem {
             }
 
         }
-
+        
         switch (player.state) {
+            case DYING:
+                state.setCurrentState("dying");
+                // TODO: remove RigidBody, Player
+                
+                // TODO: re-spawn player
+                break;
             case WALKING_UP:
                 state.setCurrentState("walking_up");
                 break;

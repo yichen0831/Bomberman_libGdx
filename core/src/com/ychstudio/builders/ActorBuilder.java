@@ -29,19 +29,20 @@ import com.ychstudio.gamesys.GameManager;
 import java.util.HashMap;
 
 public class ActorBuilder {
+
     protected final float radius = 0.46f;
 
     private final World b2dWorld;
     private final com.artemis.World world;
 
     private final AssetManager assetManager;
-    
+
     public ActorBuilder(World b2dWorld, com.artemis.World world) {
         this.b2dWorld = b2dWorld;
         this.world = world;
         this.assetManager = GameManager.getInstance().getAssetManager();
     }
-    
+
     public void createWall(float x, float y, float mapWidth, float mapHeight, TextureAtlas tileTextureAtlas) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -181,7 +182,7 @@ public class ActorBuilder {
         body.setUserData(e);
     }
 
-    public void createEnemy(float x, float y) {
+    public void createOctopus(float x, float y) {
         // box2d
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -238,6 +239,15 @@ public class ActorBuilder {
         }
         anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP);
         anims.put("walking_right", anim);
+
+        keyFrames.clear();
+        // dying
+        for (int i = 12; i < 16; i++) {
+            TextureRegion textureRegionRight = new TextureRegion(textureRegion, i * 16, 0, 16, 24);
+            keyFrames.add(textureRegionRight);
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("dying", anim);
 
         Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 24), 16 / GameManager.PPM, 24 / GameManager.PPM);
         renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
@@ -336,6 +346,14 @@ public class ActorBuilder {
         keyFrames.add(new TextureRegion(textureRegion, 9 * 16, 0, 16, 24));
         anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
         anims.put("idling_right", anim);
+
+        // dying
+        keyFrames.clear();
+        for (int i = 12; i < 18; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("dying", anim);
 
         Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 24), 16 / GameManager.PPM, 24 / GameManager.PPM);
         renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);

@@ -12,6 +12,7 @@ public class Player extends Component {
         WALKING_LEFT,
         WALKING_DOWN,
         WALKING_RIGHT,
+        DYING
     }
     
     public State state;

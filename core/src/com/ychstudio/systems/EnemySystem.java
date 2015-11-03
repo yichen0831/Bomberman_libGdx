@@ -94,7 +94,7 @@ public class EnemySystem extends IteratingSystem {
         State state = mState.get(entityId);
 
         Body body = rigidBody.body;
-
+        
         switch (enemy.getCurrentState()) {
             case ATTACKING_LEFT:
                 state.setCurrentState("attacking_left");
@@ -110,6 +110,11 @@ public class EnemySystem extends IteratingSystem {
                 break;
             case DYING:
                 state.setCurrentState("dying");
+                body.getWorld().destroyBody(body);
+                mRigidBody.set(entityId, false);
+                mEnemy.set(entityId, false);
+                
+                // TODO: chance to create power-up item
                 break;
             case WALKING_LEFT:
                 state.setCurrentState("walking_left");

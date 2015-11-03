@@ -13,8 +13,8 @@ Bomberman1
 Octopus
   rotate: false
   xy: 1, 63
-  size: 192, 24
-  orig: 192, 24
+  size: 256, 24
+  orig: 256, 24
   offset: 0, 0
   index: -1
 Explosion

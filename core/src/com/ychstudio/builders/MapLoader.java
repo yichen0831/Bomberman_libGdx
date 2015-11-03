@@ -77,7 +77,7 @@ public class MapLoader {
                 } else if (BLOCK.PLAYER.sameColor(color)) {
                     actorBuilder.createPlayer(x + 0.5f, y + 0.5f);
                 } else if (BLOCK.ENEMY1.sameColor(color)) {
-                    actorBuilder.createEnemy(x + 0.5f, y + 0.5f);
+                    actorBuilder.createOctopus(x + 0.5f, y + 0.5f);
                 }
             }
         }
