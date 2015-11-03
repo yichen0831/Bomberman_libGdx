@@ -55,7 +55,15 @@ public class RenderSystem extends EntitySystem {
             public int compare(Entity o1, Entity o2) {
                 Transform t1 = mTransform.get(o1);
                 Transform t2 = mTransform.get(o2);
-                return (int) -(t1.posY - t2.posY);
+                if (t1.posY < t2.posY) {
+                    return 1;
+                }
+                else if (t1.posY > t2.posY) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
             }
         });
         

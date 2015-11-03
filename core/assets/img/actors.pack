@@ -17,3 +17,10 @@ Octopus
   orig: 192, 24
   offset: 0, 0
   index: -1
+Bomb
+  rotate: false
+  xy: 533, 9
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
