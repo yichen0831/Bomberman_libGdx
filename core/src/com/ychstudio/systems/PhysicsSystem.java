@@ -16,9 +16,9 @@ public class PhysicsSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int i) {
-        Transform transform = mTransform.get(i);
-        RigidBody rigidBody = mRigidBody.get(i);
+    protected void process(int entityId) {
+        Transform transform = mTransform.get(entityId);
+        RigidBody rigidBody = mRigidBody.get(entityId);
         
         transform.setPosition(rigidBody.body.getPosition());
     }

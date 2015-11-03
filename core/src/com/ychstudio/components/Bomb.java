@@ -10,12 +10,18 @@ public class Bomb extends Component {
     
     public float countDown;
     public State currentState;
+    public int power;
 
     public Bomb() {
-        this(2.0f);
+        this(1, 2.0f);
+    }
+    
+    public Bomb(int power) {
+        this(power, 2.0f);
     }
 
-    public Bomb(float countDown) {
+    public Bomb(int power, float countDown) {
+        this.power = power;
         this.countDown = countDown;
         currentState = State.NORMAL;
     }

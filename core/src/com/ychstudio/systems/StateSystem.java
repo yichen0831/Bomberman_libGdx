@@ -14,8 +14,8 @@ public class StateSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int i) {
-        State state = mState.get(i);
+    protected void process(int entityId) {
+        State state = mState.get(entityId);
         state.addStateTime(world.getDelta());
     }
     

@@ -18,17 +18,17 @@ public class BreakableSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int i) {
-        Breakable breakable = mBreakable.get(i);
-        State state = mState.get(i);
-        RigidBody rigidBody = mRigidBody.get(i);
+    protected void process(int entityId) {
+        Breakable breakable = mBreakable.get(entityId);
+        State state = mState.get(entityId);
+        RigidBody rigidBody = mRigidBody.get(entityId);
 
         switch (breakable.getCurrentState()) {
             case EXPLODING:
                 state.setCurrentState("exploding");
                 if (state.getStateTime() > 0.6f) {
                     rigidBody.body.getWorld().destroyBody(rigidBody.body);
-                    world.delete(i);
+                    world.delete(entityId);
                 }
                 break;
             case NORMAL:

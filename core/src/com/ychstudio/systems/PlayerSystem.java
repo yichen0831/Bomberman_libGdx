@@ -52,10 +52,10 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int entityID) {
-        Player player = mPlayer.get(entityID);
-        RigidBody rigidBody = mRigidBody.get(entityID);
-        State state = mState.get(entityID);
+    protected void process(int entityId) {
+        Player player = mPlayer.get(entityId);
+        RigidBody rigidBody = mRigidBody.get(entityId);
+        State state = mState.get(entityId);
 
         Vector2 linearVelocity = rigidBody.body.getLinearVelocity();
 
@@ -95,7 +95,7 @@ public class PlayerSystem extends IteratingSystem {
         // set bomb
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             // create bomb
-            createBomb(rigidBody);
+            createBomb(rigidBody, player);
         }
 
         if (linearVelocity.x > 0.1f) {
@@ -149,7 +149,7 @@ public class PlayerSystem extends IteratingSystem {
 
     }
 
-    private void createBomb(RigidBody rigidBody) {
+    private void createBomb(RigidBody rigidBody, Player player) {
         // box2d
         World b2dWorld = rigidBody.body.getWorld();
         BodyDef bodyDef = new BodyDef();
@@ -178,20 +178,13 @@ public class PlayerSystem extends IteratingSystem {
         anim = new Animation(0.15f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
         anims.put("normal", anim);
 
-        keyFrames.clear();
-        for (int i = 3; i < 8; i++) {
-            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
-        }
-        anim = new Animation(0.15f, keyFrames, Animation.PlayMode.NORMAL);
-        anims.put("exploding", anim);
-
         Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
         renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
 
         // entity
         Entity e = new EntityBuilder(world)
                 .with(
-                        new Bomb(),
+                        new Bomb(player.bombPower, 2.0f),
                         new Transform(body.getPosition().x, body.getPosition().y, 1, 1, 0),
                         new RigidBody(body),
                         new State("normal"),
@@ -252,7 +245,6 @@ public class PlayerSystem extends IteratingSystem {
         for (int i = 0; i < 3; i++) {
             Vector2 tmpV = new Vector2(toV);
             b2dWorld.rayCast(rayCastCallback, fromV, tmpV.add(0, (1 - i) * 0.4f));
-
         }
         return hit;
     }

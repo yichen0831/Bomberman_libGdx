@@ -88,10 +88,10 @@ public class EnemySystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int i) {
-        Enemy enemy = mEnemy.get(i);
-        RigidBody rigidBody = mRigidBody.get(i);
-        State state = mState.get(i);
+    protected void process(int entityId) {
+        Enemy enemy = mEnemy.get(entityId);
+        RigidBody rigidBody = mRigidBody.get(entityId);
+        State state = mState.get(entityId);
 
         Body body = rigidBody.body;
 

@@ -18,11 +18,13 @@ public class Player extends Component {
     
     public float maxSpeed;
     public float acceleration;
+    public int bombPower;
 
     public Player() {
         state = State.IDLING_DOWN;
         maxSpeed = 3.0f;
         acceleration = 1.0f;
+        bombPower = 1;
     }
     
 }
