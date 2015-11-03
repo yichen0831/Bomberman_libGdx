@@ -7,9 +7,16 @@ import com.badlogic.gdx.utils.Disposable;
 public class GameManager implements Disposable {
     private static final GameManager instance = new GameManager();
     
-    private AssetManager assetManager;
+    private final AssetManager assetManager;
     
     public static final float PPM = 16.0f;
+    
+    public static final short NOTHING_BIT            = 0;
+    public static final short INDESTRUCTIIBLE_BIT    = 1;
+    public static final short BREAKABLE_BIT          = 1 << 1;
+    public static final short PLAYER_BIT             = 1 << 2;
+    public static final short BOMB_BIT               = 1 << 3;
+    public static final short ENEMY_BIT              = 1 << 4;
     
     private GameManager() {
         // load resources

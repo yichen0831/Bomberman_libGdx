@@ -116,7 +116,7 @@ public class EnemySystem extends IteratingSystem {
                 if (body.getLinearVelocity().x > -enemy.getSpeed()) {
                     body.applyLinearImpulse(new Vector2(-enemy.getSpeed() * body.getMass(), 0), body.getWorldCenter(), true);
                 }
-                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition().x, body.getPosition().y), toVector.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
+                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
                     changeWalkingState(enemy);
                 }
                 break;
@@ -125,7 +125,7 @@ public class EnemySystem extends IteratingSystem {
                 if (body.getLinearVelocity().x < enemy.getSpeed()) {
                     body.applyLinearImpulse(new Vector2(enemy.getSpeed() * body.getMass(), 0), body.getWorldCenter(), true);
                 }
-                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition().x, body.getPosition().y), toVector.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
+                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
                     changeWalkingState(enemy);
                 }
                 break;
@@ -134,7 +134,7 @@ public class EnemySystem extends IteratingSystem {
                 if (body.getLinearVelocity().y < enemy.getSpeed()) {
                     body.applyLinearImpulse(new Vector2(0, enemy.getSpeed() * body.getMass()), body.getWorldCenter(), true);
                 }
-                if (hitSomethingVertical(body, fromVector.set(body.getPosition().x, body.getPosition().y), toVector.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
+                if (hitSomethingVertical(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
                     changeWalkingState(enemy);
                 }
                 break;
@@ -144,7 +144,7 @@ public class EnemySystem extends IteratingSystem {
                 if (body.getLinearVelocity().y > -enemy.getSpeed()) {
                     body.applyLinearImpulse(new Vector2(0, -enemy.getSpeed() * body.getMass()), body.getWorldCenter(), true);
                 }
-                if (hitSomethingVertical(body, fromVector.set(body.getPosition().x, body.getPosition().y), toVector.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
+                if (hitSomethingVertical(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
                     changeWalkingState(enemy);
                 }
                 break;

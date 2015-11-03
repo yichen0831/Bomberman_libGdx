@@ -127,7 +127,13 @@ public class MapLoader {
         Body body = b2dWorld.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(0.5f, 0.5f);
-        body.createFixture(polygonShape, 1);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.filter.categoryBits = GameManager.INDESTRUCTIIBLE_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT;
+        body.createFixture(fixtureDef);
+
+        polygonShape.dispose();
 
         Renderer renderer;
 
@@ -182,7 +188,11 @@ public class MapLoader {
         Body body = b2dWorld.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(0.5f, 0.5f);
-        body.createFixture(polygonShape, 1);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.filter.categoryBits = GameManager.INDESTRUCTIIBLE_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT;
+        body.createFixture(fixtureDef);
 
         polygonShape.dispose();
 
@@ -205,7 +215,11 @@ public class MapLoader {
         Body body = b2dWorld.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(0.5f, 0.5f);
-        body.createFixture(polygonShape, 1);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.filter.categoryBits = GameManager.BREAKABLE_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT;
+        body.createFixture(fixtureDef);
 
         polygonShape.dispose();
 
@@ -257,6 +271,8 @@ public class MapLoader {
         circleShape.setRadius(radius);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
+        fixtureDef.filter.categoryBits = GameManager.ENEMY_BIT;
+        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.PLAYER_BIT;
         body.createFixture(fixtureDef);
 
         circleShape.dispose();
@@ -332,6 +348,8 @@ public class MapLoader {
         circleShape.setRadius(radius);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
+        fixtureDef.filter.categoryBits = GameManager.PLAYER_BIT;
+        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT;
         body.createFixture(fixtureDef);
         circleShape.dispose();
 
