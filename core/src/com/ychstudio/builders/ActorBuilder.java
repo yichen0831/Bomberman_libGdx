@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.ychstudio.components.Anim;
@@ -37,10 +39,17 @@ public class ActorBuilder {
 
     private final AssetManager assetManager;
 
+    private Vector2 fromV;
+    private Vector2 toV;
+    private boolean canExplodeThrough;
+
     public ActorBuilder(World b2dWorld, com.artemis.World world) {
         this.b2dWorld = b2dWorld;
         this.world = world;
         this.assetManager = GameManager.getInstance().getAssetManager();
+
+        fromV = new Vector2();
+        toV = new Vector2();
     }
 
     public void createWall(float x, float y, float mapWidth, float mapHeight, TextureAtlas tileTextureAtlas) {
@@ -418,6 +427,46 @@ public class ActorBuilder {
         body.setUserData(e);
     }
 
+    private boolean checkCanExplodeThrough(Vector2 fromV, Vector2 toV) {
+        canExplodeThrough = true;
+        RayCastCallback rayCastCallback = new RayCastCallback() {
+
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                if (fixture.getFilterData().categoryBits == GameManager.INDESTRUCTIIBLE_BIT) {
+                    canExplodeThrough = false;
+                    return 0;
+                }
+                
+                if (fixture.getFilterData().categoryBits == GameManager.BREAKABLE_BIT) {
+                    canExplodeThrough = false;
+                    Entity e = (Entity) fixture.getBody().getUserData();
+                    Breakable breakable = e.getComponent(Breakable.class);
+                    breakable.state = Breakable.State.EXPLODING;
+                    return 0;
+                }
+                
+                if (fixture.getFilterData().categoryBits == GameManager.BOMB_BIT) {
+                    canExplodeThrough = false;
+                    Entity e = (Entity) fixture.getBody().getUserData();
+                    Bomb bomb = e.getComponent(Bomb.class);
+                    bomb.countDown = 0;
+                    return 0;
+                }
+                
+                if (fixture.getFilterData().categoryBits == GameManager.EXPLOSION_BIT) {
+                    canExplodeThrough = false;
+                    return 0;
+                }
+                
+                return 0;
+            }
+        };
+
+        b2dWorld.rayCast(rayCastCallback, fromV, toV);
+        return canExplodeThrough;
+    }
+
     public void createExplosion(Bomb bomb, float x, float y) {
         TextureRegion textureRegion = assetManager.get("img/actors.pack", TextureAtlas.class).findRegion("Explosion");
         HashMap<String, Animation> anims = new HashMap<String, Animation>();
@@ -462,6 +511,10 @@ public class ActorBuilder {
 
         // up
         for (int i = 0; i < bomb.power; i++) {
+            if (!checkCanExplodeThrough(fromV.set(x, y + i), toV.set(x, y + i + 1))) {
+                break;
+            }
+
             // box2d
             bodyDef = new BodyDef();
             bodyDef.type = BodyDef.BodyType.KinematicBody;
@@ -506,6 +559,10 @@ public class ActorBuilder {
 
         // down
         for (int i = 0; i < bomb.power; i++) {
+            if (!checkCanExplodeThrough(fromV.set(x, y - i), toV.set(x, y - i - 1))) {
+                break;
+            }
+
             // box2d
             bodyDef = new BodyDef();
             bodyDef.type = BodyDef.BodyType.KinematicBody;
@@ -550,6 +607,10 @@ public class ActorBuilder {
 
         // left
         for (int i = 0; i < bomb.power; i++) {
+            if (!checkCanExplodeThrough(fromV.set(x - i, y), toV.set(x - i - 1, y))) {
+                break;
+            }
+
             // box2d
             bodyDef = new BodyDef();
             bodyDef.type = BodyDef.BodyType.KinematicBody;
@@ -594,6 +655,10 @@ public class ActorBuilder {
 
         // right
         for (int i = 0; i < bomb.power; i++) {
+            if (!checkCanExplodeThrough(fromV.set(x + i, y), toV.set(x + i + 1, y))) {
+                break;
+            }
+
             // box2d
             bodyDef = new BodyDef();
             bodyDef.type = BodyDef.BodyType.KinematicBody;

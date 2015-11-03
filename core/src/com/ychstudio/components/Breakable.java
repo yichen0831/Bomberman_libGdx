@@ -8,18 +8,9 @@ public class Breakable extends Component{
         EXPLODING
     }
     
-    private State currentState;
+    public State state;
     
     public Breakable() {
-        currentState = State.NORMAL;
+        state = State.NORMAL;
     }
-
-    public State getCurrentState() {
-        return currentState;
-    }
-
-    public void setCurrentState(State currentState) {
-        this.currentState = currentState;
-    }
-    
 }

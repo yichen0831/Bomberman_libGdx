@@ -23,7 +23,7 @@ public class BreakableSystem extends IteratingSystem {
         State state = mState.get(entityId);
         RigidBody rigidBody = mRigidBody.get(entityId);
 
-        switch (breakable.getCurrentState()) {
+        switch (breakable.state) {
             case EXPLODING:
                 state.setCurrentState("exploding");
                 if (state.getStateTime() > 0.6f) {

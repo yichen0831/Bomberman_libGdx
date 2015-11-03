@@ -5,25 +5,29 @@ import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.ychstudio.components.Enemy;
 import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
+import com.ychstudio.components.Transform;
+import com.ychstudio.gamesys.GameManager;
 
 public class EnemySystem extends IteratingSystem {
 
     protected ComponentMapper<Enemy> mEnemy;
     protected ComponentMapper<RigidBody> mRigidBody;
     protected ComponentMapper<State> mState;
+    protected ComponentMapper<Transform> mTransform;
 
     private boolean hit;
     private Vector2 fromVector;
     private Vector2 toVector;
 
     public EnemySystem() {
-        super(Aspect.all(Enemy.class, RigidBody.class, State.class));
+        super(Aspect.all(Enemy.class, Transform.class, RigidBody.class, State.class));
         fromVector = new Vector2();
         toVector = new Vector2();
     }
@@ -67,6 +71,11 @@ public class EnemySystem extends IteratingSystem {
                     return 1;
                 }
 
+                // if hit the player, ignore it
+                if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
+                    return 0;
+                }
+
                 if (fraction < 1.0f) {
                     hit = true;
                 }
@@ -74,7 +83,6 @@ public class EnemySystem extends IteratingSystem {
             }
         };
 
-        
         for (int i = 0; i < 3; i++) {
             Vector2 tmpV = new Vector2(toV);
             b2dWorld.rayCast(rayCastCallback, fromV, tmpV.add(0, (1 - i) * 0.4f));
@@ -84,7 +92,7 @@ public class EnemySystem extends IteratingSystem {
     }
 
     protected void changeWalkingState(Enemy enemy) {
-        enemy.setCurrentState(Enemy.State.getRandomWalkingState());
+        enemy.state = Enemy.State.getRandomWalkingState();
     }
 
     @Override
@@ -94,8 +102,8 @@ public class EnemySystem extends IteratingSystem {
         State state = mState.get(entityId);
 
         Body body = rigidBody.body;
-        
-        switch (enemy.getCurrentState()) {
+
+        switch (enemy.state) {
             case ATTACKING_LEFT:
                 state.setCurrentState("attacking_left");
                 break;
@@ -110,10 +118,18 @@ public class EnemySystem extends IteratingSystem {
                 break;
             case DYING:
                 state.setCurrentState("dying");
-                body.getWorld().destroyBody(body);
-                mRigidBody.set(entityId, false);
-                mEnemy.set(entityId, false);
-                
+                Filter filter = body.getFixtureList().get(0).getFilterData();
+                filter.maskBits = GameManager.NOTHING_BIT;
+                body.getFixtureList().get(0).setFilterData(filter);
+                if (state.getStateTime() > 0.6f) {
+                    body.getWorld().destroyBody(body);
+                    mRigidBody.set(entityId, false);
+                    mEnemy.set(entityId, false);
+                    mState.set(entityId, false);
+                    Transform transform = mTransform.get(entityId);
+                    transform.z = 999;
+                }
+
                 // TODO: chance to create power-up item
                 break;
             case WALKING_LEFT:

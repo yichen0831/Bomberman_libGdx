@@ -20,7 +20,7 @@ public class Enemy extends Component {
         }
     }
 
-    protected State currentState;
+    public State state;
     protected int hp;
     protected float speed;
     
@@ -29,17 +29,9 @@ public class Enemy extends Component {
     }
 
     public Enemy(int hp, float speed) {
-        currentState = State.getRandomWalkingState();
+        state = State.getRandomWalkingState();
         this.hp = hp;
         this.speed = speed;
-    }
-
-    public State getCurrentState() {
-        return currentState;
-    }
-
-    public void setCurrentState(State currentState) {
-        this.currentState = currentState;
     }
 
     public int getHp() {
@@ -48,6 +40,10 @@ public class Enemy extends Component {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+    
+    public void damage(int damage) {
+        hp -= damage;
     }
     
     public float getSpeed() {
