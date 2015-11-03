@@ -2,34 +2,21 @@ package com.ychstudio.systems;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.systems.IteratingSystem;
-import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.ychstudio.components.Anim;
-import com.ychstudio.components.Bomb;
+import com.ychstudio.builders.ActorBuilder;
 import com.ychstudio.components.Player;
-import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
 import com.ychstudio.components.Transform;
 import com.ychstudio.gamesys.GameManager;
-import java.util.HashMap;
 
 public class PlayerSystem extends IteratingSystem {
 
@@ -95,7 +82,8 @@ public class PlayerSystem extends IteratingSystem {
         // set bomb
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             // create bomb
-            createBomb(rigidBody, player);
+            ActorBuilder actorBuilder = new ActorBuilder(rigidBody.body.getWorld(), world);
+            actorBuilder.createBomb(player, rigidBody.body.getPosition().x, rigidBody.body.getPosition().y);
         }
 
         if (linearVelocity.x > 0.1f) {
@@ -147,53 +135,6 @@ public class PlayerSystem extends IteratingSystem {
                 break;
         }
 
-    }
-
-    private void createBomb(RigidBody rigidBody, Player player) {
-        // box2d
-        World b2dWorld = rigidBody.body.getWorld();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
-        bodyDef.position.set(MathUtils.floor(rigidBody.body.getPosition().x) + 0.5f, MathUtils.floor(rigidBody.body.getPosition().y) + 0.5f);
-
-        Body body = b2dWorld.createBody(bodyDef);
-        PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(0.45f, 0.45f);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygonShape;
-        fixtureDef.filter.categoryBits = GameManager.BOMB_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT;
-        body.createFixture(fixtureDef);
-        polygonShape.dispose();
-
-        TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
-        TextureRegion textureRegion = textureAtlas.findRegion("Bomb");
-
-        Animation anim;
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
-        for (int i = 0; i < 3; i++) {
-            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
-        }
-        anim = new Animation(0.15f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
-        anims.put("normal", anim);
-
-        Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
-        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
-
-        // entity
-        Entity e = new EntityBuilder(world)
-                .with(
-                        new Bomb(player.bombPower, 2.0f),
-                        new Transform(body.getPosition().x, body.getPosition().y, 1, 1, 0),
-                        new RigidBody(body),
-                        new State("normal"),
-                        renderer,
-                        new Anim(anims)
-                )
-                .build();
-
-        body.setUserData(e);
     }
 
     protected boolean hitBombVertical(final Body body, Vector2 fromV, Vector2 toV) {
