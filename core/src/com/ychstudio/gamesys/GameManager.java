@@ -2,6 +2,7 @@ package com.ychstudio.gamesys;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
 public class GameManager implements Disposable {
@@ -19,6 +20,8 @@ public class GameManager implements Disposable {
     public static final short EXPLOSION_BIT         = 1 << 4;
     public static final short ENEMY_BIT             = 1 << 5;
     
+    private final Vector2 playerRespawnPosition;
+    
     private GameManager() {
         // load resources
         assetManager = new AssetManager();
@@ -26,6 +29,8 @@ public class GameManager implements Disposable {
         assetManager.load("img/actors.pack", TextureAtlas.class);
         
         assetManager.finishLoading();
+        
+        playerRespawnPosition = new Vector2();
     }
     
     public static GameManager getInstance() {
@@ -34,6 +39,14 @@ public class GameManager implements Disposable {
     
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+    
+    public Vector2 getPlayerRespawnPosition() {
+        return playerRespawnPosition;
+    }
+    
+    public void setPlayerRespawnPosition(Vector2 position) {
+        playerRespawnPosition.set(position);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.ychstudio.components;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -53,9 +54,12 @@ public class Renderer extends Component {
     public boolean isFlipY() {
         return sprite.isFlipY();
     }
+    
+    public void setColor(Color tint) {
+        sprite.setColor(tint);
+    }
 
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
-
 }

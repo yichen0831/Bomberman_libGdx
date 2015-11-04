@@ -5,7 +5,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.ychstudio.builders.ActorBuilder;
 import com.ychstudio.components.Player;
+import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
 import com.ychstudio.components.Transform;
@@ -25,16 +26,14 @@ public class PlayerSystem extends IteratingSystem {
     protected ComponentMapper<Transform> mTransform;
     protected ComponentMapper<RigidBody> mRigidBody;
     protected ComponentMapper<State> mState;
-
-    private final AssetManager assetManager;
+    protected ComponentMapper<Renderer> mRenderer;
 
     private boolean hit;
-    private Vector2 fromV;
-    private Vector2 toV;
+    private final Vector2 fromV;
+    private final Vector2 toV;
 
     public PlayerSystem() {
-        super(Aspect.all(Player.class, Transform.class, RigidBody.class, State.class));
-        assetManager = GameManager.getInstance().getAssetManager();
+        super(Aspect.all(Player.class, Transform.class, Renderer.class, RigidBody.class, State.class));
         fromV = new Vector2();
         toV = new Vector2();
     }
@@ -44,6 +43,7 @@ public class PlayerSystem extends IteratingSystem {
         Player player = mPlayer.get(entityId);
         RigidBody rigidBody = mRigidBody.get(entityId);
         State state = mState.get(entityId);
+        Renderer renderer = mRenderer.get(entityId);
 
         Body body = rigidBody.body;
 
@@ -113,6 +113,24 @@ public class PlayerSystem extends IteratingSystem {
 
         }
 
+        // invincible timer
+        player.invincibleCountDown -= world.getDelta();
+        if (player.invincibleCountDown < 0) {
+            player.invincible = false;
+        }
+
+        if (player.invincible) {
+            Filter filter = body.getFixtureList().get(0).getFilterData();
+            filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT;
+            body.getFixtureList().get(0).setFilterData(filter);
+            renderer.setColor(new Color(1, 1, 1, 1f + (float) Math.sin(player.invincibleCountDown * 20)));
+        } else {
+            Filter filter = body.getFixtureList().get(0).getFilterData();
+            filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT;
+            body.getFixtureList().get(0).setFilterData(filter);
+            renderer.setColor(Color.WHITE);
+        }
+
         if (player.hp <= 0) {
             player.state = Player.State.DYING;
         }
@@ -120,7 +138,6 @@ public class PlayerSystem extends IteratingSystem {
         switch (player.state) {
             case DYING:
                 state.setCurrentState("dying");
-                // TODO: remove RigidBody, Player
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = GameManager.NOTHING_BIT;
                 body.getFixtureList().get(0).setFilterData(filter);
@@ -132,9 +149,11 @@ public class PlayerSystem extends IteratingSystem {
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
-                }
 
-                // TODO: re-spawn player
+                    ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
+                    Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
+                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y);
+                }
                 break;
             case WALKING_UP:
                 state.setCurrentState("walking_up");

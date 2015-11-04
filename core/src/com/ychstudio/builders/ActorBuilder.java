@@ -32,15 +32,15 @@ import java.util.HashMap;
 
 public class ActorBuilder {
 
-    protected final float radius = 0.46f;
+    protected final float radius = 0.45f;
 
     private final World b2dWorld;
     private final com.artemis.World world;
 
     private final AssetManager assetManager;
 
-    private Vector2 fromV;
-    private Vector2 toV;
+    private final Vector2 fromV;
+    private final Vector2 toV;
     private boolean canExplodeThrough;
 
     public ActorBuilder(World b2dWorld, com.artemis.World world) {

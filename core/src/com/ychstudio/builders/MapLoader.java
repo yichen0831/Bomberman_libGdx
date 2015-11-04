@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.ychstudio.gamesys.GameManager;
 
@@ -76,6 +77,7 @@ public class MapLoader {
                     actorBuilder.createIndestructible(x + 0.5f, y + 0.5f, tileTextureAtlas);
                 } else if (BLOCK.PLAYER.sameColor(color)) {
                     actorBuilder.createPlayer(x + 0.5f, y + 0.5f);
+                    GameManager.getInstance().setPlayerRespawnPosition(new Vector2(x + 0.5f, y + 0.5f));
                 } else if (BLOCK.ENEMY1.sameColor(color)) {
                     actorBuilder.createOctopus(x + 0.5f, y + 0.5f);
                 }
