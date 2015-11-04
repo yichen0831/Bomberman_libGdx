@@ -29,8 +29,8 @@ public class PlayerSystem extends IteratingSystem {
     private final AssetManager assetManager;
 
     private boolean hit;
-    private Vector2 fromV;
-    private Vector2 toV;
+    private final Vector2 fromV;
+    private final Vector2 toV;
 
     public PlayerSystem() {
         super(Aspect.all(Player.class, Transform.class, RigidBody.class, State.class));
@@ -120,7 +120,6 @@ public class PlayerSystem extends IteratingSystem {
         switch (player.state) {
             case DYING:
                 state.setCurrentState("dying");
-                // TODO: remove RigidBody, Player
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = GameManager.NOTHING_BIT;
                 body.getFixtureList().get(0).setFilterData(filter);
@@ -132,9 +131,11 @@ public class PlayerSystem extends IteratingSystem {
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
+                    
+                    ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
+                    Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
+                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y);
                 }
-
-                // TODO: re-spawn player
                 break;
             case WALKING_UP:
                 state.setCurrentState("walking_up");
