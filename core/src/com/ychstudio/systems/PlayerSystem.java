@@ -44,49 +44,52 @@ public class PlayerSystem extends IteratingSystem {
         Player player = mPlayer.get(entityId);
         RigidBody rigidBody = mRigidBody.get(entityId);
         State state = mState.get(entityId);
-        
+
         Body body = rigidBody.body;
 
         Vector2 linearVelocity = body.getLinearVelocity();
 
         float maxSpeed = player.maxSpeed;
-        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
-                if (Math.abs(linearVelocity.y) < maxSpeed) {
-                    body.applyLinearImpulse(new Vector2(0, player.acceleration * body.getMass()), body.getWorldCenter(), true);
+
+        if (player.hp > 0) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
+                    if (Math.abs(linearVelocity.y) < maxSpeed) {
+                        body.applyLinearImpulse(new Vector2(0, player.acceleration * body.getMass()), body.getWorldCenter(), true);
+                    }
                 }
             }
-        }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
-                if (Math.abs(linearVelocity.y) < maxSpeed) {
-                    body.applyLinearImpulse(new Vector2(0, -player.acceleration * body.getMass()), body.getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
+                    if (Math.abs(linearVelocity.y) < maxSpeed) {
+                        body.applyLinearImpulse(new Vector2(0, -player.acceleration * body.getMass()), body.getWorldCenter(), true);
+                    }
                 }
             }
-        }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
-                if (Math.abs(linearVelocity.x) < maxSpeed) {
-                    body.applyLinearImpulse(new Vector2(-player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
+                    if (Math.abs(linearVelocity.x) < maxSpeed) {
+                        body.applyLinearImpulse(new Vector2(-player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
+                    }
                 }
             }
-        }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
-                if (Math.abs(linearVelocity.x) < maxSpeed) {
-                    body.applyLinearImpulse(new Vector2(player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
+                    if (Math.abs(linearVelocity.x) < maxSpeed) {
+                        body.applyLinearImpulse(new Vector2(player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
+                    }
                 }
             }
-        }
 
-        // set bomb
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            // create bomb
-            ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-            actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+            // set bomb
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                // create bomb
+                ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+            }
         }
 
         if (linearVelocity.x > 0.1f) {
@@ -108,6 +111,10 @@ public class PlayerSystem extends IteratingSystem {
                 player.state = Player.State.IDLING_RIGHT;
             }
 
+        }
+
+        if (player.hp <= 0) {
+            player.state = Player.State.DYING;
         }
 
         switch (player.state) {

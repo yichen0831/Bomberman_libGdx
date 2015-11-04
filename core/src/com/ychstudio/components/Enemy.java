@@ -21,7 +21,7 @@ public class Enemy extends Component {
     }
 
     public State state;
-    protected int hp;
+    public int hp;
     protected float speed;
     
     public Enemy(int hp) {
@@ -34,14 +34,6 @@ public class Enemy extends Component {
         this.speed = speed;
     }
 
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-    
     public void damage(int damage) {
         hp -= damage;
     }

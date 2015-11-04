@@ -18,7 +18,6 @@ public class GameManager implements Disposable {
     public static final short BOMB_BIT              = 1 << 3;
     public static final short EXPLOSION_BIT         = 1 << 4;
     public static final short ENEMY_BIT             = 1 << 5;
-    public static final short EVERYTHING_BIT        = 0xff;
     
     private GameManager() {
         // load resources

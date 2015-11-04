@@ -151,7 +151,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.filter.categoryBits = GameManager.BREAKABLE_BIT;
-        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT | GameManager.EXPLOSION_BIT;
         body.createFixture(fixtureDef);
 
         polygonShape.dispose();
@@ -204,7 +204,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.PLAYER_BIT;
+        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
         body.createFixture(fixtureDef);
 
         circleShape.dispose();
@@ -290,7 +290,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.filter.categoryBits = GameManager.PLAYER_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT;
+        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT;
         body.createFixture(fixtureDef);
         circleShape.dispose();
 
@@ -393,7 +393,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.filter.categoryBits = GameManager.BOMB_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT;
+        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.EXPLOSION_BIT;
         body.createFixture(fixtureDef);
         polygonShape.dispose();
 
@@ -476,17 +476,17 @@ public class ActorBuilder {
 
         // center
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
         Body explosionBody = b2dWorld.createBody(bodyDef);
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(0.5f, 0.5f);
+        polygonShape.setAsBox(0.3f, 0.3f);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
         fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
         fixtureDef.isSensor = true;
-        Fixture fixture = explosionBody.createFixture(fixtureDef);
+        explosionBody.createFixture(fixtureDef);
 
         for (int i = 0; i < 5; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 16, 16, 16));
@@ -517,7 +517,7 @@ public class ActorBuilder {
 
             // box2d
             bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.KinematicBody;
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
             bodyDef.position.set(x, y + i + 1);
             explosionBody = b2dWorld.createBody(bodyDef);
             fixtureDef = new FixtureDef();
@@ -525,7 +525,7 @@ public class ActorBuilder {
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
             fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
             fixtureDef.isSensor = true;
-            fixture = explosionBody.createFixture(fixtureDef);
+            explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
             anims = new HashMap<String, Animation>();
@@ -565,7 +565,7 @@ public class ActorBuilder {
 
             // box2d
             bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.KinematicBody;
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
             bodyDef.position.set(x, y - i - 1);
             explosionBody = b2dWorld.createBody(bodyDef);
             fixtureDef = new FixtureDef();
@@ -573,7 +573,7 @@ public class ActorBuilder {
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
             fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
             fixtureDef.isSensor = true;
-            fixture = explosionBody.createFixture(fixtureDef);
+            explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
             anims = new HashMap<String, Animation>();
@@ -613,7 +613,7 @@ public class ActorBuilder {
 
             // box2d
             bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.KinematicBody;
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
             bodyDef.position.set(x - i - 1, y);
             explosionBody = b2dWorld.createBody(bodyDef);
             fixtureDef = new FixtureDef();
@@ -621,7 +621,7 @@ public class ActorBuilder {
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
             fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
             fixtureDef.isSensor = true;
-            fixture = explosionBody.createFixture(fixtureDef);
+            explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
             anims = new HashMap<String, Animation>();
@@ -661,7 +661,7 @@ public class ActorBuilder {
 
             // box2d
             bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.KinematicBody;
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
             bodyDef.position.set(x + i + 1, y);
             explosionBody = b2dWorld.createBody(bodyDef);
             fixtureDef = new FixtureDef();
@@ -669,7 +669,7 @@ public class ActorBuilder {
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
             fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
             fixtureDef.isSensor = true;
-            fixture = explosionBody.createFixture(fixtureDef);
+            explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
             anims = new HashMap<String, Animation>();

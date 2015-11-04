@@ -19,6 +19,7 @@ public class Player extends Component {
     
     public float maxSpeed;
     public float acceleration;
+    public int hp;
     public int bombPower;
     public int maxBomb;
     public int bombLeft;
@@ -30,11 +31,16 @@ public class Player extends Component {
         state = State.IDLING_DOWN;
         maxSpeed = 3.0f;
         acceleration = 1.0f;
+        hp = 1;
         bombPower = 1;
         maxBomb = 1;
         bombLeft = 1;
         bombRegeratingTime = 2.0f;
         bombRegeratingTimeLeft = 2.0f;
+    }
+    
+    public void damage(int damage) {
+        hp -= damage;
     }
     
 }
