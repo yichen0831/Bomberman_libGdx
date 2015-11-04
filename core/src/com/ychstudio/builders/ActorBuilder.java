@@ -468,6 +468,9 @@ public class ActorBuilder {
     }
 
     public void createExplosion(Bomb bomb, float x, float y) {
+        x = MathUtils.floor(x) + 0.5f;
+        y = MathUtils.floor(y) + 0.5f;
+        
         TextureRegion textureRegion = assetManager.get("img/actors.pack", TextureAtlas.class).findRegion("Explosion");
         HashMap<String, Animation> anims = new HashMap<String, Animation>();
 

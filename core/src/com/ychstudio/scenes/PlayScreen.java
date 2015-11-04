@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
+import com.ychstudio.gui.Hud;
 import com.ychstudio.listeners.B2DWorldContactListener;
 import com.ychstudio.systems.AnimationSystem;
 import com.ychstudio.systems.BombSystem;
@@ -27,6 +28,9 @@ import com.ychstudio.systems.RenderSystem;
 import com.ychstudio.systems.StateSystem;
 
 public class PlayScreen extends ScreenAdapter {
+    
+    private final float WIDTH = 20;
+    private final float HEIGHT = 15;
 
     private final Bomberman game;
     private final SpriteBatch batch;
@@ -44,6 +48,8 @@ public class PlayScreen extends ScreenAdapter {
 
     private int mapWidth;
     private int mapHeight;
+    
+    private Hud hud;
 
     private float b2dTimer;
 
@@ -57,8 +63,8 @@ public class PlayScreen extends ScreenAdapter {
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        viewport = new FitViewport(20.0f, 15.0f, camera);
-        camera.position.set(10.0f, 7.5f, 0);
+        viewport = new FitViewport(WIDTH, HEIGHT, camera);
+        camera.position.set(WIDTH / 2, HEIGHT / 2, 0);
 
         b2dWorld = new World(new Vector2(), true);
         b2dWorld.setContactListener(new B2DWorldContactListener());
@@ -86,6 +92,8 @@ public class PlayScreen extends ScreenAdapter {
 
         mapWidth = worldBuilder.getMapWidth();
         mapHeight = worldBuilder.getMapHeight();
+        
+        hud = new Hud(batch, WIDTH, HEIGHT);
 
         b2dTimer = 0;
     }
@@ -132,6 +140,8 @@ public class PlayScreen extends ScreenAdapter {
         if (showB2DRenderer) {
             b2dRenderer.render(b2dWorld, camera.combined);
         }
+        
+        hud.draw(delta);
 
     }
 
@@ -146,6 +156,7 @@ public class PlayScreen extends ScreenAdapter {
         b2dWorld.dispose();
         world.dispose();
         b2dRenderer.dispose();
+        hud.dispose();
     }
 
 }

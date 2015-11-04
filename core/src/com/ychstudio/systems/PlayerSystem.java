@@ -85,12 +85,29 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             // set bomb
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.bombLeft > 0) {
                 // create bomb
                 ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                 actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+
+                player.bombLeft--;
+            }
+
+            // re-generate bomb
+            if (player.bombLeft < player.maxBomb) {
+                player.bombRegeratingTimeLeft -= world.getDelta();
+            }
+            if (player.bombRegeratingTimeLeft <= 0) {
+                player.bombLeft++;
+                player.bombRegeratingTimeLeft = player.bombRegeratingTime;
             }
         }
+        
+        // update bomb data to GameManager
+        GameManager.playerMaxBomb = player.maxBomb;
+        GameManager.playerBombLeft = player.bombLeft;
+        GameManager.playerBombRegeratingTime = player.bombRegeratingTime;
+        GameManager.playerBombRegeratingTimeLeft = player.bombRegeratingTimeLeft;
 
         if (linearVelocity.x > 0.1f) {
             player.state = Player.State.WALKING_RIGHT;
