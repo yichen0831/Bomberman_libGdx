@@ -17,6 +17,13 @@ Octopus
   orig: 256, 24
   offset: 0, 0
   index: -1
+Bomberman_big
+  rotate: false
+  xy: 1, 13
+  size: 160, 48
+  orig: 160, 48
+  offset: 0, 0
+  index: -1
 Explosion
   rotate: false
   xy: 339, 1

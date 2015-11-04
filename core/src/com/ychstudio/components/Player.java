@@ -5,7 +5,6 @@ import com.artemis.Component;
 public class Player extends Component {
 
     public enum State {
-
         IDLING_UP,
         IDLING_LEFT,
         IDLING_DOWN,
@@ -38,7 +37,7 @@ public class Player extends Component {
         acceleration = 1.0f;
         hp = 1;
         bombPower = 1;
-        maxBomb = 1;
+        maxBomb = 3;
         bombLeft = 1;
         bombRegeratingTime = 2.0f;
         bombRegeratingTimeLeft = 2.0f;
