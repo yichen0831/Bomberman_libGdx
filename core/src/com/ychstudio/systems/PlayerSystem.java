@@ -169,7 +169,7 @@ public class PlayerSystem extends IteratingSystem {
 
                     ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
                     Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
-                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y);
+                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, false);
                 }
                 break;
             case WALKING_UP:
