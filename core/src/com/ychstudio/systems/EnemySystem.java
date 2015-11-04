@@ -40,10 +40,11 @@ public class EnemySystem extends IteratingSystem {
 
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture.getBody() == body) {
-                    return 1;
+                // if hit the player, ignore it
+                if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
+                    return 0;
                 }
-
+                
                 if (fraction < 1.0f) {
                     hit = true;
                 }
@@ -67,10 +68,6 @@ public class EnemySystem extends IteratingSystem {
 
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture.getBody() == body) {
-                    return 1;
-                }
-
                 // if hit the player, ignore it
                 if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
                     return 0;
@@ -102,6 +99,10 @@ public class EnemySystem extends IteratingSystem {
         State state = mState.get(entityId);
 
         Body body = rigidBody.body;
+        
+        if (enemy.hp <= 0) {
+            enemy.state = Enemy.State.DYING;
+        }
 
         switch (enemy.state) {
             case ATTACKING_LEFT:

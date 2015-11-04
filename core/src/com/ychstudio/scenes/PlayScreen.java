@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
+import com.ychstudio.listeners.B2DWorldContactListener;
 import com.ychstudio.systems.AnimationSystem;
 import com.ychstudio.systems.BombSystem;
 import com.ychstudio.systems.BreakableSystem;
@@ -60,6 +61,7 @@ public class PlayScreen extends ScreenAdapter {
         camera.position.set(10.0f, 7.5f, 0);
 
         b2dWorld = new World(new Vector2(), true);
+        b2dWorld.setContactListener(new B2DWorldContactListener());
         b2dRenderer = new Box2DDebugRenderer();
 
         WorldConfiguration worldConfiguration = new WorldConfigurationBuilder()
