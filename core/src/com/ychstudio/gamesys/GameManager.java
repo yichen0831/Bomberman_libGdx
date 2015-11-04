@@ -19,11 +19,15 @@ public class GameManager implements Disposable {
     public static final short BOMB_BIT              = 1 << 3;
     public static final short EXPLOSION_BIT         = 1 << 4;
     public static final short ENEMY_BIT             = 1 << 5;
+    public static final short POWERUP_BIT           = 1 << 6;
+    public static final short PORTAL_BIT            = 1 << 7;
     
-    public static int playerMaxBomb = 0;
+    public static int playerMaxBomb = 3;
     public static int playerBombLeft = 0;
-    public static float playerBombRegeratingTime = 0;
+    public static float playerBombRegeratingTime = 2.0f;
     public static float playerBombRegeratingTimeLeft = 0;
+    public static int playerMaxSpeed = 0;
+    public static int playerBombPower = 0;
     
     private final Vector2 playerRespawnPosition;
     

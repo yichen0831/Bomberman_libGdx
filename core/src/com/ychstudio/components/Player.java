@@ -1,10 +1,12 @@
 package com.ychstudio.components;
 
 import com.artemis.Component;
+import com.ychstudio.gamesys.GameManager;
 
 public class Player extends Component {
 
     public enum State {
+
         IDLING_UP,
         IDLING_LEFT,
         IDLING_DOWN,
@@ -31,16 +33,25 @@ public class Player extends Component {
     public boolean invincible;
     public float invincibleCountDown;
 
-    public Player() {
+    public Player(boolean restore) {
         state = State.IDLING_DOWN;
-        maxSpeed = 3.0f;
-        acceleration = 1.0f;
+
+        if (restore) {
+            maxSpeed = 3.0f + GameManager.playerMaxSpeed;
+            bombPower = 1 + GameManager.playerBombPower;
+            maxBomb = GameManager.playerMaxBomb;
+            bombRegeratingTime = GameManager.playerBombRegeratingTime;
+        } else {
+            maxSpeed = 3.0f;
+            bombPower = 1;
+            maxBomb = 3;
+            bombRegeratingTime = 2.0f;
+        }
+
         hp = 1;
-        bombPower = 1;
-        maxBomb = 3;
-        bombLeft = 1;
-        bombRegeratingTime = 2.0f;
-        bombRegeratingTimeLeft = 2.0f;
+        acceleration = 1.0f;
+        bombLeft = 0;
+        bombRegeratingTimeLeft = 0f;
 
         invincible = true;
         invincibleCountDown = 3.0f;

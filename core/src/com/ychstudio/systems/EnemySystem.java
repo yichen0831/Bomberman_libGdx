@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
+import com.ychstudio.builders.ActorBuilder;
 import com.ychstudio.components.Enemy;
 import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
@@ -44,7 +45,7 @@ public class EnemySystem extends IteratingSystem {
                 if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
                     return 0;
                 }
-                
+
                 if (fraction < 1.0f) {
                     hit = true;
                 }
@@ -68,8 +69,8 @@ public class EnemySystem extends IteratingSystem {
 
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                // if hit the player, ignore it
-                if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
+                // if hit the player or power-up item, ignore it
+                if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT || fixture.getFilterData().categoryBits == GameManager.POWERUP_BIT) {
                     return 0;
                 }
 
@@ -99,7 +100,7 @@ public class EnemySystem extends IteratingSystem {
         State state = mState.get(entityId);
 
         Body body = rigidBody.body;
-        
+
         if (enemy.hp <= 0) {
             enemy.state = Enemy.State.DYING;
         }
@@ -129,9 +130,13 @@ public class EnemySystem extends IteratingSystem {
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
-                }
 
-                // TODO: chance to create power-up item
+                    // chance to create PowerUp item
+                    if (Math.random() < 0.2) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
+                    }
+                }
                 break;
             case WALKING_LEFT:
                 state.setCurrentState("walking_left");

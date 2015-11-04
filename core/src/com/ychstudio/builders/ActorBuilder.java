@@ -23,6 +23,7 @@ import com.ychstudio.components.Breakable;
 import com.ychstudio.components.Enemy;
 import com.ychstudio.components.Explosion;
 import com.ychstudio.components.Player;
+import com.ychstudio.components.PowerUp;
 import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
@@ -171,7 +172,7 @@ public class ActorBuilder {
         for (int i = 4; i < 10; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
         }
-        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anim = new Animation(0.125f, keyFrames, Animation.PlayMode.NORMAL);
         anims.put("exploding", anim);
 
         Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
@@ -277,7 +278,7 @@ public class ActorBuilder {
 
     }
 
-    public void createPlayer(float x, float y) {
+    public void createPlayer(float x, float y, boolean restore) {
         // box2d
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -290,7 +291,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.filter.categoryBits = GameManager.PLAYER_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT;
+        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
         body.createFixture(fixtureDef);
         circleShape.dispose();
 
@@ -370,7 +371,7 @@ public class ActorBuilder {
         // entity
         Entity e = new com.artemis.utils.EntityBuilder(world)
                 .with(
-                        new Player(),
+                        new Player(restore),
                         new Transform(x, y, 1, 1, 0),
                         new RigidBody(body),
                         new State("idling_down"),
@@ -437,7 +438,7 @@ public class ActorBuilder {
                     canExplodeThrough = false;
                     return 0;
                 }
-                
+
                 if (fixture.getFilterData().categoryBits == GameManager.BREAKABLE_BIT) {
                     canExplodeThrough = false;
                     Entity e = (Entity) fixture.getBody().getUserData();
@@ -445,7 +446,7 @@ public class ActorBuilder {
                     breakable.state = Breakable.State.EXPLODING;
                     return 0;
                 }
-                
+
                 if (fixture.getFilterData().categoryBits == GameManager.BOMB_BIT) {
                     canExplodeThrough = false;
                     Entity e = (Entity) fixture.getBody().getUserData();
@@ -453,12 +454,12 @@ public class ActorBuilder {
                     bomb.countDown = 0;
                     return 0;
                 }
-                
+
                 if (fixture.getFilterData().categoryBits == GameManager.EXPLOSION_BIT) {
                     canExplodeThrough = false;
                     return 0;
                 }
-                
+
                 return 0;
             }
         };
@@ -470,7 +471,7 @@ public class ActorBuilder {
     public void createExplosion(Bomb bomb, float x, float y) {
         x = MathUtils.floor(x) + 0.5f;
         y = MathUtils.floor(y) + 0.5f;
-        
+
         TextureRegion textureRegion = assetManager.get("img/actors.pack", TextureAtlas.class).findRegion("Explosion");
         HashMap<String, Animation> anims = new HashMap<String, Animation>();
 
@@ -704,6 +705,62 @@ public class ActorBuilder {
             explosionBody.setUserData(e);
         }
 
+        polygonShape.dispose();
+    }
+
+    public void createPowerUp(float x, float y) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(MathUtils.floor(x) + 0.5f, MathUtils.floor(y) + 0.5f);
+
+        Body body = b2dWorld.createBody(bodyDef);
+
+        PolygonShape polygonShape = new PolygonShape();
+        polygonShape.setAsBox(0.4f, 0.4f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.filter.categoryBits = GameManager.POWERUP_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+
+        PowerUp powerUp = new PowerUp();
+        int i;
+        switch (powerUp.type) {
+            case REMOTE:
+                i = 4;
+                break;
+            case KICK:
+                i = 3;
+                break;
+            case SPEED:
+                i = 2;
+                break;
+            case POWER:
+                i = 1;
+                break;
+            case AMMO:
+            default:
+                i = 0;
+                break;
+
+        }
+
+        TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
+        Renderer renderer = new Renderer(new TextureRegion(textureAtlas.findRegion("Items"), i * 16, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+
+        Entity e = new EntityBuilder(world)
+                .with(
+                        powerUp,
+                        new RigidBody(body),
+                        new Transform(body.getPosition().x, body.getPosition().y, 1, 1, 0),
+                        new State("normal"),
+                        renderer
+                )
+                .build();
+
+        body.setUserData(e);
         polygonShape.dispose();
     }
 }
