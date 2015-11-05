@@ -291,7 +291,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.filter.categoryBits = GameManager.PLAYER_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
+        fixtureDef.filter.maskBits = Player.defaultMaskBits;
         body.createFixture(fixtureDef);
         circleShape.dispose();
 

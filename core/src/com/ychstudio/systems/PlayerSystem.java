@@ -6,6 +6,7 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -104,9 +105,7 @@ public class PlayerSystem extends IteratingSystem {
         }
         
         // update bomb data to GameManager
-        GameManager.playerMaxBomb = player.maxBomb;
         GameManager.playerBombLeft = player.bombLeft;
-        GameManager.playerBombRegeratingTime = player.bombRegeratingTime;
         GameManager.playerBombRegeratingTimeLeft = player.bombRegeratingTimeLeft;
 
         if (linearVelocity.x > 0.1f) {
@@ -138,12 +137,12 @@ public class PlayerSystem extends IteratingSystem {
 
         if (player.invincible) {
             Filter filter = body.getFixtureList().get(0).getFilterData();
-            filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT;
+            filter.maskBits = Player.invincibleMaskBit;
             body.getFixtureList().get(0).setFilterData(filter);
-            renderer.setColor(new Color(1, 1, 1, 1f + (float) Math.sin(player.invincibleCountDown * 20)));
+            renderer.setColor(new Color(1, 1, 1, 1f + MathUtils.sin(player.invincibleCountDown * 20)));
         } else {
             Filter filter = body.getFixtureList().get(0).getFilterData();
-            filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT;
+            filter.maskBits = Player.defaultMaskBits;
             body.getFixtureList().get(0).setFilterData(filter);
             renderer.setColor(Color.WHITE);
         }
@@ -169,7 +168,7 @@ public class PlayerSystem extends IteratingSystem {
 
                     ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
                     Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
-                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, false);
+                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.restorePowerUp);
                 }
                 break;
             case WALKING_UP:
