@@ -5,12 +5,17 @@ import com.artemis.Component;
 public class Bomb extends Component {
     public enum State {
         NORMAL,
+        MOVING_UP,
+        MOVING_DOWN,
+        MOVING_LEFT,
+        MOVING_RIGHT,
         EXPLODING
     }
     
     public float countDown;
-    public State currentState;
+    public State state;
     public int power;
+    public float speed;
 
     public Bomb() {
         this(1, 2.0f);
@@ -23,7 +28,11 @@ public class Bomb extends Component {
     public Bomb(int power, float countDown) {
         this.power = power;
         this.countDown = countDown;
-        currentState = State.NORMAL;
+        this.speed = 6.0f;
+        state = State.NORMAL;
     }
-
+    
+    public void setMove(Bomb.State state) {
+        this.state = state;
+    }
 }
