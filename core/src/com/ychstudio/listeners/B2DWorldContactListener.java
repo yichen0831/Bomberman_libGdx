@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.ychstudio.components.Bomb;
+import com.ychstudio.components.Breakable;
 import com.ychstudio.components.Enemy;
 import com.ychstudio.components.Player;
 import com.ychstudio.components.PowerUp;
@@ -48,6 +49,15 @@ public class B2DWorldContactListener implements ContactListener {
                 Entity e = (Entity) fixtureB.getBody().getUserData();
                 Bomb bomb = e.getComponent(Bomb.class);
                 bomb.countDown = 0;
+            } // explode breakable
+            else if (fixtureA.getFilterData().categoryBits == GameManager.BREAKABLE_BIT) {
+                Entity e = (Entity) fixtureA.getBody().getUserData();
+                Breakable breakable = e.getComponent(Breakable.class);
+                breakable.state = Breakable.State.EXPLODING;
+            } else if (fixtureB.getFilterData().categoryBits == GameManager.BREAKABLE_BIT) {
+                Entity e = (Entity) fixtureB.getBody().getUserData();
+                Breakable breakable = e.getComponent(Breakable.class);
+                breakable.state = Breakable.State.EXPLODING;
             }
         } // enemy
         else if (fixtureA.getFilterData().categoryBits == GameManager.ENEMY_BIT || fixtureB.getFilterData().categoryBits == GameManager.ENEMY_BIT) {

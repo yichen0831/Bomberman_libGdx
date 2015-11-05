@@ -2,6 +2,7 @@ package com.ychstudio.systems;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.ychstudio.builders.ActorBuilder;
+import com.ychstudio.components.Bomb;
 import com.ychstudio.components.Player;
 import com.ychstudio.components.Renderer;
 import com.ychstudio.components.RigidBody;
@@ -29,7 +31,9 @@ public class PlayerSystem extends IteratingSystem {
     protected ComponentMapper<State> mState;
     protected ComponentMapper<Renderer> mRenderer;
 
-    private boolean hit;
+    private boolean hitting;
+    private boolean kicking;
+    private Bomb kickingBomb;
     private final Vector2 fromV;
     private final Vector2 toV;
 
@@ -59,6 +63,8 @@ public class PlayerSystem extends IteratingSystem {
                         body.applyLinearImpulse(new Vector2(0, player.acceleration * body.getMass()), body.getWorldCenter(), true);
                     }
                 }
+
+                player.state = Player.State.WALKING_UP;
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
@@ -67,6 +73,8 @@ public class PlayerSystem extends IteratingSystem {
                         body.applyLinearImpulse(new Vector2(0, -player.acceleration * body.getMass()), body.getWorldCenter(), true);
                     }
                 }
+
+                player.state = Player.State.WALKING_DOWN;
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -75,6 +83,8 @@ public class PlayerSystem extends IteratingSystem {
                         body.applyLinearImpulse(new Vector2(-player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
                     }
                 }
+
+                player.state = Player.State.WALKING_LEFT;
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
@@ -83,15 +93,48 @@ public class PlayerSystem extends IteratingSystem {
                         body.applyLinearImpulse(new Vector2(player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
                     }
                 }
+
+                player.state = Player.State.WALKING_RIGHT;
             }
 
-            // set bomb
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.bombLeft > 0) {
-                // create bomb
-                ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-                actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+            // set bomb or kick bomb
+            if ((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.X)) && player.bombLeft > 0) {
+                kicking = false;
+                if (player.kickBomb) {
+                    // check if player is facing a bomb, if so, kick it
+                    switch (player.state) {
+                        case WALKING_UP:
+                            if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x, body.getPosition().y + 0.6f)))) {
+                                kickingBomb.setMove(Bomb.State.MOVING_UP);
+                            }
+                            break;
+                        case WALKING_DOWN:
+                            if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x, body.getPosition().y - 0.6f)))) {
+                                kickingBomb.setMove(Bomb.State.MOVING_DOWN);
+                            }
+                            break;
+                        case WALKING_LEFT:
+                            if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x - 0.6f, body.getPosition().y)))) {
+                                kickingBomb.setMove(Bomb.State.MOVING_LEFT);
+                            }
+                            break;
+                        case WALKING_RIGHT:
+                            if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x + 0.6f, body.getPosition().y)))) {
+                                kickingBomb.setMove(Bomb.State.MOVING_RIGHT);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
-                player.bombLeft--;
+                if (!kicking) {
+                    // create bomb
+                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                    actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+                    player.bombLeft--;
+                }
+
             }
 
             // re-generate bomb
@@ -103,20 +146,12 @@ public class PlayerSystem extends IteratingSystem {
                 player.bombRegeratingTimeLeft = player.bombRegeratingTime;
             }
         }
-        
+
         // update bomb data to GameManager
         GameManager.playerBombLeft = player.bombLeft;
         GameManager.playerBombRegeratingTimeLeft = player.bombRegeratingTimeLeft;
 
-        if (linearVelocity.x > 0.1f) {
-            player.state = Player.State.WALKING_RIGHT;
-        } else if (linearVelocity.x < -0.1f) {
-            player.state = Player.State.WALKING_LEFT;
-        } else if (linearVelocity.y > 0.1f) {
-            player.state = Player.State.WALKING_UP;
-        } else if (linearVelocity.y < -0.1f) {
-            player.state = Player.State.WALKING_DOWN;
-        } else {
+        if (linearVelocity.len2() < 0.1f) {
             if (player.state == Player.State.WALKING_UP) {
                 player.state = Player.State.IDLING_UP;
             } else if (player.state == Player.State.WALKING_LEFT) {
@@ -126,7 +161,6 @@ public class PlayerSystem extends IteratingSystem {
             } else if (player.state == Player.State.WALKING_RIGHT) {
                 player.state = Player.State.IDLING_RIGHT;
             }
-
         }
 
         // invincible timer
@@ -200,9 +234,34 @@ public class PlayerSystem extends IteratingSystem {
 
     }
 
+    protected boolean checkCanKickBomb(Body body, Vector2 fromV, Vector2 toV) {
+        World b2dWorld = body.getWorld();
+        kickingBomb = null;
+        kicking = false;
+
+        RayCastCallback rayCastCallback = new RayCastCallback() {
+
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                if (fixture.getFilterData().categoryBits == GameManager.BOMB_BIT) {
+                    Entity bombEntity = (Entity) fixture.getBody().getUserData();
+                    kickingBomb = bombEntity.getComponent(Bomb.class);
+                    return 0;
+                }
+                return 0;
+            }
+        };
+
+        b2dWorld.rayCast(rayCastCallback, fromV, toV);
+        if (kickingBomb != null) {
+            kicking = true;
+        }
+        return kicking;
+    }
+
     protected boolean hitBombVertical(final Body body, Vector2 fromV, Vector2 toV) {
         World b2dWorld = body.getWorld();
-        hit = false;
+        hitting = false;
 
         RayCastCallback rayCastCallback = new RayCastCallback() {
 
@@ -213,7 +272,7 @@ public class PlayerSystem extends IteratingSystem {
                 }
 
                 if (fraction < 1.0f && fixture.getFilterData().categoryBits == GameManager.BOMB_BIT) {
-                    hit = true;
+                    hitting = true;
                 }
                 return 0;
             }
@@ -224,12 +283,12 @@ public class PlayerSystem extends IteratingSystem {
             b2dWorld.rayCast(rayCastCallback, fromV, tmpV.add((1 - i) * 0.4f, 0));
 
         }
-        return hit;
+        return hitting;
     }
 
     protected boolean hitBombHorizontal(final Body body, Vector2 fromV, Vector2 toV) {
         World b2dWorld = body.getWorld();
-        hit = false;
+        hitting = false;
 
         RayCastCallback rayCastCallback = new RayCastCallback() {
 
@@ -240,7 +299,7 @@ public class PlayerSystem extends IteratingSystem {
                 }
 
                 if (fraction < 1.0f && fixture.getFilterData().categoryBits == GameManager.BOMB_BIT) {
-                    hit = true;
+                    hitting = true;
                 }
                 return 0;
             }
@@ -250,6 +309,6 @@ public class PlayerSystem extends IteratingSystem {
             Vector2 tmpV = new Vector2(toV);
             b2dWorld.rayCast(rayCastCallback, fromV, tmpV.add(0, (1 - i) * 0.4f));
         }
-        return hit;
+        return hitting;
     }
 }
