@@ -26,6 +26,11 @@ public class Hud implements Disposable {
     private Sprite bigBombermanSprite;
     private Animation bigBombermanAnimation;
 
+    private Sprite powerSprite;
+    private Sprite speedSprite;
+    private Sprite kickSprite;
+    private Sprite remoteSprite;
+
     public Hud(SpriteBatch batch, float width, float height) {
         this.batch = batch;
 
@@ -47,6 +52,19 @@ public class Hud implements Disposable {
         bombTimerSprite = new Sprite(bombTimerTexture);
         bombTimerSprite.setBounds(16f, 12.5f, 3.0f, 0.2f);
 
+        TextureRegion itemTextureRegion = textureAtlas.findRegion("Items");
+        powerSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 1, 0, 16, 16));
+        powerSprite.setBounds(16.0f, 9.0f, 1, 1);
+
+        speedSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 2, 0, 16, 16));
+        speedSprite.setBounds(16.0f, 8.0f, 1, 1);
+
+        kickSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 3, 0, 16, 16));
+        kickSprite.setBounds(16.0f, 7.0f, 1, 1);
+
+        remoteSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 4, 0, 16, 16));
+        remoteSprite.setBounds(16.0f, 6.0f, 1, 1);
+
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
         for (int i = 0; i < 5; i++) {
             keyFrames.add(new TextureRegion(textureAtlas.findRegion("Bomberman_big"), 32 * i, 0, 32, 48));
@@ -55,7 +73,7 @@ public class Hud implements Disposable {
         bigBombermanSprite = new Sprite(bigBombermanAnimation.getKeyFrame(0));
         bigBombermanSprite.setBounds(17.5f, 0.5f, 2f, 3f);
         stateTime = 0;
-        
+
         pixmap.dispose();
     }
 
@@ -74,6 +92,30 @@ public class Hud implements Disposable {
 
         bombTimerSprite.setSize((1.0f - GameManager.playerBombRegeratingTimeLeft / GameManager.playerBombRegeratingTime) * 3.0f, 0.2f);
         bombTimerSprite.draw(batch);
+
+        if (GameManager.playerBombPower > 0) {
+            for (int i = 0; i < GameManager.playerBombPower; i++) {
+                powerSprite.setPosition(16.0f + i * 0.5f, 9.0f);
+                powerSprite.draw(batch);
+            }
+
+        } else {
+            powerSprite.setPosition(16.0f, 9.0f);
+            powerSprite.draw(batch, 0.5f);
+        }
+
+        if (GameManager.playerMaxSpeed > 0) {
+            for (int i = 0; i < GameManager.playerMaxSpeed; i++) {
+                speedSprite.setPosition(16.0f + i * 0.5f, 8.0f);
+                speedSprite.draw(batch);
+            }
+        } else {
+            speedSprite.setPosition(16.0f, 8.0f);
+            speedSprite.draw(batch, 0.5f);
+        }
+        
+        kickSprite.draw(batch, GameManager.playerKickBomb ? 1.0f : 0.5f);
+        remoteSprite.draw(batch, GameManager.playerRemoteBomb ? 1.0f : 0.5f);
 
         bigBombermanSprite.draw(batch);
 

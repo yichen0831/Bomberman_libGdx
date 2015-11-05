@@ -51,7 +51,7 @@ public class Player extends Component {
             GameManager.playerRemoteBomb = false;
         }
 
-        maxSpeed = 3.0f + GameManager.playerMaxSpeed;
+        maxSpeed = 3.0f + GameManager.playerMaxSpeed * 1.2f;
         bombPower = 1 + GameManager.playerBombPower;
         maxBomb = GameManager.playerMaxBomb;
         bombRegeratingTime = GameManager.playerBombRegeratingTime;
@@ -83,9 +83,9 @@ public class Player extends Component {
     }
 
     public void powerUpPower() {
-        if (bombPower <= 9) {
-            bombPower++;
-            GameManager.playerBombPower = bombPower;
+        if (bombPower < 6) {
+            GameManager.playerBombPower++;
+            bombPower = 1 + GameManager.playerBombPower;
         } else {
             decreaseBombRegeneratingTime();
         }
@@ -94,9 +94,8 @@ public class Player extends Component {
     public void powerUpSpeed() {
         if (maxSpeed <= 8.0f) {
             GameManager.playerMaxSpeed++;
-            maxSpeed += 1;
-        }
-        else {
+            maxSpeed = 3.0f + GameManager.playerMaxSpeed * 1.2f;
+        } else {
             decreaseBombRegeneratingTime();
         }
     }
@@ -105,8 +104,7 @@ public class Player extends Component {
         if (!kickBomb) {
             kickBomb = true;
             GameManager.playerKickBomb = kickBomb;
-        }
-        else {
+        } else {
             decreaseBombRegeneratingTime();
         }
     }
@@ -115,8 +113,7 @@ public class Player extends Component {
         if (!remoteBomb) {
             remoteBomb = true;
             GameManager.playerRemoteBomb = remoteBomb;
-        }
-        else {
+        } else {
             decreaseBombRegeneratingTime();
         }
     }
