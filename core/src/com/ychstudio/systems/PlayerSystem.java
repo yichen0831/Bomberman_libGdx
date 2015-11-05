@@ -199,6 +199,8 @@ public class PlayerSystem extends IteratingSystem {
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
+                    
+                    GameManager.playerLives--;
 
                     ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
                     Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();

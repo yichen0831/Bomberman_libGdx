@@ -33,6 +33,8 @@ public class GameManager implements Disposable {
     public static boolean playerKickBomb = false;
     public static boolean playerRemoteBomb = false;
     
+    public static int playerLives = 3;
+    
     private final Vector2 playerRespawnPosition;
     
     private GameManager() {

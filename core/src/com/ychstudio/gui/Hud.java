@@ -1,15 +1,22 @@
 package com.ychstudio.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.gamesys.GameManager;
 
 public class Hud implements Disposable {
@@ -30,7 +37,13 @@ public class Hud implements Disposable {
     private Sprite speedSprite;
     private Sprite kickSprite;
     private Sprite remoteSprite;
-
+    
+    private final float SCALE = 16f;
+    private Stage stage;
+    private BitmapFont font;
+    private Label fpsLabel;
+    private Label playerLivesLabel;
+    
     public Hud(SpriteBatch batch, float width, float height) {
         this.batch = batch;
 
@@ -75,6 +88,23 @@ public class Hud implements Disposable {
         stateTime = 0;
 
         pixmap.dispose();
+        
+        FitViewport viewport = new FitViewport(width * SCALE, height * SCALE);
+        stage = new Stage(viewport, batch);
+        font = new BitmapFont(Gdx.files.internal("fonts/foo.fnt"));
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
+        fpsLabel = new Label("FPS:", labelStyle);
+        fpsLabel.setPosition(16 * SCALE, 0 * SCALE);
+        
+        playerLivesLabel = new Label("" + GameManager.playerLives, labelStyle);
+        playerLivesLabel.setPosition(17.5f * SCALE, 13.5f * SCALE);
+        
+        Image bombermanImage = new Image(new TextureRegion(textureAtlas.findRegion("Items"), 16 * 5, 0, 16, 16));
+        bombermanImage.setPosition(16f * SCALE, 13.5f * SCALE);
+        
+        stage.addActor(fpsLabel);
+        stage.addActor(playerLivesLabel);
+        stage.addActor(bombermanImage);
     }
 
     public void draw(float delta) {
@@ -118,14 +148,21 @@ public class Hud implements Disposable {
         remoteSprite.draw(batch, GameManager.playerRemoteBomb ? 1.0f : 0.5f);
 
         bigBombermanSprite.draw(batch);
-
+        
         batch.end();
+        
+        // update stage
+        playerLivesLabel.setText("" + GameManager.playerLives);
+        fpsLabel.setText("FPS:" + Gdx.graphics.getFramesPerSecond());
+        stage.draw();
     }
 
     @Override
     public void dispose() {
         bgTexture.dispose();
         bombTimerTexture.dispose();
+        font.dispose();
+        stage.dispose();
     }
 
 }
