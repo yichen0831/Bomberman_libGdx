@@ -94,10 +94,12 @@ public class Hud implements Disposable {
         font = new BitmapFont(Gdx.files.internal("fonts/foo.fnt"));
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
         fpsLabel = new Label("FPS:", labelStyle);
-        fpsLabel.setPosition(16 * SCALE, 0 * SCALE);
+        fpsLabel.setFontScale(0.3f);
+        fpsLabel.setPosition(16 * SCALE, -0.8f * SCALE);
         
         playerLivesLabel = new Label("" + GameManager.playerLives, labelStyle);
-        playerLivesLabel.setPosition(17.5f * SCALE, 13.5f * SCALE);
+        playerLivesLabel.setFontScale(0.5f);
+        playerLivesLabel.setPosition(17.2f * SCALE, 12.8f * SCALE);
         
         Image bombermanImage = new Image(new TextureRegion(textureAtlas.findRegion("Items"), 16 * 5, 0, 16, 16));
         bombermanImage.setPosition(16f * SCALE, 13.5f * SCALE);
