@@ -42,7 +42,7 @@ public class EnemySystem extends IteratingSystem {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                 // if hit the player, ignore it
-                if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
+                if (fixture.getFilterData().categoryBits == GameManager.PLAYER_BIT || fixture.getFilterData().categoryBits == GameManager.POWERUP_BIT) {
                     return 0;
                 }
 

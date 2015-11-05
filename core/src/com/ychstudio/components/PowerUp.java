@@ -14,19 +14,19 @@ public class PowerUp extends Component {
             int index;
             int random = (int) (Math.random() * 10);
             if (random < 3) {
-                index = 0;
+                index = 0;  // AMMO
             }
             else if (random < 6) {
-                index = 1;
+                index = 1;  // POWER
             }
             else if (random < 8) {
-                index = 2;
+                index = 2;  // SPEED
             }
             else if (random < 9) {
-                index = 3;
+                index = 3;  // KICK
             }
             else {
-                index = 4;
+                index = 4;  // REMOTE
             }
             return values()[index];
         }
