@@ -20,8 +20,8 @@ Bomberman1
 Bomb
   rotate: false
   xy: 421, 103
-  size: 48, 16
-  orig: 48, 16
+  size: 80, 16
+  orig: 80, 16
   offset: 0, 0
   index: -1
 Bomberman_big
@@ -41,7 +41,7 @@ Octopus
 Items
   rotate: false
   xy: 83, 1
-  size: 112, 16
-  orig: 112, 16
+  size: 128, 16
+  orig: 128, 16
   offset: 0, 0
   index: -1

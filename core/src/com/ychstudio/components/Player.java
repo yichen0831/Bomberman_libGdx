@@ -7,7 +7,6 @@ import com.ychstudio.gamesys.GameManager;
 public class Player extends Component {
 
     public enum State {
-
         IDLING_UP,
         IDLING_LEFT,
         IDLING_DOWN,
@@ -21,7 +20,7 @@ public class Player extends Component {
 
     public State state;
 
-    public static short defaultMaskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
+    public static short defaultMaskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT | GameManager.EXPLOSION_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
     public static short invincibleMaskBit = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
 
     public float maxSpeed;

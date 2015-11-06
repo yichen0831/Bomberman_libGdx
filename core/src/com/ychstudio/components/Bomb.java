@@ -1,8 +1,11 @@
 package com.ychstudio.components;
 
 import com.artemis.Component;
+import com.ychstudio.gamesys.GameManager;
 
 public class Bomb extends Component {
+    public static short defaultMaskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.EXPLOSION_BIT;
+    
     public enum State {
         NORMAL,
         MOVING_UP,
