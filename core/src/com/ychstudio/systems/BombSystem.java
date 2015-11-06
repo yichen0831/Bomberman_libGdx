@@ -61,7 +61,7 @@ public class BombSystem extends IteratingSystem {
                 world.delete(entityId);
                 break;
             case MOVING_UP:
-                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
+                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.55f))) {
                     body.setLinearVelocity(0, bomb.speed);
                 } else {
                     body.setLinearVelocity(0, 0);
@@ -69,7 +69,7 @@ public class BombSystem extends IteratingSystem {
                 }
                 break;
             case MOVING_DOWN:
-                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
+                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.55f))) {
                     body.setLinearVelocity(0, -bomb.speed);
                 } else {
                     body.setLinearVelocity(0, 0);
@@ -77,7 +77,7 @@ public class BombSystem extends IteratingSystem {
                 }
                 break;
             case MOVING_LEFT:
-                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
+                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.55f, body.getPosition().y))) {
                     body.setLinearVelocity(-bomb.speed, 0);
                 } else {
                     body.setLinearVelocity(0, 0);
@@ -86,7 +86,7 @@ public class BombSystem extends IteratingSystem {
                 break;
 
             case MOVING_RIGHT:
-                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
+                if (checkMovable(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.55f, body.getPosition().y))) {
                     body.setLinearVelocity(bomb.speed, 0);
                 } else {
                     body.setLinearVelocity(0, 0);

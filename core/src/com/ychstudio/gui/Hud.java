@@ -37,13 +37,15 @@ public class Hud implements Disposable {
     private Sprite speedSprite;
     private Sprite kickSprite;
     private Sprite remoteSprite;
-    
+
     private final float SCALE = 16f;
     private Stage stage;
     private BitmapFont font;
     private Label fpsLabel;
     private Label playerLivesLabel;
-    
+    private Label xLabel;
+    private Label zLabel;
+
     public Hud(SpriteBatch batch, float width, float height) {
         this.batch = batch;
 
@@ -88,7 +90,7 @@ public class Hud implements Disposable {
         stateTime = 0;
 
         pixmap.dispose();
-        
+
         FitViewport viewport = new FitViewport(width * SCALE, height * SCALE);
         stage = new Stage(viewport, batch);
         font = new BitmapFont(Gdx.files.internal("fonts/foo.fnt"));
@@ -96,17 +98,27 @@ public class Hud implements Disposable {
         fpsLabel = new Label("FPS:", labelStyle);
         fpsLabel.setFontScale(0.3f);
         fpsLabel.setPosition(16 * SCALE, -0.8f * SCALE);
-        
+
         playerLivesLabel = new Label("" + GameManager.playerLives, labelStyle);
         playerLivesLabel.setFontScale(0.5f);
         playerLivesLabel.setPosition(17.2f * SCALE, 12.8f * SCALE);
-        
+
         Image bombermanImage = new Image(new TextureRegion(textureAtlas.findRegion("Items"), 16 * 5, 0, 16, 16));
         bombermanImage.setPosition(16f * SCALE, 13.5f * SCALE);
-        
+
+        xLabel = new Label("X", labelStyle);
+        xLabel.setFontScale(0.4f);
+        xLabel.setPosition(17.2f * SCALE, 6.3f * SCALE);
+
+        zLabel = new Label("Z", labelStyle);
+        zLabel.setFontScale(0.4f);
+        zLabel.setPosition(17.2f * SCALE, 5.3f * SCALE);
+
         stage.addActor(fpsLabel);
         stage.addActor(playerLivesLabel);
         stage.addActor(bombermanImage);
+        stage.addActor(xLabel);
+        stage.addActor(zLabel);
     }
 
     public void draw(float delta) {
@@ -145,15 +157,18 @@ public class Hud implements Disposable {
             speedSprite.setPosition(16.0f, 8.0f);
             speedSprite.draw(batch, 0.5f);
         }
-        
+
         kickSprite.draw(batch, GameManager.playerKickBomb ? 1.0f : 0.5f);
         remoteSprite.draw(batch, GameManager.playerRemoteBomb ? 1.0f : 0.5f);
 
         bigBombermanSprite.draw(batch);
-        
+
         batch.end();
-        
+
         // update stage
+        xLabel.setVisible(GameManager.playerKickBomb);
+        zLabel.setVisible(GameManager.playerRemoteBomb);
+        
         playerLivesLabel.setText("" + GameManager.playerLives);
         fpsLabel.setText("FPS:" + Gdx.graphics.getFramesPerSecond());
         stage.draw();
