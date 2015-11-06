@@ -5,7 +5,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GameManager implements Disposable {
     private static final GameManager instance = new GameManager();
@@ -39,7 +40,7 @@ public class GameManager implements Disposable {
     
     private final Vector2 playerRespawnPosition;
     
-    private LinkedBlockingQueue<Entity> remoteBombQueue;
+    private Queue<Entity> remoteBombQueue;
     
     private GameManager() {
         // load resources
@@ -51,7 +52,7 @@ public class GameManager implements Disposable {
         
         playerRespawnPosition = new Vector2();
         
-        remoteBombQueue = new LinkedBlockingQueue<Entity>();
+        remoteBombQueue = new LinkedList<Entity>();
     }
     
     public static GameManager getInstance() {
@@ -62,7 +63,7 @@ public class GameManager implements Disposable {
         return assetManager;
     }
     
-    public LinkedBlockingQueue<Entity> getRemoteBombDeque() {
+    public Queue<Entity> getRemoteBombDeque() {
         return remoteBombQueue;
     }
     

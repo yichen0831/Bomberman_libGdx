@@ -22,7 +22,7 @@ import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
 import com.ychstudio.components.Transform;
 import com.ychstudio.gamesys.GameManager;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Queue;
 
 public class PlayerSystem extends IteratingSystem {
 
@@ -152,7 +152,7 @@ public class PlayerSystem extends IteratingSystem {
                     ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
 
                     if (player.remoteBomb) {
-                        GameManager.getInstance().getRemoteBombDeque().add(
+                        GameManager.getInstance().getRemoteBombDeque().offer(
                                 actorBuilder.createRemoteBomb(player, body.getPosition().x, body.getPosition().y)
                         );
                     } else {
@@ -165,7 +165,7 @@ public class PlayerSystem extends IteratingSystem {
 
             // trigger remote bomb
             if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && player.remoteBomb) {
-                LinkedBlockingQueue<Entity> remoteBombQueue = GameManager.getInstance().getRemoteBombDeque();
+                Queue<Entity> remoteBombQueue = GameManager.getInstance().getRemoteBombDeque();
                 
                 // clean those bomes which have already exploded
                 while (!remoteBombQueue.isEmpty() && remoteBombQueue.peek().getComponent(Bomb.class) == null) {
