@@ -22,6 +22,7 @@ import com.ychstudio.components.RigidBody;
 import com.ychstudio.components.State;
 import com.ychstudio.components.Transform;
 import com.ychstudio.gamesys.GameManager;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class PlayerSystem extends IteratingSystem {
 
@@ -74,9 +75,9 @@ public class PlayerSystem extends IteratingSystem {
                 player.powerUpRemote();
             }
 
-            // player controls
+            // player movement controls
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
+                if (player.invincible || !hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
                     if (Math.abs(linearVelocity.y) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(0, player.acceleration * body.getMass()), body.getWorldCenter(), true);
                     }
@@ -86,7 +87,7 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
+                if (player.invincible || !hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
                     if (Math.abs(linearVelocity.y) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(0, -player.acceleration * body.getMass()), body.getWorldCenter(), true);
                     }
@@ -96,7 +97,7 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
+                if (player.invincible || !hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
                     if (Math.abs(linearVelocity.x) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(-player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
                     }
@@ -106,7 +107,7 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
+                if (player.invincible || !hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
                     if (Math.abs(linearVelocity.x) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
                     }
@@ -149,10 +150,33 @@ public class PlayerSystem extends IteratingSystem {
                 if (!kicking && player.bombLeft > 0) {
                     // create bomb
                     ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-                    actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+
+                    if (player.remoteBomb) {
+                        GameManager.getInstance().getRemoteBombDeque().add(
+                                actorBuilder.createRemoteBomb(player, body.getPosition().x, body.getPosition().y)
+                        );
+                    } else {
+                        actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
+                    }
                     player.bombLeft--;
                 }
 
+            }
+
+            // trigger remote bomb
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && player.remoteBomb) {
+                LinkedBlockingQueue<Entity> remoteBombQueue = GameManager.getInstance().getRemoteBombDeque();
+                
+                // clean those bomes which have already exploded
+                while (!remoteBombQueue.isEmpty() && remoteBombQueue.peek().getComponent(Bomb.class) == null) {
+                    remoteBombQueue.remove();
+                }
+                
+                Entity remoteBombEntity = remoteBombQueue.poll();
+                if (remoteBombEntity != null) {
+                    Bomb remoteBomb = remoteBombEntity.getComponent(Bomb.class);
+                    remoteBomb.countDown = 0;
+                }
             }
 
             // re-generate bomb

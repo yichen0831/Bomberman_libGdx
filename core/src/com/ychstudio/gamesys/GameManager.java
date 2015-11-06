@@ -1,9 +1,11 @@
 package com.ychstudio.gamesys;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class GameManager implements Disposable {
     private static final GameManager instance = new GameManager();
@@ -37,6 +39,8 @@ public class GameManager implements Disposable {
     
     private final Vector2 playerRespawnPosition;
     
+    private LinkedBlockingQueue<Entity> remoteBombQueue;
+    
     private GameManager() {
         // load resources
         assetManager = new AssetManager();
@@ -46,6 +50,8 @@ public class GameManager implements Disposable {
         assetManager.finishLoading();
         
         playerRespawnPosition = new Vector2();
+        
+        remoteBombQueue = new LinkedBlockingQueue<Entity>();
     }
     
     public static GameManager getInstance() {
@@ -54,6 +60,10 @@ public class GameManager implements Disposable {
     
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+    
+    public LinkedBlockingQueue<Entity> getRemoteBombDeque() {
+        return remoteBombQueue;
     }
     
     public Vector2 getPlayerRespawnPosition() {
