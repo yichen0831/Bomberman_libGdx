@@ -427,8 +427,8 @@ public class ActorBuilder {
 
         body.setUserData(e);
     }
-    
-        public Entity createRemoteBomb(Player player, float x, float y) {
+
+    public Entity createRemoteBomb(Player player, float x, float y) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         bodyDef.position.set(MathUtils.floor(x) + 0.5f, MathUtils.floor(y) + 0.5f);
@@ -800,5 +800,50 @@ public class ActorBuilder {
 
         body.setUserData(e);
         polygonShape.dispose();
+    }
+
+    public void createPortal(float x, float y) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.position.set(x + 0.5f, y + 0.5f);
+
+        Body body = b2dWorld.createBody(bodyDef);
+
+        PolygonShape polygonShape = new PolygonShape();
+        polygonShape.setAsBox(0.2f, 0.2f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.filter.categoryBits = GameManager.PORTAL_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+
+        polygonShape.dispose();
+
+        TextureRegion textureRegion = assetManager.get("img/actors.pack", TextureAtlas.class).findRegion("Items");
+        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        for (int i = 6; i < 8; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+        }
+        Animation anim = new Animation(0.2f, keyFrames, Animation.PlayMode.LOOP);
+
+        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        anims.put("normal", anim);
+
+        Transform transform = new Transform(body.getPosition().x, body.getPosition().y, 1, 1, 0);
+        transform.z = 99; // make portal drawn below player
+        Renderer renderer = new Renderer(textureRegion, 16 / GameManager.PPM, 16 / GameManager.PPM);
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+
+        Entity e = new EntityBuilder(world)
+                .with(
+                        transform,
+                        new State("normal"),
+                        new Anim(anims),
+                        renderer
+                )
+                .build();
+
+        body.setUserData(e);
     }
 }
