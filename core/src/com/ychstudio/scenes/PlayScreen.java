@@ -91,6 +91,7 @@ public class PlayScreen extends ScreenAdapter {
 
         // reset enemy count
         GameManager.enemiesLeft = 0;
+        GameManager.levelCompleted = false;
         
         WorldBuilder worldBuilder = new WorldBuilder(b2dWorld, world);
         worldBuilder.build("level_1");
@@ -142,6 +143,10 @@ public class PlayScreen extends ScreenAdapter {
 
         world.setDelta(delta);
         world.process();
+        
+        if (GameManager.levelCompleted) {
+            game.setScreen(new PlayScreen(game));
+        }
         
         if (showB2DRenderer) {
             b2dRenderer.render(b2dWorld, camera.combined);
