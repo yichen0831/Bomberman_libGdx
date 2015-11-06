@@ -121,6 +121,11 @@ public class B2DWorldContactListener implements ContactListener {
                         player.powerUpAmmo();
                         break;
                 }
+            } // portal
+            else if (fixtureA.getFilterData().categoryBits == GameManager.PORTAL_BIT) {
+                System.out.println("Level cleared!");
+            } else if (fixtureB.getFilterData().categoryBits == GameManager.PORTAL_BIT) {
+                System.out.println("Level cleared!");
             }
         }
     }

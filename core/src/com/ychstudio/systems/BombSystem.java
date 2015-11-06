@@ -3,6 +3,7 @@ package com.ychstudio.systems;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -65,6 +66,7 @@ public class BombSystem extends IteratingSystem {
                     body.setLinearVelocity(0, bomb.speed);
                 } else {
                     body.setLinearVelocity(0, 0);
+                    body.setTransform(MathUtils.floor(body.getPosition().x) + 0.5f, MathUtils.floor(body.getPosition().y) + 0.5f, 0);
                     bomb.state = Bomb.State.NORMAL;
                 }
                 break;
@@ -73,6 +75,7 @@ public class BombSystem extends IteratingSystem {
                     body.setLinearVelocity(0, -bomb.speed);
                 } else {
                     body.setLinearVelocity(0, 0);
+                    body.setTransform(MathUtils.floor(body.getPosition().x) + 0.5f, MathUtils.floor(body.getPosition().y) + 0.5f, 0);
                     bomb.state = Bomb.State.NORMAL;
                 }
                 break;
@@ -81,6 +84,7 @@ public class BombSystem extends IteratingSystem {
                     body.setLinearVelocity(-bomb.speed, 0);
                 } else {
                     body.setLinearVelocity(0, 0);
+                    body.setTransform(MathUtils.floor(body.getPosition().x) + 0.5f, MathUtils.floor(body.getPosition().y) + 0.5f, 0);
                     bomb.state = Bomb.State.NORMAL;
                 }
                 break;
@@ -90,6 +94,7 @@ public class BombSystem extends IteratingSystem {
                     body.setLinearVelocity(bomb.speed, 0);
                 } else {
                     body.setLinearVelocity(0, 0);
+                    body.setTransform(MathUtils.floor(body.getPosition().x) + 0.5f, MathUtils.floor(body.getPosition().y) + 0.5f, 0);
                     bomb.state = Bomb.State.NORMAL;
                 }
                 break;

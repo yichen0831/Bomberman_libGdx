@@ -35,6 +35,9 @@ public class Enemy extends Component {
         state = State.getRandomWalkingState();
         this.hp = hp;
         this.speed = speed;
+        
+        // increase enemy count
+        GameManager.enemiesLeft++;
     }
 
     public void damage(int damage) {

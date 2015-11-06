@@ -25,7 +25,7 @@ public class GameManager implements Disposable {
     public static final short POWERUP_BIT           = 1 << 6;
     public static final short PORTAL_BIT            = 1 << 7;
     
-    public static boolean restorePowerUp = false;
+    public static boolean restorePowerUp = true;
     
     public static int playerMaxBomb = 3;
     public static int playerBombLeft = 0;
@@ -38,7 +38,10 @@ public class GameManager implements Disposable {
     
     public static int playerLives = 3;
     
-    private final Vector2 playerRespawnPosition;
+    private Vector2 playerRespawnPosition;
+    private Vector2 portalPosition;
+    
+    public static int enemiesLeft;
     
     private Queue<Entity> remoteBombQueue;
     
@@ -51,6 +54,7 @@ public class GameManager implements Disposable {
         assetManager.finishLoading();
         
         playerRespawnPosition = new Vector2();
+        portalPosition = new Vector2();
         
         remoteBombQueue = new LinkedList<Entity>();
     }
@@ -75,6 +79,14 @@ public class GameManager implements Disposable {
         playerRespawnPosition.set(position);
     }
 
+    public Vector2 getPortalPosition() {
+        return portalPosition;
+    }
+
+    public void setPortalPosition(Vector2 position) {
+        portalPosition.set(position);
+    }
+    
     @Override
     public void dispose() {
         assetManager.dispose();

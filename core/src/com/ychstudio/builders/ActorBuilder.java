@@ -802,7 +802,10 @@ public class ActorBuilder {
         polygonShape.dispose();
     }
 
-    public void createPortal(float x, float y) {
+    public void createPortal() {
+        float x = GameManager.getInstance().getPortalPosition().x;
+        float y = GameManager.getInstance().getPortalPosition().y;
+        
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         bodyDef.position.set(x + 0.5f, y + 0.5f);

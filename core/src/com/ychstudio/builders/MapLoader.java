@@ -83,6 +83,7 @@ public class MapLoader {
                 }
             }
         }
+        GameManager.getInstance().setPortalPosition(new Vector2(mapWidth / 2, mapHeight / 2));
     }
 
     public int getMapWidth() {
