@@ -57,7 +57,25 @@ public class PlayerSystem extends IteratingSystem {
         float maxSpeed = player.maxSpeed;
 
         if (player.hp > 0) {
-            if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            // TODO: cheat code...
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+                player.powerUpAmmo();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+                player.powerUpPower();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+                player.powerUpSpeed();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+                player.powerUpKick();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+                player.powerUpRemote();
+            }
+
+            // player controls
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
                     if (Math.abs(linearVelocity.y) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(0, player.acceleration * body.getMass()), body.getWorldCenter(), true);
@@ -67,7 +85,7 @@ public class PlayerSystem extends IteratingSystem {
                 player.state = Player.State.WALKING_UP;
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 if (!hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
                     if (Math.abs(linearVelocity.y) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(0, -player.acceleration * body.getMass()), body.getWorldCenter(), true);
@@ -77,7 +95,7 @@ public class PlayerSystem extends IteratingSystem {
                 player.state = Player.State.WALKING_DOWN;
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
                     if (Math.abs(linearVelocity.x) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(-player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
@@ -87,7 +105,7 @@ public class PlayerSystem extends IteratingSystem {
                 player.state = Player.State.WALKING_LEFT;
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 if (!hitBombHorizontal(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
                     if (Math.abs(linearVelocity.x) < maxSpeed) {
                         body.applyLinearImpulse(new Vector2(player.acceleration * body.getMass(), 0), body.getWorldCenter(), true);
@@ -98,7 +116,7 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             // set bomb or kick bomb
-            if ((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.X)) && player.bombLeft > 0) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
                 kicking = false;
                 if (player.kickBomb) {
                     // check if player is facing a bomb, if so, kick it
@@ -128,7 +146,7 @@ public class PlayerSystem extends IteratingSystem {
                     }
                 }
 
-                if (!kicking) {
+                if (!kicking && player.bombLeft > 0) {
                     // create bomb
                     ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
@@ -199,7 +217,7 @@ public class PlayerSystem extends IteratingSystem {
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
-                    
+
                     GameManager.playerLives--;
 
                     ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);

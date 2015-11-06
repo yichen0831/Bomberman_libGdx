@@ -394,7 +394,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.filter.categoryBits = GameManager.BOMB_BIT;
-        fixtureDef.filter.maskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.EXPLOSION_BIT;
+        fixtureDef.filter.maskBits = Bomb.defaultMaskBits;
         body.createFixture(fixtureDef);
         polygonShape.dispose();
 
@@ -447,14 +447,6 @@ public class ActorBuilder {
                     return 0;
                 }
 
-                if (fixture.getFilterData().categoryBits == GameManager.BOMB_BIT) {
-                    canExplodeThrough = false;
-                    Entity e = (Entity) fixture.getBody().getUserData();
-                    Bomb bomb = e.getComponent(Bomb.class);
-                    bomb.countDown = 0;
-                    return 0;
-                }
-
                 if (fixture.getFilterData().categoryBits == GameManager.EXPLOSION_BIT) {
                     canExplodeThrough = false;
                     return 0;
@@ -488,7 +480,7 @@ public class ActorBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
-        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
+        fixtureDef.filter.maskBits = Explosion.defaultMaskBits;
         fixtureDef.isSensor = true;
         explosionBody.createFixture(fixtureDef);
 
@@ -527,7 +519,7 @@ public class ActorBuilder {
             fixtureDef = new FixtureDef();
             fixtureDef.shape = polygonShape;
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
-            fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
+            fixtureDef.filter.maskBits = Explosion.defaultMaskBits;
             fixtureDef.isSensor = true;
             explosionBody.createFixture(fixtureDef);
 
@@ -575,7 +567,7 @@ public class ActorBuilder {
             fixtureDef = new FixtureDef();
             fixtureDef.shape = polygonShape;
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
-            fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
+            fixtureDef.filter.maskBits = Explosion.defaultMaskBits;
             fixtureDef.isSensor = true;
             explosionBody.createFixture(fixtureDef);
 
@@ -623,7 +615,7 @@ public class ActorBuilder {
             fixtureDef = new FixtureDef();
             fixtureDef.shape = polygonShape;
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
-            fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
+            fixtureDef.filter.maskBits = Explosion.defaultMaskBits;
             fixtureDef.isSensor = true;
             explosionBody.createFixture(fixtureDef);
 
@@ -671,7 +663,7 @@ public class ActorBuilder {
             fixtureDef = new FixtureDef();
             fixtureDef.shape = polygonShape;
             fixtureDef.filter.categoryBits = GameManager.EXPLOSION_BIT;
-            fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.BOMB_BIT | GameManager.ENEMY_BIT | GameManager.BREAKABLE_BIT;
+            fixtureDef.filter.maskBits = Explosion.defaultMaskBits;
             fixtureDef.isSensor = true;
             explosionBody.createFixture(fixtureDef);
 
