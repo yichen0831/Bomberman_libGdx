@@ -52,6 +52,7 @@ public class BombSystem extends IteratingSystem {
         switch (bomb.state) {
             case EXPLODING:
                 state.setCurrentState("exploding");
+                GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.6f, 0.8f), 0);
                 // create explosion
                 ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                 actorBuilder.createExplosion(bomb, body.getPosition().x, body.getPosition().y);

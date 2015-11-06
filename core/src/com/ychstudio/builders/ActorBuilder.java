@@ -278,7 +278,7 @@ public class ActorBuilder {
 
     }
 
-    public void createPlayer(float x, float y, boolean restore) {
+    public void createPlayer(float x, float y, boolean resetPlayerAbilities) {
         // box2d
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -371,7 +371,7 @@ public class ActorBuilder {
         // entity
         Entity e = new com.artemis.utils.EntityBuilder(world)
                 .with(
-                        new Player(restore),
+                        new Player(resetPlayerAbilities),
                         new Transform(x, y, 1, 1, 0),
                         new RigidBody(body),
                         new State("idling_down"),

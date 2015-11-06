@@ -3,6 +3,7 @@ package com.ychstudio.systems;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -123,7 +124,11 @@ public class EnemySystem extends IteratingSystem {
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = GameManager.NOTHING_BIT;
                 body.getFixtureList().get(0).setFilterData(filter);
-                
+
+                if (state.getStateTime() <= 0) {
+                    GameManager.getInstance().playSound(enemy.getDieSound(), 1.0f, MathUtils.random(0.8f, 1.2f), 0);
+                }
+
                 if (state.getStateTime() > 0.6f) {
                     // decrease enemy count
                     GameManager.enemiesLeft--;

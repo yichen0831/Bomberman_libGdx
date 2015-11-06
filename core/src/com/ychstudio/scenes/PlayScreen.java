@@ -44,7 +44,7 @@ public class PlayScreen extends ScreenAdapter {
     private com.artemis.World world;
 
     private Box2DDebugRenderer b2dRenderer;
-    private boolean showB2DRenderer;
+    private boolean showB2DDebugRenderer;
 
     private Sprite groundSprite;
 
@@ -59,7 +59,7 @@ public class PlayScreen extends ScreenAdapter {
         this.game = game;
         this.batch = game.getSpriteBatch();
 
-        showB2DRenderer = true;
+        showB2DDebugRenderer = false;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class PlayScreen extends ScreenAdapter {
     
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            showB2DRenderer = !showB2DRenderer;
+            showB2DDebugRenderer = !showB2DDebugRenderer;
         }
     }
 
@@ -145,10 +145,11 @@ public class PlayScreen extends ScreenAdapter {
         world.process();
         
         if (GameManager.levelCompleted) {
+            GameManager.getInstance().playSound("Teleport.ogg");
             game.setScreen(new PlayScreen(game));
         }
         
-        if (showB2DRenderer) {
+        if (showB2DDebugRenderer) {
             b2dRenderer.render(b2dWorld, camera.combined);
         }
         
