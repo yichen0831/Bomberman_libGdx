@@ -7,6 +7,7 @@ import com.ychstudio.gamesys.GameManager;
 public class Player extends Component {
 
     public enum State {
+
         IDLING_UP,
         IDLING_LEFT,
         IDLING_DOWN,
@@ -38,16 +39,11 @@ public class Player extends Component {
     public boolean invincible;
     public float invincibleCountDown;
 
-    public Player(boolean restore) {
+    public Player(boolean resetPlayerAbilities) {
         state = State.IDLING_DOWN;
 
-        if (!restore) {
-            GameManager.playerMaxBomb = 3;
-            GameManager.playerMaxSpeed = 0;
-            GameManager.playerBombPower = 0;
-            GameManager.playerBombRegeratingTime = 2.0f;
-            GameManager.playerKickBomb = false;
-            GameManager.playerRemoteBomb = false;
+        if (resetPlayerAbilities) {
+            GameManager.resetPlayerAbilities();
         }
 
         maxSpeed = 3.0f + GameManager.playerMaxSpeed * 1.2f;
@@ -79,6 +75,8 @@ public class Player extends Component {
         } else {
             decreaseBombRegeneratingTime();
         }
+
+        GameManager.getInstance().playSound("Powerup.ogg");
     }
 
     public void powerUpPower() {
@@ -88,6 +86,8 @@ public class Player extends Component {
         } else {
             decreaseBombRegeneratingTime();
         }
+
+        GameManager.getInstance().playSound("Powerup.ogg");
     }
 
     public void powerUpSpeed() {
@@ -97,6 +97,8 @@ public class Player extends Component {
         } else {
             decreaseBombRegeneratingTime();
         }
+
+        GameManager.getInstance().playSound("Powerup.ogg");
     }
 
     public void powerUpKick() {
@@ -106,6 +108,8 @@ public class Player extends Component {
         } else {
             decreaseBombRegeneratingTime();
         }
+
+        GameManager.getInstance().playSound("Powerup.ogg");
     }
 
     public void powerUpRemote() {
@@ -115,6 +119,8 @@ public class Player extends Component {
         } else {
             decreaseBombRegeneratingTime();
         }
+
+        GameManager.getInstance().playSound("Powerup.ogg");
     }
 
     public void decreaseBombRegeneratingTime() {

@@ -76,7 +76,7 @@ public class MapLoader {
                 } else if (BLOCK.INDESTRUCTIBLE.sameColor(color)) {
                     actorBuilder.createIndestructible(x + 0.5f, y + 0.5f, tileTextureAtlas);
                 } else if (BLOCK.PLAYER.sameColor(color)) {
-                    actorBuilder.createPlayer(x + 0.5f, y + 0.5f, true);
+                    actorBuilder.createPlayer(x + 0.5f, y + 0.5f, false);
                     GameManager.getInstance().setPlayerRespawnPosition(new Vector2(x + 0.5f, y + 0.5f));
                 } else if (BLOCK.ENEMY1.sameColor(color)) {
                     actorBuilder.createOctopus(x + 0.5f, y + 0.5f);

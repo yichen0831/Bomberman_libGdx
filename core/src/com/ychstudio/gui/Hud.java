@@ -45,6 +45,8 @@ public class Hud implements Disposable {
     private Label playerLivesLabel;
     private Label xLabel;
     private Label zLabel;
+    
+    private final float leftAlignment = 15.5f;
 
     public Hud(SpriteBatch batch, float width, float height) {
         this.batch = batch;
@@ -69,16 +71,16 @@ public class Hud implements Disposable {
 
         TextureRegion itemTextureRegion = textureAtlas.findRegion("Items");
         powerSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 1, 0, 16, 16));
-        powerSprite.setBounds(16.0f, 9.0f, 1, 1);
+        powerSprite.setBounds(leftAlignment, 9.0f, 1, 1);
 
         speedSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 2, 0, 16, 16));
-        speedSprite.setBounds(16.0f, 8.0f, 1, 1);
+        speedSprite.setBounds(leftAlignment, 8.0f, 1, 1);
 
         kickSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 3, 0, 16, 16));
-        kickSprite.setBounds(16.0f, 7.0f, 1, 1);
+        kickSprite.setBounds(leftAlignment, 7.0f, 1, 1);
 
         remoteSprite = new Sprite(new TextureRegion(itemTextureRegion, 16 * 4, 0, 16, 16));
-        remoteSprite.setBounds(16.0f, 6.0f, 1, 1);
+        remoteSprite.setBounds(leftAlignment, 6.0f, 1, 1);
 
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
         for (int i = 0; i < 5; i++) {
@@ -101,18 +103,18 @@ public class Hud implements Disposable {
 
         playerLivesLabel = new Label("" + GameManager.playerLives, labelStyle);
         playerLivesLabel.setFontScale(0.5f);
-        playerLivesLabel.setPosition(17.2f * SCALE, 12.8f * SCALE);
+        playerLivesLabel.setPosition(16.8f * SCALE, 12.8f * SCALE);
 
         Image bombermanImage = new Image(new TextureRegion(textureAtlas.findRegion("Items"), 16 * 5, 0, 16, 16));
-        bombermanImage.setPosition(16f * SCALE, 13.5f * SCALE);
+        bombermanImage.setPosition(leftAlignment * SCALE, 13.5f * SCALE);
 
         xLabel = new Label("X", labelStyle);
         xLabel.setFontScale(0.4f);
-        xLabel.setPosition(17.2f * SCALE, 6.3f * SCALE);
+        xLabel.setPosition(16.8f * SCALE, 6.3f * SCALE);
 
         zLabel = new Label("Z", labelStyle);
         zLabel.setFontScale(0.4f);
-        zLabel.setPosition(17.2f * SCALE, 5.3f * SCALE);
+        zLabel.setPosition(16.8f * SCALE, 5.3f * SCALE);
 
         stage.addActor(fpsLabel);
         stage.addActor(playerLivesLabel);
@@ -139,22 +141,22 @@ public class Hud implements Disposable {
 
         if (GameManager.playerBombPower > 0) {
             for (int i = 0; i < GameManager.playerBombPower; i++) {
-                powerSprite.setPosition(16.0f + i * 0.5f, 9.0f);
+                powerSprite.setPosition(leftAlignment + i * 0.5f, 9.0f);
                 powerSprite.draw(batch);
             }
 
         } else {
-            powerSprite.setPosition(16.0f, 9.0f);
+            powerSprite.setPosition(leftAlignment, 9.0f);
             powerSprite.draw(batch, 0.5f);
         }
 
         if (GameManager.playerMaxSpeed > 0) {
             for (int i = 0; i < GameManager.playerMaxSpeed; i++) {
-                speedSprite.setPosition(16.0f + i * 0.5f, 8.0f);
+                speedSprite.setPosition(leftAlignment + i * 0.5f, 8.0f);
                 speedSprite.draw(batch);
             }
         } else {
-            speedSprite.setPosition(16.0f, 8.0f);
+            speedSprite.setPosition(leftAlignment, 8.0f);
             speedSprite.draw(batch, 0.5f);
         }
 

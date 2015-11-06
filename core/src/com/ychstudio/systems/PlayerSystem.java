@@ -215,7 +215,7 @@ public class PlayerSystem extends IteratingSystem {
             Filter filter = body.getFixtureList().get(0).getFilterData();
             filter.maskBits = Player.invincibleMaskBit;
             body.getFixtureList().get(0).setFilterData(filter);
-            renderer.setColor(new Color(1, 1, 1, 1f + MathUtils.sin(player.invincibleCountDown * 20)));
+            renderer.setColor(new Color(1, 1, 1, 1.2f + MathUtils.sin(player.invincibleCountDown * 24)));
         } else {
             Filter filter = body.getFixtureList().get(0).getFilterData();
             filter.maskBits = Player.defaultMaskBits;
@@ -233,6 +233,11 @@ public class PlayerSystem extends IteratingSystem {
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = GameManager.NOTHING_BIT;
                 body.getFixtureList().get(0).setFilterData(filter);
+                
+                if (state.getStateTime() <= 0) {
+                    GameManager.getInstance().playSound("Die.ogg");
+                }
+                
                 if (state.getStateTime() > 0.65f) {
                     World b2dWorld = body.getWorld();
                     b2dWorld.destroyBody(body);
@@ -246,7 +251,7 @@ public class PlayerSystem extends IteratingSystem {
 
                     ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
                     Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
-                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.restorePowerUp);
+                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.resetPlayerAbilities);
                 }
                 break;
             case WALKING_UP:
