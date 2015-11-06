@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
+import com.ychstudio.gamesys.GameManager;
 import com.ychstudio.gui.Hud;
 import com.ychstudio.listeners.B2DWorldContactListener;
 import com.ychstudio.systems.AnimationSystem;
@@ -53,7 +54,7 @@ public class PlayScreen extends ScreenAdapter {
     private Hud hud;
 
     private float b2dTimer;
-
+    
     public PlayScreen(Bomberman game) {
         this.game = game;
         this.batch = game.getSpriteBatch();
@@ -88,6 +89,9 @@ public class PlayScreen extends ScreenAdapter {
 
         world = new com.artemis.World(worldConfiguration);
 
+        // reset enemy count
+        GameManager.enemiesLeft = 0;
+        
         WorldBuilder worldBuilder = new WorldBuilder(b2dWorld, world);
         worldBuilder.build("level_1");
         groundSprite = worldBuilder.getGroundSprite();
@@ -138,7 +142,7 @@ public class PlayScreen extends ScreenAdapter {
 
         world.setDelta(delta);
         world.process();
-
+        
         if (showB2DRenderer) {
             b2dRenderer.render(b2dWorld, camera.combined);
         }

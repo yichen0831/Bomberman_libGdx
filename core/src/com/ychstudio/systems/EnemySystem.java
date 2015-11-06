@@ -123,7 +123,17 @@ public class EnemySystem extends IteratingSystem {
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = GameManager.NOTHING_BIT;
                 body.getFixtureList().get(0).setFilterData(filter);
+                
                 if (state.getStateTime() > 0.6f) {
+                    // decrease enemy count
+                    GameManager.enemiesLeft--;
+
+                    // if no enemy left, create the portal
+                    if (GameManager.enemiesLeft <= 0) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPortal();
+                    }
+
                     body.getWorld().destroyBody(body);
                     mRigidBody.set(entityId, false);
                     mEnemy.set(entityId, false);
