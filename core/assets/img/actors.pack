@@ -5,43 +5,43 @@ filter: Nearest,Nearest
 repeat: none
 Explosion
   rotate: false
-  xy: 1, 7
+  xy: 1, 1
   size: 80, 112
   orig: 80, 112
   offset: 0, 0
   index: -1
 Bomberman1
   rotate: false
-  xy: 83, 95
+  xy: 83, 89
   size: 336, 24
   orig: 336, 24
   offset: 0, 0
   index: -1
 Bomb
   rotate: false
-  xy: 421, 103
-  size: 80, 16
-  orig: 80, 16
+  xy: 421, 81
+  size: 80, 32
+  orig: 80, 32
   offset: 0, 0
   index: -1
 Bomberman_big
   rotate: false
-  xy: 83, 45
+  xy: 83, 39
   size: 160, 48
   orig: 160, 48
   offset: 0, 0
   index: -1
-Octopus
-  rotate: false
-  xy: 83, 19
-  size: 256, 24
-  orig: 256, 24
-  offset: 0, 0
-  index: -1
 Items
   rotate: false
-  xy: 83, 1
+  xy: 245, 71
   size: 128, 16
   orig: 128, 16
+  offset: 0, 0
+  index: -1
+Octopus
+  rotate: false
+  xy: 83, 13
+  size: 256, 24
+  orig: 256, 24
   offset: 0, 0
   index: -1

@@ -185,7 +185,7 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             // re-generate bomb
-            if (player.bombLeft < player.maxBomb) {
+            if (player.bombLeft < player.bombCapacity) {
                 player.bombRegeratingTimeLeft -= world.getDelta();
             }
             if (player.bombRegeratingTimeLeft <= 0) {

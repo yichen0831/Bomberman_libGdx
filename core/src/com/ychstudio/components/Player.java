@@ -7,7 +7,6 @@ import com.ychstudio.gamesys.GameManager;
 public class Player extends Component {
 
     public enum State {
-
         IDLING_UP,
         IDLING_LEFT,
         IDLING_DOWN,
@@ -23,16 +22,19 @@ public class Player extends Component {
 
     public static short defaultMaskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT | GameManager.EXPLOSION_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
     public static short invincibleMaskBit = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
+    
+    public static final int maxBombCapacity = 10;
+    public static final int maxBombPower = 6;
 
     public float maxSpeed;
     public float acceleration;
     public int hp;
     public int bombPower;
-    public int maxBomb;
+    public int bombCapacity;
     public int bombLeft;
     public boolean kickBomb;
     public boolean remoteBomb;
-
+    
     public float bombRegeratingTime;
     public float bombRegeratingTimeLeft;
 
@@ -48,7 +50,7 @@ public class Player extends Component {
 
         maxSpeed = 3.0f + GameManager.playerMaxSpeed * 1.2f;
         bombPower = 1 + GameManager.playerBombPower;
-        maxBomb = GameManager.playerMaxBomb;
+        bombCapacity = GameManager.playerBombCapacity;
         bombRegeratingTime = GameManager.playerBombRegeratingTime;
         remoteBomb = GameManager.playerRemoteBomb;
         kickBomb = GameManager.playerKickBomb;
@@ -69,9 +71,9 @@ public class Player extends Component {
     }
 
     public void powerUpAmmo() {
-        if (maxBomb <= 9) {
-            maxBomb++;
-            GameManager.playerMaxBomb = maxBomb;
+        if (bombCapacity < maxBombCapacity) {
+            bombCapacity++;
+            GameManager.playerBombCapacity = bombCapacity;
         } else {
             decreaseBombRegeneratingTime();
         }
@@ -80,7 +82,7 @@ public class Player extends Component {
     }
 
     public void powerUpPower() {
-        if (bombPower < 6) {
+        if (bombPower < maxBombPower) {
             GameManager.playerBombPower++;
             bombPower = 1 + GameManager.playerBombPower;
         } else {
