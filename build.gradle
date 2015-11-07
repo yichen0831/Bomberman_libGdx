@@ -56,6 +56,9 @@ project(":html") {
         compile "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion:sources"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
+        compile "net.onedaybeard.artemis:artemis-odb-gwt:1.1.2"
+        compile "net.onedaybeard.artemis:artemis-odb-gwt:1.1.2:sources"
+        compile "net.onedaybeard.artemis:artemis-odb:1.1.2:sources"
     }
 }
 

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module rename-to="html">
-	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
-	<inherits name='com.badlogic.gdx.physics.box2d.box2d-gwt' />
-	<inherits name='Box2DLights' />
-	<inherits name='com.badlogic.gdx.ai' />
+    <inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
+    <inherits name='com.badlogic.gdx.physics.box2d.box2d-gwt' />
+    <inherits name='Box2DLights' />
+    <inherits name='com.badlogic.gdx.ai' />
+    
+    <inherits name='com.artemis.backends.artemis_backends_gwt' />
+    <extend-configuration-property name="artemis.reflect.include" value="com.ychstudio.components" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.ychstudio.systems" />
 
-	<inherits name='Bomberman' />
-	<entry-point class='com.ychstudio.client.HtmlLauncher' />
+    <inherits name='Bomberman' />
+    <entry-point class='com.ychstudio.client.HtmlLauncher' />
 	
-	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
+    <set-configuration-property name="gdx.assetpath" value="../core/assets" />
 </module>
