@@ -38,9 +38,16 @@ Items
   orig: 128, 16
   offset: 0, 0
   index: -1
+MainMenuLogo
+  rotate: false
+  xy: 375, 53
+  size: 80, 26
+  orig: 80, 26
+  offset: 0, 0
+  index: -1
 Octopus
   rotate: false
-  xy: 83, 13
+  xy: 245, 27
   size: 256, 24
   orig: 256, 24
   offset: 0, 0
