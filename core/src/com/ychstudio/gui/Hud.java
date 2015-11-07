@@ -17,11 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.ychstudio.components.Player;
 import com.ychstudio.gamesys.GameManager;
 
 public class Hud implements Disposable {
 
     private final SpriteBatch batch;
+
+    private TextureAtlas textureAtlas;
 
     private Sprite bombSprite;
     private Sprite bombTimerSprite;
@@ -45,14 +48,14 @@ public class Hud implements Disposable {
     private Label playerLivesLabel;
     private Label xLabel;
     private Label zLabel;
-    
+
     private final float leftAlignment = 15.5f;
 
     public Hud(SpriteBatch batch, float width, float height) {
         this.batch = batch;
 
         AssetManager assetManager = GameManager.getInstance().getAssetManager();
-        TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
+        textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
         bombSprite = new Sprite(new TextureRegion(textureAtlas.findRegion("Bomb"), 0, 0, 16, 16));
         bombSprite.setBounds(15.0f, 11.5f, 1, 1);
 
@@ -127,9 +130,23 @@ public class Hud implements Disposable {
         stateTime += delta;
         bigBombermanSprite.setRegion(bigBombermanAnimation.getKeyFrame(stateTime));
 
+        if (GameManager.playerRemoteBomb) {
+            if (GameManager.playerBombPower + 1 < Player.maxBombPower) {
+                bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 16 * 3, 0, 16, 16));
+            } else {
+                bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 16 * 3, 16 * 1, 16, 16));
+            }
+        } else {
+            if (GameManager.playerBombPower + 1 < Player.maxBombPower) {
+                bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 0, 0, 16, 16));
+            } else {
+                bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 0, 16 * 1, 16, 16));
+            }
+        }
+
         batch.begin();
         batch.draw(bgTexture, 15, 0);
-        for (int i = 0; i < GameManager.playerMaxBomb; i++) {
+        for (int i = 0; i < GameManager.playerBombCapacity; i++) {
             float alpha;
             bombSprite.setPosition(15.0f + i % 5, 11.5f - i / 5);
             alpha = i >= GameManager.playerBombLeft ? 0.5f : 1.0f;
@@ -170,7 +187,7 @@ public class Hud implements Disposable {
         // update stage
         xLabel.setVisible(GameManager.playerKickBomb);
         zLabel.setVisible(GameManager.playerRemoteBomb);
-        
+
         playerLivesLabel.setText("" + GameManager.playerLives);
         fpsLabel.setText("FPS:" + Gdx.graphics.getFramesPerSecond());
         stage.draw();

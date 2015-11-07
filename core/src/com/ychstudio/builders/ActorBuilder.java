@@ -404,8 +404,14 @@ public class ActorBuilder {
 
         Animation anim;
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
-        for (int i = 0; i < 3; i++) {
-            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+        if (player.bombPower >= player.maxBombPower) {
+            for (int i = 0; i < 3; i++) {
+                keyFrames.add(new TextureRegion(textureRegion, i * 16, 16 * 1, 16, 16));
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
+                keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+            }
         }
         anim = new Animation(0.15f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
         anims.put("normal", anim);
@@ -449,8 +455,14 @@ public class ActorBuilder {
 
         Animation anim;
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
-        for (int i = 3; i < 5; i++) {
-            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+        if (player.bombPower >= player.maxBombPower) {
+            for (int i = 3; i < 5; i++) {
+                keyFrames.add(new TextureRegion(textureRegion, i * 16, 16 * 1, 16, 16));
+            }
+        } else {
+            for (int i = 3; i < 5; i++) {
+                keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
+            }
         }
         anim = new Animation(0.15f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
         anims.put("normal", anim);
@@ -805,7 +817,7 @@ public class ActorBuilder {
     public void createPortal() {
         float x = GameManager.getInstance().getPortalPosition().x;
         float y = GameManager.getInstance().getPortalPosition().y;
-        
+
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         bodyDef.position.set(x + 0.5f, y + 0.5f);

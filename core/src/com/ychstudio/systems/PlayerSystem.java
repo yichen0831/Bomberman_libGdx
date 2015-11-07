@@ -125,21 +125,25 @@ public class PlayerSystem extends IteratingSystem {
                         case WALKING_UP:
                             if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x, body.getPosition().y + 0.6f)))) {
                                 kickingBomb.setMove(Bomb.State.MOVING_UP);
+                                GameManager.getInstance().playSound("KickBomb.ogg");
                             }
                             break;
                         case WALKING_DOWN:
                             if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x, body.getPosition().y - 0.6f)))) {
                                 kickingBomb.setMove(Bomb.State.MOVING_DOWN);
+                                GameManager.getInstance().playSound("KickBomb.ogg");
                             }
                             break;
                         case WALKING_LEFT:
                             if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x - 0.6f, body.getPosition().y)))) {
                                 kickingBomb.setMove(Bomb.State.MOVING_LEFT);
+                                GameManager.getInstance().playSound("KickBomb.ogg");
                             }
                             break;
                         case WALKING_RIGHT:
                             if (checkCanKickBomb(body, fromV.set(body.getPosition()), toV.set(new Vector2(body.getPosition().x + 0.6f, body.getPosition().y)))) {
                                 kickingBomb.setMove(Bomb.State.MOVING_RIGHT);
+                                GameManager.getInstance().playSound("KickBomb.ogg");
                             }
                             break;
                         default:
@@ -159,6 +163,7 @@ public class PlayerSystem extends IteratingSystem {
                         actorBuilder.createBomb(player, body.getPosition().x, body.getPosition().y);
                     }
                     player.bombLeft--;
+                    GameManager.getInstance().playSound("PlaceBomb.ogg");
                 }
 
             }
@@ -166,12 +171,12 @@ public class PlayerSystem extends IteratingSystem {
             // trigger remote bomb
             if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && player.remoteBomb) {
                 Queue<Entity> remoteBombQueue = GameManager.getInstance().getRemoteBombDeque();
-                
+
                 // clean those bomes which have already exploded
                 while (!remoteBombQueue.isEmpty() && remoteBombQueue.peek().getComponent(Bomb.class) == null) {
                     remoteBombQueue.remove();
                 }
-                
+
                 Entity remoteBombEntity = remoteBombQueue.poll();
                 if (remoteBombEntity != null) {
                     Bomb remoteBomb = remoteBombEntity.getComponent(Bomb.class);
@@ -180,7 +185,7 @@ public class PlayerSystem extends IteratingSystem {
             }
 
             // re-generate bomb
-            if (player.bombLeft < player.maxBomb) {
+            if (player.bombLeft < player.bombCapacity) {
                 player.bombRegeratingTimeLeft -= world.getDelta();
             }
             if (player.bombRegeratingTimeLeft <= 0) {
@@ -233,11 +238,11 @@ public class PlayerSystem extends IteratingSystem {
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = GameManager.NOTHING_BIT;
                 body.getFixtureList().get(0).setFilterData(filter);
-                
+
                 if (state.getStateTime() <= 0) {
                     GameManager.getInstance().playSound("Die.ogg");
                 }
-                
+
                 if (state.getStateTime() > 0.65f) {
                     World b2dWorld = body.getWorld();
                     b2dWorld.destroyBody(body);

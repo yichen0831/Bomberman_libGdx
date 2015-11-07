@@ -103,6 +103,8 @@ public class PlayScreen extends ScreenAdapter {
         hud = new Hud(batch, WIDTH, HEIGHT);
 
         b2dTimer = 0;
+        
+        GameManager.getInstance().playMusic("SuperBomberman-Area1.ogg");
     }
 
     @Override

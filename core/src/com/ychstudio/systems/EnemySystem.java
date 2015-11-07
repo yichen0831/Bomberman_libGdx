@@ -137,6 +137,7 @@ public class EnemySystem extends IteratingSystem {
                     if (GameManager.enemiesLeft <= 0) {
                         ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                         actorBuilder.createPortal();
+                        GameManager.getInstance().playSound("PortalAppears.ogg");
                     }
 
                     body.getWorld().destroyBody(body);
