@@ -1,6 +1,7 @@
 package com.ychstudio.gui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -47,6 +48,8 @@ public class Hud implements Disposable {
     private Label playerLivesLabel;
     private Label xLabel;
     private Label zLabel;
+    
+    private boolean showFPS = false;
     
     private StringBuilder stringBuilder;
 
@@ -103,6 +106,7 @@ public class Hud implements Disposable {
         fpsLabel = new Label("FPS:", labelStyle);
         fpsLabel.setFontScale(0.3f);
         fpsLabel.setPosition(16 * SCALE, -0.8f * SCALE);
+        fpsLabel.setVisible(showFPS);
 
         playerLivesLabel = new Label("" + GameManager.playerLives, labelStyle);
         playerLivesLabel.setFontScale(0.5f);
@@ -126,9 +130,19 @@ public class Hud implements Disposable {
         stage.addActor(zLabel);
         
         stringBuilder = new StringBuilder();
+        
+    }
+    
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            showFPS = !showFPS;
+            fpsLabel.setVisible(showFPS);
+        }
     }
 
     public void draw(float delta) {
+        handleInput();
+        
         stateTime += delta;
         bigBombermanSprite.setRegion(bigBombermanAnimation.getKeyFrame(stateTime));
 
@@ -192,9 +206,11 @@ public class Hud implements Disposable {
 
         playerLivesLabel.setText("" + GameManager.playerLives);
         
+        if (showFPS) {
         stringBuilder.setLength(0);
-        stringBuilder.append("FPS:").append(Gdx.graphics.getFramesPerSecond());
-        fpsLabel.setText(stringBuilder.toString());
+            stringBuilder.append("FPS:").append(Gdx.graphics.getFramesPerSecond());
+            fpsLabel.setText(stringBuilder.toString());
+        }
         stage.draw();
     }
 

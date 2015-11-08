@@ -99,7 +99,7 @@ public class MainMenuScreen extends ScreenAdapter {
         selected = false;
     }
 
-    private void inputHandler() {
+    private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !selected) {
             currentSelection--;
             if (currentSelection < 0) {
@@ -168,7 +168,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        inputHandler();
+        handleInput();
 
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
