@@ -162,7 +162,7 @@ public class MainMenuScreen extends ScreenAdapter {
                 }
             });
 
-            stage.addAction(new SequenceAction(Actions.delay(0.2f), Actions.alpha(0, 0.5f), runnableAction));
+            stage.addAction(new SequenceAction(Actions.delay(0.2f), Actions.fadeOut(1f), runnableAction));
         }
     }
 
@@ -191,6 +191,7 @@ public class MainMenuScreen extends ScreenAdapter {
     public void dispose() {
         backgroundTexture.dispose();
         stage.dispose();
+        font.dispose();
     }
 
 }

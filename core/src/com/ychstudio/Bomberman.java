@@ -3,7 +3,7 @@ package com.ychstudio;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ychstudio.gamesys.GameManager;
-import com.ychstudio.scenes.MainMenuScreen;
+import com.ychstudio.scenes.GameOverScreen;
 
 public class Bomberman extends Game {
 
@@ -16,7 +16,8 @@ public class Bomberman extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        setScreen(new MainMenuScreen(this));
+//        setScreen(new MainMenuScreen(this));
+        setScreen(new GameOverScreen(this));
     }
 
     @Override
