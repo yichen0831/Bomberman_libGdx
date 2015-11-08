@@ -8,7 +8,7 @@ import com.ychstudio.scenes.MainMenuScreen;
 public class Bomberman extends Game {
 
     private SpriteBatch batch;
-    
+
     public SpriteBatch getSpriteBatch() {
         return batch;
     }

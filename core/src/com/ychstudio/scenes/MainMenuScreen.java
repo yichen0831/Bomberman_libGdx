@@ -5,11 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -24,6 +27,8 @@ public class MainMenuScreen extends ScreenAdapter {
     private Stage stage;
 
     private BitmapFont font;
+
+    Texture backgroundTexture;
 
     private Image indicator0;
     private Image indicator1;
@@ -45,6 +50,11 @@ public class MainMenuScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("fonts/foo.fnt"));
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
+
+        Label titleLabel = new Label("Bomberman", labelStyle);
+        titleLabel.setFontScale(1.6f);
+        titleLabel.setPosition(140, 360);
+
         Label easyLabel = new Label("Easy", labelStyle);
         easyLabel.setPosition((640 - easyLabel.getWidth()) / 2, 240);
 
@@ -53,6 +63,13 @@ public class MainMenuScreen extends ScreenAdapter {
 
         Label hardLabel = new Label("Hard", labelStyle);
         hardLabel.setPosition((640 - hardLabel.getWidth()) / 2, 120);
+
+        Pixmap pixmap = new Pixmap(640, 480, Pixmap.Format.RGB888);
+        pixmap.setColor(240.0f / 255.0f, 128 / 255.0f, 0, 1.0f);
+        pixmap.fill();
+        backgroundTexture = new Texture(pixmap);
+        pixmap.dispose();
+        Image background = new Image(backgroundTexture);
 
         indicatorX = 160f;
         indicatorY = 240f;
@@ -67,6 +84,8 @@ public class MainMenuScreen extends ScreenAdapter {
         indicator1.setPosition(indicatorX, indicatorY);
         indicator1.setVisible(false);
 
+        stage.addActor(background);
+        stage.addActor(titleLabel);
         stage.addActor(easyLabel);
         stage.addActor(normalLabel);
         stage.addActor(hardLabel);
@@ -83,8 +102,16 @@ public class MainMenuScreen extends ScreenAdapter {
             if (currentSelection < 0) {
                 currentSelection += 3;
             }
-            indicator0.setPosition(indicatorX, indicatorY - currentSelection * 60f);
-            indicator1.setPosition(indicatorX, indicatorY - currentSelection * 60f);
+
+            float newIndicatorY = indicatorY - currentSelection * 60f;
+
+            MoveToAction moveToAction = new MoveToAction();
+            moveToAction.setPosition(indicatorX, newIndicatorY);
+            moveToAction.setDuration(0.5f);
+            indicator0.clearActions();
+            indicator0.addAction(moveToAction);
+            indicator1.clearActions();
+            indicator1.addAction(moveToAction);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -92,8 +119,16 @@ public class MainMenuScreen extends ScreenAdapter {
             if (currentSelection >= 3) {
                 currentSelection -= 3;
             }
-            indicator0.setPosition(indicatorX, indicatorY - currentSelection * 60f);
-            indicator1.setPosition(indicatorX, indicatorY - currentSelection * 60f);
+
+            float newIndicatorY = indicatorY - currentSelection * 60f;
+
+            MoveToAction moveToAction = new MoveToAction();
+            moveToAction.setPosition(indicatorX, newIndicatorY);
+            moveToAction.setDuration(0.5f);
+            indicator0.clearActions();
+            indicator0.addAction(moveToAction);
+            indicator1.clearActions();
+            indicator1.addAction(moveToAction);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
@@ -111,6 +146,7 @@ public class MainMenuScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        stage.act(delta);
         stage.draw();
     }
 
@@ -126,6 +162,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        backgroundTexture.dispose();
         stage.dispose();
     }
 

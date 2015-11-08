@@ -28,7 +28,6 @@ public class Hud implements Disposable {
 
     private Sprite bombSprite;
     private Sprite bombTimerSprite;
-    private Pixmap pixmap;
     private Texture bgTexture;
     private Texture bombTimerTexture;
 
@@ -59,7 +58,7 @@ public class Hud implements Disposable {
         bombSprite = new Sprite(new TextureRegion(textureAtlas.findRegion("Bomb"), 0, 0, 16, 16));
         bombSprite.setBounds(15.0f, 11.5f, 1, 1);
 
-        pixmap = new Pixmap(5, 15, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(5, 15, Pixmap.Format.RGBA8888);
         pixmap.setColor(240.0f / 255.0f, 128 / 255.0f, 0, 1.0f);
         pixmap.fill();
 
@@ -68,6 +67,7 @@ public class Hud implements Disposable {
         pixmap.setColor(1, 1, 1, 1);
         pixmap.fill();
         bombTimerTexture = new Texture(pixmap);
+        pixmap.dispose();
 
         bombTimerSprite = new Sprite(bombTimerTexture);
         bombTimerSprite.setBounds(16f, 12.5f, 3.0f, 0.2f);
@@ -93,8 +93,6 @@ public class Hud implements Disposable {
         bigBombermanSprite = new Sprite(bigBombermanAnimation.getKeyFrame(0));
         bigBombermanSprite.setBounds(17.5f, 0.5f, 2f, 3f);
         stateTime = 0;
-
-        pixmap.dispose();
 
         FitViewport viewport = new FitViewport(width * SCALE, height * SCALE);
         stage = new Stage(viewport, batch);
