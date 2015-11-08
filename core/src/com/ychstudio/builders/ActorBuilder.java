@@ -404,7 +404,7 @@ public class ActorBuilder {
 
         Animation anim;
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
-        if (player.bombPower >= player.maxBombPower) {
+        if (player.bombPower >= player.MAX_BOMB_POWER) {
             for (int i = 0; i < 3; i++) {
                 keyFrames.add(new TextureRegion(textureRegion, i * 16, 16 * 1, 16, 16));
             }
@@ -455,7 +455,7 @@ public class ActorBuilder {
 
         Animation anim;
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
-        if (player.bombPower >= player.maxBombPower) {
+        if (player.bombPower >= player.MAX_BOMB_POWER) {
             for (int i = 3; i < 5; i++) {
                 keyFrames.add(new TextureRegion(textureRegion, i * 16, 16 * 1, 16, 16));
             }
@@ -504,12 +504,6 @@ public class ActorBuilder {
                     breakable.state = Breakable.State.EXPLODING;
                     return 0;
                 }
-
-                if (fixture.getFilterData().categoryBits == GameManager.EXPLOSION_BIT) {
-                    canExplodeThrough = false;
-                    return 0;
-                }
-
                 return 0;
             }
         };

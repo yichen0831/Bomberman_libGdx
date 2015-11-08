@@ -23,8 +23,8 @@ public class Player extends Component {
     public static short defaultMaskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT | GameManager.EXPLOSION_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
     public static short invincibleMaskBit = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.POWERUP_BIT | GameManager.PORTAL_BIT;
     
-    public static final int maxBombCapacity = 10;
-    public static final int maxBombPower = 6;
+    public static final int MAX_BOMB_CAPACITY = 10;
+    public static final int MAX_BOMB_POWER = 6;
 
     public float maxSpeed;
     public float acceleration;
@@ -71,7 +71,7 @@ public class Player extends Component {
     }
 
     public void powerUpAmmo() {
-        if (bombCapacity < maxBombCapacity) {
+        if (bombCapacity < MAX_BOMB_CAPACITY) {
             bombCapacity++;
             GameManager.playerBombCapacity = bombCapacity;
         } else {
@@ -82,7 +82,7 @@ public class Player extends Component {
     }
 
     public void powerUpPower() {
-        if (bombPower < maxBombPower) {
+        if (bombPower < MAX_BOMB_POWER) {
             GameManager.playerBombPower++;
             bombPower = 1 + GameManager.playerBombPower;
         } else {

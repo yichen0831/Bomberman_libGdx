@@ -47,6 +47,7 @@ public class GameManager implements Disposable {
 
     public static int enemiesLeft;
     public static boolean levelCompleted;
+    public static boolean gameOver;
 
     private Queue<Entity> remoteBombQueue;
 

@@ -253,6 +253,9 @@ public class PlayerSystem extends IteratingSystem {
                     transform.z = 999;
 
                     GameManager.playerLives--;
+                    if (!GameManager.infiniteLives && GameManager.playerLives <= 0) {
+                        GameManager.gameOver = true;
+                    }
 
                     ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
                     Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();

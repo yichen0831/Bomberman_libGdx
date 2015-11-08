@@ -147,13 +147,13 @@ public class Hud implements Disposable {
         bigBombermanSprite.setRegion(bigBombermanAnimation.getKeyFrame(stateTime));
 
         if (GameManager.playerRemoteBomb) {
-            if (GameManager.playerBombPower + 1 < Player.maxBombPower) {
+            if (GameManager.playerBombPower + 1 < Player.MAX_BOMB_POWER) {
                 bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 16 * 3, 0, 16, 16));
             } else {
                 bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 16 * 3, 16 * 1, 16, 16));
             }
         } else {
-            if (GameManager.playerBombPower + 1 < Player.maxBombPower) {
+            if (GameManager.playerBombPower + 1 < Player.MAX_BOMB_POWER) {
                 bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 0, 0, 16, 16));
             } else {
                 bombSprite.setRegion(new TextureRegion(textureAtlas.findRegion("Bomb"), 0, 16 * 1, 16, 16));
