@@ -12,7 +12,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -34,7 +37,7 @@ public class MainMenuScreen extends ScreenAdapter {
     private Image indicator1;
     private float indicatorX;
     private float indicatorY;
-    private float currentSelection;
+    private int currentSelection;
     private boolean selected;
 
     public MainMenuScreen(Bomberman game) {
@@ -97,7 +100,7 @@ public class MainMenuScreen extends ScreenAdapter {
     }
 
     private void inputHandler() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !selected) {
             currentSelection--;
             if (currentSelection < 0) {
                 currentSelection += 3;
@@ -107,14 +110,13 @@ public class MainMenuScreen extends ScreenAdapter {
 
             MoveToAction moveToAction = new MoveToAction();
             moveToAction.setPosition(indicatorX, newIndicatorY);
-            moveToAction.setDuration(0.5f);
+            moveToAction.setDuration(0.2f);
             indicator0.clearActions();
             indicator0.addAction(moveToAction);
-            indicator1.clearActions();
-            indicator1.addAction(moveToAction);
+            indicator1.setPosition(indicatorX, newIndicatorY);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && !selected) {
             currentSelection++;
             if (currentSelection >= 3) {
                 currentSelection -= 3;
@@ -124,18 +126,43 @@ public class MainMenuScreen extends ScreenAdapter {
 
             MoveToAction moveToAction = new MoveToAction();
             moveToAction.setPosition(indicatorX, newIndicatorY);
-            moveToAction.setDuration(0.5f);
+            moveToAction.setDuration(0.2f);
             indicator0.clearActions();
             indicator0.addAction(moveToAction);
-            indicator1.clearActions();
-            indicator1.addAction(moveToAction);
+            indicator1.setPosition(indicatorX, newIndicatorY);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X) && !selected) {
             selected = true;
 
             indicator0.setVisible(false);
             indicator1.setVisible(true);
+
+            RunnableAction runnableAction = new RunnableAction();
+            runnableAction.setRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    switch (currentSelection) {
+                        case 2: // hard mode
+                            GameManager.infiniteLives = false;
+                            GameManager.resetPlayerAbilities = true;
+                            break;
+                        case 1: // normal mode
+                            GameManager.infiniteLives = true;
+                            GameManager.resetPlayerAbilities = true;
+                            break;
+                        case 0: // easy mode
+                        default:
+                            GameManager.infiniteLives = true;
+                            GameManager.resetPlayerAbilities = false;
+                            break;
+
+                    }
+                    game.setScreen(new PlayScreen(game));
+                }
+            });
+
+            stage.addAction(new SequenceAction(Actions.delay(0.2f), Actions.alpha(0, 0.5f), runnableAction));
         }
     }
 

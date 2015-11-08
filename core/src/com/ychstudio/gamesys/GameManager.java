@@ -28,7 +28,8 @@ public class GameManager implements Disposable {
     public static final short POWERUP_BIT = 1 << 6;
     public static final short PORTAL_BIT = 1 << 7;
 
-    public static boolean resetPlayerAbilities = false;
+    public static boolean infiniteLives = true;
+    public static boolean resetPlayerAbilities = false;  // reset player abilities after dying
 
     public static int playerBombCapacity = 3;
     public static int playerBombLeft = 0;

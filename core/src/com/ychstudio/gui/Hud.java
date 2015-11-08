@@ -47,6 +47,8 @@ public class Hud implements Disposable {
     private Label playerLivesLabel;
     private Label xLabel;
     private Label zLabel;
+    
+    private StringBuilder stringBuilder;
 
     private final float leftAlignment = 15.5f;
 
@@ -122,6 +124,8 @@ public class Hud implements Disposable {
         stage.addActor(bombermanImage);
         stage.addActor(xLabel);
         stage.addActor(zLabel);
+        
+        stringBuilder = new StringBuilder();
     }
 
     public void draw(float delta) {
@@ -187,7 +191,10 @@ public class Hud implements Disposable {
         zLabel.setVisible(GameManager.playerRemoteBomb);
 
         playerLivesLabel.setText("" + GameManager.playerLives);
-        fpsLabel.setText("FPS:" + Gdx.graphics.getFramesPerSecond());
+        
+        stringBuilder.setLength(0);
+        stringBuilder.append("FPS:").append(Gdx.graphics.getFramesPerSecond());
+        fpsLabel.setText(stringBuilder.toString());
         stage.draw();
     }
 
