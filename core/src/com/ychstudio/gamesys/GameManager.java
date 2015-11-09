@@ -4,6 +4,7 @@ import com.artemis.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -60,8 +61,10 @@ public class GameManager implements Disposable {
         // load resources
         assetManager = new AssetManager();
 
+        // load actors 
         assetManager.load("img/actors.pack", TextureAtlas.class);
 
+        // load sounds
         assetManager.load("sounds/Pickup.ogg", Sound.class);
         assetManager.load("sounds/PlaceBomb.ogg", Sound.class);
         assetManager.load("sounds/KickBomb.ogg", Sound.class);
@@ -72,9 +75,16 @@ public class GameManager implements Disposable {
         assetManager.load("sounds/PortalAppears.ogg", Sound.class);
         assetManager.load("sounds/Teleport.ogg", Sound.class);
 
+        // load music
         assetManager.load("music/SuperBomberman-Area1.ogg", Music.class);
         assetManager.load("music/SuperBomberman-Area2.ogg", Music.class);
         assetManager.load("music/GameOver.ogg", Music.class);
+
+        // load maps
+        assetManager.load("maps/level_1.png", Pixmap.class);
+        assetManager.load("maps/level_2.png", Pixmap.class);
+        assetManager.load("maps/area_1_tiles.pack", TextureAtlas.class);
+        assetManager.load("maps/area_2_tiles.pack", TextureAtlas.class);
 
         assetManager.finishLoading();
 

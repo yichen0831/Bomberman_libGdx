@@ -3,52 +3,66 @@ actors.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Explosion
+hare
   rotate: false
-  xy: 1, 1
-  size: 80, 112
-  orig: 80, 112
+  xy: 1, 53
+  size: 144, 72
+  orig: 144, 72
   offset: 0, 0
   index: -1
 Bomberman1
   rotate: false
-  xy: 83, 89
+  xy: 1, 27
   size: 336, 24
   orig: 336, 24
   offset: 0, 0
   index: -1
-Bomb
+Octopus
   rotate: false
-  xy: 421, 81
-  size: 80, 32
-  orig: 80, 32
+  xy: 1, 1
+  size: 256, 24
+  orig: 256, 24
+  offset: 0, 0
+  index: -1
+Slime
+  rotate: false
+  xy: 259, 1
+  size: 144, 24
+  orig: 144, 24
+  offset: 0, 0
+  index: -1
+Explosion
+  rotate: false
+  xy: 405, 13
+  size: 80, 112
+  orig: 80, 112
   offset: 0, 0
   index: -1
 Bomberman_big
   rotate: false
-  xy: 83, 39
+  xy: 147, 77
   size: 160, 48
   orig: 160, 48
   offset: 0, 0
   index: -1
 Items
   rotate: false
-  xy: 245, 71
+  xy: 147, 59
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
-MainMenuLogo
+Bomb
   rotate: false
-  xy: 375, 53
-  size: 80, 26
-  orig: 80, 26
+  xy: 309, 93
+  size: 80, 32
+  orig: 80, 32
   offset: 0, 0
   index: -1
-Octopus
+MainMenuLogo
   rotate: false
-  xy: 245, 27
-  size: 256, 24
-  orig: 256, 24
+  xy: 309, 65
+  size: 80, 26
+  orig: 80, 26
   offset: 0, 0
   index: -1

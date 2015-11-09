@@ -51,12 +51,14 @@ public class MapLoader {
         this.level = level;
         assetManager = GameManager.getInstance().getAssetManager();
 
-        assetManager.load("maps/level_" + level + ".png", Pixmap.class);
-        assetManager.load("maps/level_" + level + "_tiles.pack", TextureAtlas.class);
-        assetManager.finishLoading();
-
         pixmap = assetManager.get("maps/level_" + level + ".png", Pixmap.class);
-        tileTextureAtlas = assetManager.get("maps/level_" + level + "_tiles.pack", TextureAtlas.class);
+        switch (level) {
+            case 2:
+            case 1:
+            default:
+                tileTextureAtlas = assetManager.get("maps/area_1_tiles.pack", TextureAtlas.class);
+                break;
+        }
 
         mapWidth = pixmap.getWidth();
         mapHeight = pixmap.getHeight();
@@ -79,7 +81,15 @@ public class MapLoader {
                     actorBuilder.createPlayer(x + 0.5f, y + 0.5f, false);
                     GameManager.getInstance().setPlayerRespawnPosition(new Vector2(x + 0.5f, y + 0.5f));
                 } else if (BLOCK.ENEMY1.sameColor(color)) {
-                    actorBuilder.createOctopus(x + 0.5f, y + 0.5f);
+                    switch (level) {
+                        case 2:
+                            actorBuilder.createSlime(x + 0.5f, y + 0.5f);
+                            break;
+                        case 1:
+                        default:
+                            actorBuilder.createOctopus(x + 0.5f, y + 0.5f);
+                            break;
+                    }
                 }
             }
         }
