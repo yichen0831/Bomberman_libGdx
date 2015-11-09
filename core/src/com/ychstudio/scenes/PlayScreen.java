@@ -120,9 +120,12 @@ public class PlayScreen extends ScreenAdapter {
         b2dTimer = 0;
 
         switch (level) {
+            case 2:
+                GameManager.getInstance().playMusic("SuperBomberman-Area2.ogg", true);
+                break;
             case 1:
             default:
-                GameManager.getInstance().playMusic("SuperBomberman-Area1.ogg");
+                GameManager.getInstance().playMusic("SuperBomberman-Area1.ogg", true);
                 break;
         }
 
@@ -135,7 +138,7 @@ public class PlayScreen extends ScreenAdapter {
         pixmap.dispose();
         Image image = new Image(fadeOutTexture);
         stage.addActor(image);
-        stage.addAction(Actions.alpha(0));
+        stage.addAction(Actions.fadeOut(0.5f));
     }
 
     @Override
@@ -194,12 +197,12 @@ public class PlayScreen extends ScreenAdapter {
             stage.addAction(Actions.addAction(
                     Actions.sequence(
                             Actions.delay(1f),
-                            Actions.alpha(1, 1f),
+                            Actions.fadeIn(1f),
                             Actions.delay(1f),
                             Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (level == 1) { // all levels cleared
+                                    if (level == 2) { // all levels cleared
                                         game.setScreen(new GameOverScreen(game));
                                     } else {
                                         game.setScreen(new PlayScreen(game, level + 1));
@@ -214,7 +217,7 @@ public class PlayScreen extends ScreenAdapter {
             stage.addAction(Actions.addAction(
                     Actions.sequence(
                             Actions.delay(1f),
-                            Actions.alpha(1, 1f),
+                            Actions.fadeIn(1f),
                             Actions.delay(1f),
                             Actions.run(new Runnable() {
                                 @Override

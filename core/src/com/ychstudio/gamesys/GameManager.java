@@ -54,6 +54,8 @@ public class GameManager implements Disposable {
     private String soundPath = "sounds/";
     private String musicPath = "music/";
 
+    private String currentMusic = "";
+
     private GameManager() {
         // load resources
         assetManager = new AssetManager();
@@ -71,6 +73,8 @@ public class GameManager implements Disposable {
         assetManager.load("sounds/Teleport.ogg", Sound.class);
 
         assetManager.load("music/SuperBomberman-Area1.ogg", Music.class);
+        assetManager.load("music/SuperBomberman-Area2.ogg", Music.class);
+        assetManager.load("music/GameOver.ogg", Music.class);
 
         assetManager.finishLoading();
 
@@ -106,11 +110,29 @@ public class GameManager implements Disposable {
         sound.play(volume, pitch, pan);
     }
 
-    public void playMusic(String musicName) {
+    public void playMusic(String musicName, boolean isLooping) {
         Music music = assetManager.get(musicPath + musicName);
-        if (!music.isPlaying()) {
-            music.setLooping(true);
-            music.play();
+        if (currentMusic.equals(musicName)) {
+            music.setLooping(isLooping);
+            if (!music.isPlaying()) {
+                music.play();
+            }
+            return;
+        }
+
+        stopMusic();
+        music.setLooping(isLooping);
+        music.play();
+        currentMusic = musicName;
+    }
+
+    public void stopMusic() {
+        if (currentMusic.isEmpty()) {
+            return;
+        }
+        Music music = assetManager.get(musicPath + currentMusic);
+        if (music.isPlaying()) {
+            music.stop();
         }
     }
 
