@@ -45,6 +45,7 @@ public class Hud implements Disposable {
     private Stage stage;
     private BitmapFont font;
     private Label fpsLabel;
+    private Label levelLabel;
     private Label playerLivesLabel;
     private Label xLabel;
     private Label zLabel;
@@ -107,6 +108,10 @@ public class Hud implements Disposable {
         fpsLabel.setFontScale(0.3f);
         fpsLabel.setPosition(16 * SCALE, -0.8f * SCALE);
         fpsLabel.setVisible(showFPS);
+        
+        levelLabel = new Label("Level", labelStyle);
+        levelLabel.setPosition(15.5f * SCALE, 3 * SCALE);
+        levelLabel.setFontScale(0.4f);
 
         playerLivesLabel = new Label("" + GameManager.playerLives, labelStyle);
         playerLivesLabel.setFontScale(0.5f);
@@ -124,6 +129,7 @@ public class Hud implements Disposable {
         zLabel.setPosition(16.8f * SCALE, 5.3f * SCALE);
 
         stage.addActor(fpsLabel);
+        stage.addActor(levelLabel);
         stage.addActor(playerLivesLabel);
         stage.addActor(bombermanImage);
         stage.addActor(xLabel);
@@ -131,6 +137,10 @@ public class Hud implements Disposable {
         
         stringBuilder = new StringBuilder();
         
+    }
+    
+    public void setLevelInfo(int level) {
+        levelLabel.setText("Level " + level);
     }
     
     private void handleInput() {

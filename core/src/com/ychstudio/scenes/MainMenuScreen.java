@@ -156,10 +156,9 @@ public class MainMenuScreen extends ScreenAdapter {
                             GameManager.infiniteLives = true;
                             GameManager.resetPlayerAbilities = false;
                             break;
-
                     }
                     GameManager.playerLives = 3;
-                    game.setScreen(new PlayScreen(game));
+                    game.setScreen(new PlayScreen(game, 1));
                 }
             });
 

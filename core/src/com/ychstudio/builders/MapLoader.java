@@ -41,22 +41,22 @@ public class MapLoader {
     protected int mapWidth;
     protected int mapHeight;
 
-    protected String level;
+    protected int level;
 
     protected final float radius = 0.46f;
 
-    public MapLoader(World b2dWorld, com.artemis.World world, String level) {
+    public MapLoader(World b2dWorld, com.artemis.World world, int level) {
         this.b2dWorld = b2dWorld;
         this.world = world;
         this.level = level;
         assetManager = GameManager.getInstance().getAssetManager();
 
-        assetManager.load("maps/" + level + ".png", Pixmap.class);
-        assetManager.load("maps/" + level + "_tiles.pack", TextureAtlas.class);
+        assetManager.load("maps/level_" + level + ".png", Pixmap.class);
+        assetManager.load("maps/level_" + level + "_tiles.pack", TextureAtlas.class);
         assetManager.finishLoading();
 
-        pixmap = assetManager.get("maps/" + level + ".png", Pixmap.class);
-        tileTextureAtlas = assetManager.get("maps/" + level + "_tiles.pack", TextureAtlas.class);
+        pixmap = assetManager.get("maps/level_" + level + ".png", Pixmap.class);
+        tileTextureAtlas = assetManager.get("maps/level_" + level + "_tiles.pack", TextureAtlas.class);
 
         mapWidth = pixmap.getWidth();
         mapHeight = pixmap.getHeight();

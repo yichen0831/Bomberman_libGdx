@@ -64,9 +64,13 @@ public class PlayScreen extends ScreenAdapter {
     private Stage stage;
     private Texture fadeOutTexture;
 
-    public PlayScreen(Bomberman game) {
+    private int level;
+
+    public PlayScreen(Bomberman game, int level) {
         this.game = game;
         this.batch = game.getSpriteBatch();
+
+        this.level = level;
 
         showB2DDebugRenderer = false;
     }
@@ -104,17 +108,23 @@ public class PlayScreen extends ScreenAdapter {
         GameManager.gameOver = false;
 
         WorldBuilder worldBuilder = new WorldBuilder(b2dWorld, world);
-        worldBuilder.build("level_1");
+        worldBuilder.build(level);
         groundSprite = worldBuilder.getGroundSprite();
 
         mapWidth = worldBuilder.getMapWidth();
         mapHeight = worldBuilder.getMapHeight();
 
         hud = new Hud(batch, WIDTH, HEIGHT);
+        hud.setLevelInfo(level);
 
         b2dTimer = 0;
 
-        GameManager.getInstance().playMusic("SuperBomberman-Area1.ogg");
+        switch (level) {
+            case 1:
+            default:
+                GameManager.getInstance().playMusic("SuperBomberman-Area1.ogg");
+                break;
+        }
 
         changeScreen = false;
         stage = new Stage(viewport);
@@ -189,8 +199,11 @@ public class PlayScreen extends ScreenAdapter {
                             Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    game.setScreen(new PlayScreen(game));
-
+                                    if (level == 1) { // all levels cleared
+                                        game.setScreen(new GameOverScreen(game));
+                                    } else {
+                                        game.setScreen(new PlayScreen(game, level + 1));
+                                    }
                                 }
                             })
                     )));
