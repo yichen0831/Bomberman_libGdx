@@ -57,7 +57,7 @@ public class PlayerSystem extends IteratingSystem {
 
         float maxSpeed = player.maxSpeed;
 
-        if (player.hp > 0) {
+        if (player.hp > 0 && player.state != Player.State.TELEPORTING) {
             // TODO: cheat code...
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
                 player.powerUpAmmo();
@@ -210,8 +210,9 @@ public class PlayerSystem extends IteratingSystem {
                     player.state = Player.State.IDLING_LEFT;
                     break;
                 case WALKING_RIGHT:
-                default:
                     player.state = Player.State.IDLING_RIGHT;
+                    break;
+                default:
                     break;
             }
         }
@@ -237,7 +238,7 @@ public class PlayerSystem extends IteratingSystem {
         if (player.hp <= 0) {
             player.state = Player.State.DYING;
         }
-
+        
         switch (player.state) {
             case DYING:
                 state.setCurrentState("dying");
@@ -267,6 +268,9 @@ public class PlayerSystem extends IteratingSystem {
                         actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.resetPlayerAbilities);
                     }
                 }
+                break;
+            case TELEPORTING:
+                state.setCurrentState("teleporting");
                 break;
             case WALKING_UP:
                 state.setCurrentState("walking_up");

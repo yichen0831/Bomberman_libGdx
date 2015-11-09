@@ -92,17 +92,14 @@ public class ActorBuilder {
                 renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 2, 16 * 1, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
 
             }
+        } else if (y < 1.0f) {
+            renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 1, 16 * 2, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
+        } else if (y > mapHeight - 1) {
+            renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 1, 16 * 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
+
         } else {
-            if (y < 1.0f) {
-                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 1, 16 * 2, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
-
-            } else if (y > mapHeight - 1) {
-                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 16 * 1, 16 * 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
-
-            } else {
-                renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
-            }
-
+            renderer = new Renderer(new TextureRegion(tileTextureAtlas.findRegion("wall"), 0, 0, 16, 16), 16 / GameManager.PPM, 16 / GameManager.PPM);
         }
 
         renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
@@ -364,6 +361,15 @@ public class ActorBuilder {
         }
         anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
         anims.put("dying", anim);
+
+        // teleporting
+        keyFrames.clear();
+        keyFrames.add(new TextureRegion(textureRegion, 16 * 1, 0, 16, 24));
+        keyFrames.add(new TextureRegion(textureRegion, 16 * 3, 0, 16, 24));
+        keyFrames.add(new TextureRegion(textureRegion, 16 * 7, 0, 16, 24));
+        keyFrames.add(new TextureRegion(textureRegion, 16 * 9, 0, 16, 24));
+        anim = new Animation(0.05f, keyFrames, Animation.PlayMode.LOOP);
+        anims.put("teleporting", anim);
 
         Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 24), 16 / GameManager.PPM, 24 / GameManager.PPM);
         renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);

@@ -15,6 +15,7 @@ public class Player extends Component {
         WALKING_LEFT,
         WALKING_DOWN,
         WALKING_RIGHT,
+        TELEPORTING,
         DYING
     }
 
