@@ -7,11 +7,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
@@ -30,7 +35,7 @@ import com.ychstudio.systems.RenderSystem;
 import com.ychstudio.systems.StateSystem;
 
 public class PlayScreen extends ScreenAdapter {
-    
+
     private final float WIDTH = 20;
     private final float HEIGHT = 15;
 
@@ -50,11 +55,15 @@ public class PlayScreen extends ScreenAdapter {
 
     private int mapWidth;
     private int mapHeight;
-    
+
     private Hud hud;
 
     private float b2dTimer;
-    
+
+    private boolean changeScreen;
+    private Stage stage;
+    private Texture fadeOutTexture;
+
     public PlayScreen(Bomberman game) {
         this.game = game;
         this.batch = game.getSpriteBatch();
@@ -93,26 +102,37 @@ public class PlayScreen extends ScreenAdapter {
         GameManager.enemiesLeft = 0;
         GameManager.levelCompleted = false;
         GameManager.gameOver = false;
-        
+
         WorldBuilder worldBuilder = new WorldBuilder(b2dWorld, world);
         worldBuilder.build("level_1");
         groundSprite = worldBuilder.getGroundSprite();
 
         mapWidth = worldBuilder.getMapWidth();
         mapHeight = worldBuilder.getMapHeight();
-        
+
         hud = new Hud(batch, WIDTH, HEIGHT);
 
         b2dTimer = 0;
-        
+
         GameManager.getInstance().playMusic("SuperBomberman-Area1.ogg");
+
+        changeScreen = false;
+        stage = new Stage(viewport);
+        Pixmap pixmap = new Pixmap((int) WIDTH, (int) HEIGHT, Pixmap.Format.RGB888);
+        pixmap.setColor(0.2f, 0.2f, 0.2f, 1f);
+        pixmap.fill();
+        fadeOutTexture = new Texture(pixmap);
+        pixmap.dispose();
+        Image image = new Image(fadeOutTexture);
+        stage.addActor(image);
+        stage.addAction(Actions.alpha(0));
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
-    
+
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             showB2DDebugRenderer = !showB2DDebugRenderer;
@@ -122,7 +142,8 @@ public class PlayScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         handleInput();
-        
+        handleChangeScreen();
+
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -146,20 +167,50 @@ public class PlayScreen extends ScreenAdapter {
 
         world.setDelta(delta);
         world.process();
-        
+
         hud.draw(delta);
-        
-        if (GameManager.levelCompleted) {
-            GameManager.getInstance().playSound("Teleport.ogg");
-            game.setScreen(new PlayScreen(game));
-        }
-        
-        if (GameManager.gameOver) {
-            game.setScreen(new GameOverScreen(game));
-        }
-        
+
+        stage.draw();
+        stage.act(delta);
+
         if (showB2DDebugRenderer) {
             b2dRenderer.render(b2dWorld, camera.combined);
+        }
+    }
+
+    private void handleChangeScreen() {
+        if (GameManager.levelCompleted && !changeScreen) {
+            GameManager.getInstance().playSound("Teleport.ogg");
+            stage.addAction(Actions.addAction(
+                    Actions.sequence(
+                            Actions.delay(1f),
+                            Actions.alpha(1, 1f),
+                            Actions.delay(1f),
+                            Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    game.setScreen(new PlayScreen(game));
+
+                                }
+                            })
+                    )));
+            changeScreen = true;
+        }
+
+        if (GameManager.gameOver && !changeScreen) {
+            stage.addAction(Actions.addAction(
+                    Actions.sequence(
+                            Actions.delay(1f),
+                            Actions.alpha(1, 1f),
+                            Actions.delay(1f),
+                            Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    game.setScreen(new GameOverScreen(game));
+                                }
+                            })
+                    )));
+            changeScreen = true;
         }
     }
 
@@ -174,6 +225,8 @@ public class PlayScreen extends ScreenAdapter {
         b2dWorld.dispose();
         world.dispose();
         b2dRenderer.dispose();
+        stage.dispose();
+        fadeOutTexture.dispose();
         hud.dispose();
     }
 

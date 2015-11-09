@@ -158,6 +158,7 @@ public class MainMenuScreen extends ScreenAdapter {
                             break;
 
                     }
+                    GameManager.playerLives = 3;
                     game.setScreen(new PlayScreen(game));
                 }
             });

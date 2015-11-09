@@ -199,14 +199,20 @@ public class PlayerSystem extends IteratingSystem {
         GameManager.playerBombRegeratingTimeLeft = player.bombRegeratingTimeLeft;
 
         if (linearVelocity.len2() < 0.1f) {
-            if (player.state == Player.State.WALKING_UP) {
-                player.state = Player.State.IDLING_UP;
-            } else if (player.state == Player.State.WALKING_LEFT) {
-                player.state = Player.State.IDLING_LEFT;
-            } else if (player.state == Player.State.WALKING_DOWN) {
-                player.state = Player.State.IDLING_DOWN;
-            } else if (player.state == Player.State.WALKING_RIGHT) {
-                player.state = Player.State.IDLING_RIGHT;
+            switch (player.state) {
+                case WALKING_UP:
+                    player.state = Player.State.IDLING_UP;
+                    break;
+                case WALKING_DOWN:
+                    player.state = Player.State.IDLING_DOWN;
+                    break;
+                case WALKING_LEFT:
+                    player.state = Player.State.IDLING_LEFT;
+                    break;
+                case WALKING_RIGHT:
+                default:
+                    player.state = Player.State.IDLING_RIGHT;
+                    break;
             }
         }
 
@@ -255,11 +261,11 @@ public class PlayerSystem extends IteratingSystem {
                     GameManager.playerLives--;
                     if (!GameManager.infiniteLives && GameManager.playerLives <= 0) {
                         GameManager.gameOver = true;
+                    } else {
+                        ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
+                        Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
+                        actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.resetPlayerAbilities);
                     }
-
-                    ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
-                    Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
-                    actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.resetPlayerAbilities);
                 }
                 break;
             case WALKING_UP:
