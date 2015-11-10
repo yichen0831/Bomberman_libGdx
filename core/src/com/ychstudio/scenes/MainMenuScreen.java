@@ -31,7 +31,10 @@ public class MainMenuScreen extends ScreenAdapter {
 
     private BitmapFont font;
 
-    Texture backgroundTexture;
+    private Texture backgroundTexture;
+    
+    private Texture indicationsTexture;
+    private Image indications;
 
     private Image indicator0;
     private Image indicator1;
@@ -86,8 +89,13 @@ public class MainMenuScreen extends ScreenAdapter {
         indicator1.setSize(80f, 52f);
         indicator1.setPosition(indicatorX, indicatorY);
         indicator1.setVisible(false);
+        
+        indicationsTexture = new Texture("img/indications.png");
+        indications = new Image(indicationsTexture);
+        indications.setPosition(640f - indications.getWidth() - 12f, 12f);
 
         stage.addActor(background);
+        stage.addActor(indications);
         stage.addActor(titleLabel);
         stage.addActor(easyLabel);
         stage.addActor(normalLabel);
@@ -101,6 +109,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !selected) {
+            GameManager.getInstance().playSound("Pickup.ogg");
             currentSelection--;
             if (currentSelection < 0) {
                 currentSelection += 3;
@@ -117,6 +126,7 @@ public class MainMenuScreen extends ScreenAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && !selected) {
+            GameManager.getInstance().playSound("Pickup.ogg");
             currentSelection++;
             if (currentSelection >= 3) {
                 currentSelection -= 3;
@@ -133,6 +143,8 @@ public class MainMenuScreen extends ScreenAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.X) && !selected) {
+            GameManager.getInstance().playSound("Teleport.ogg");
+            
             selected = true;
 
             indicator0.setVisible(false);
@@ -190,6 +202,7 @@ public class MainMenuScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         backgroundTexture.dispose();
+        indicationsTexture.dispose();
         stage.dispose();
         font.dispose();
     }

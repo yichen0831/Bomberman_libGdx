@@ -72,6 +72,8 @@ public class GameManager implements Disposable {
         assetManager.load("sounds/Explosion.ogg", Sound.class);
         assetManager.load("sounds/Die.ogg", Sound.class);
         assetManager.load("sounds/EnemyDie.ogg", Sound.class);
+        assetManager.load("sounds/EnemyDie1.ogg", Sound.class);
+        assetManager.load("sounds/EnemyDie2.ogg", Sound.class);
         assetManager.load("sounds/PortalAppears.ogg", Sound.class);
         assetManager.load("sounds/Teleport.ogg", Sound.class);
 
@@ -157,7 +159,7 @@ public class GameManager implements Disposable {
     public void setPlayerRespawnPosition(Vector2 position) {
         playerRespawnPosition.set(position);
     }
-    
+
     public void playerOneUp() {
         playerLives++;
         playSound("Powerup.ogg");
