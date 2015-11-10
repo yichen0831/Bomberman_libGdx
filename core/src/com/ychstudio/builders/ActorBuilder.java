@@ -856,6 +856,9 @@ public class ActorBuilder {
         PowerUp powerUp = new PowerUp();
         int i;
         switch (powerUp.type) {
+            case ONE_UP:
+                i = 5;
+                break;
             case REMOTE:
                 i = 4;
                 break;

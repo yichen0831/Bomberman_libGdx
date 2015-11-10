@@ -80,6 +80,9 @@ public class B2DWorldContactListener implements ContactListener {
                 Entity playerEntity = (Entity) fixtureB.getBody().getUserData();
                 Player player = playerEntity.getComponent(Player.class);
                 switch (powerUp.type) {
+                    case ONE_UP:
+                        GameManager.getInstance().playerOneUp();
+                        break;
                     case REMOTE:
                         player.powerUpRemote();
                         break;

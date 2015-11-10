@@ -157,6 +157,11 @@ public class GameManager implements Disposable {
     public void setPlayerRespawnPosition(Vector2 position) {
         playerRespawnPosition.set(position);
     }
+    
+    public void playerOneUp() {
+        playerLives++;
+        playSound("Powerup.ogg");
+    }
 
     public Vector2 getPortalPosition() {
         return portalPosition;
