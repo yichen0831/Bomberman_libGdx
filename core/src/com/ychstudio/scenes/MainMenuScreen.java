@@ -105,6 +105,8 @@ public class MainMenuScreen extends ScreenAdapter {
 
         currentSelection = 0;
         selected = false;
+        
+        GameManager.getInstance().playMusic("SuperBomberman-Title.ogg", true);
     }
 
     private void handleInput() {
@@ -142,7 +144,7 @@ public class MainMenuScreen extends ScreenAdapter {
             indicator1.setPosition(indicatorX, newIndicatorY);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.X) && !selected) {
+        if (!selected && (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isKeyJustPressed(Input.Keys.Z))) {
             GameManager.getInstance().playSound("Teleport.ogg");
             
             selected = true;
@@ -170,6 +172,7 @@ public class MainMenuScreen extends ScreenAdapter {
                             break;
                     }
                     GameManager.playerLives = 3;
+                    // TODO: change back before commit
                     game.setScreen(new PlayScreen(game, 1));
                 }
             });
@@ -196,6 +199,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void hide() {
+        GameManager.getInstance().stopMusic();
         dispose();
     }
 

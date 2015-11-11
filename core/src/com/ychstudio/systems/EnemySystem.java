@@ -28,6 +28,10 @@ public class EnemySystem extends IteratingSystem {
     private Vector2 fromVector;
     private Vector2 toVector;
 
+    private Enemy enemy;
+    private RigidBody rigidBody;
+    private State state;
+
     public EnemySystem() {
         super(Aspect.all(Enemy.class, Transform.class, RigidBody.class, State.class));
         fromVector = new Vector2();
@@ -96,10 +100,24 @@ public class EnemySystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        Enemy enemy = mEnemy.get(entityId);
-        RigidBody rigidBody = mRigidBody.get(entityId);
-        State state = mState.get(entityId);
+        enemy = mEnemy.get(entityId);
+        rigidBody = mRigidBody.get(entityId);
+        state = mState.get(entityId);
 
+        switch (enemy.type) {
+            case "boss1":
+                handleBoss1(entityId);
+                break;
+            case "bomb":
+                handleBombEnemy(entityId);
+                break;
+            default:
+                handleBasics(entityId);
+                break;
+        }
+    }
+
+    private void handleBasics(int entityId) {
         Body body = rigidBody.body;
 
         if (enemy.hp <= 0) {
@@ -107,16 +125,6 @@ public class EnemySystem extends IteratingSystem {
             enemy.lifetime = 0;
         } else {
             enemy.lifetime += world.getDelta();
-        }
-
-        if (enemy.type.equals("bomb")
-                && enemy.state != Enemy.State.ATTACKING_UP
-                && (int) enemy.lifetime % 12 == 11) {
-            if ((int) (enemy.lifetime * 10) % 10 == 9
-                    && GameManager.enemiesLeft < 12
-                    && MathUtils.random() < 0.05f) {
-                enemy.state = Enemy.State.ATTACKING_UP;
-            }
         }
 
         switch (enemy.state) {
@@ -128,11 +136,6 @@ public class EnemySystem extends IteratingSystem {
                 break;
             case ATTACKING_UP:
                 state.setCurrentState("attacking_up");
-                if (enemy.type.equals("bomb") && state.getStateTime() > 3f) {
-                    enemy.state = Enemy.State.getRandomWalkingState();
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-                    actorBuilder.createBombEnemy(body.getPosition().x, body.getPosition().y);
-                }
                 break;
             case ATTACKING_DOWN:
                 state.setCurrentState("attacking_down");
@@ -145,12 +148,6 @@ public class EnemySystem extends IteratingSystem {
 
                 if (state.getStateTime() <= 0) {
                     GameManager.getInstance().playSound(enemy.getDieSound(), 1.0f, MathUtils.random(0.8f, 1.2f), 0);
-
-                    if (enemy.type.equals("bomb")) {
-                        GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.6f, 0.8f), 0);
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-                        actorBuilder.createExplosion(body.getPosition().x, body.getPosition().y, 1);
-                    }
                 }
 
                 if (state.getStateTime() > 0.6f) {
@@ -169,17 +166,13 @@ public class EnemySystem extends IteratingSystem {
                         ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                         actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
                     }
-                    
+
                     body.getWorld().destroyBody(body);
                     mRigidBody.set(entityId, false);
                     mEnemy.set(entityId, false);
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
-                    
-                    if (enemy.type.equals("bomb")) {
-                        world.delete(entityId);
-                    }
                 }
                 break;
             case WALKING_LEFT:
@@ -222,4 +215,208 @@ public class EnemySystem extends IteratingSystem {
         }
     }
 
+    private void handleBombEnemy(int entityId) {
+        Body body = rigidBody.body;
+
+        if (enemy.hp <= 0) {
+            enemy.state = Enemy.State.DYING;
+            enemy.lifetime = 0;
+        } else {
+            enemy.lifetime += world.getDelta();
+        }
+
+        switch (enemy.state) {
+            case ATTACKING_LEFT:
+                state.setCurrentState("attacking_left");
+                break;
+            case ATTACKING_RIGHT:
+                state.setCurrentState("attacking_right");
+                break;
+            case ATTACKING_UP:
+                state.setCurrentState("attacking_up");
+                if (state.getStateTime() > 3f) {
+                    enemy.state = Enemy.State.getRandomWalkingState();
+                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                    actorBuilder.createBombEnemy(body.getPosition().x, body.getPosition().y);
+                }
+                break;
+            case ATTACKING_DOWN:
+                state.setCurrentState("attacking_down");
+                break;
+            case DYING:
+                state.setCurrentState("dying");
+                Filter filter = body.getFixtureList().get(0).getFilterData();
+                filter.maskBits = GameManager.NOTHING_BIT;
+                body.getFixtureList().get(0).setFilterData(filter);
+
+                if (state.getStateTime() <= 0) {
+                    GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.6f, 0.8f), 0);
+                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                    actorBuilder.createExplosion(body.getPosition().x, body.getPosition().y, 1);
+                }
+
+                if (state.getStateTime() > 0.6f) {
+                    // decrease enemy count
+                    GameManager.enemiesLeft--;
+
+                    // if no enemy left, create the portal
+                    if (GameManager.enemiesLeft <= 0) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPortal();
+                        GameManager.getInstance().playSound("PortalAppears.ogg");
+                    }
+
+                    // chance to create PowerUp item
+                    if (Math.random() < 0.2) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
+                    }
+
+                    body.getWorld().destroyBody(body);
+                    mRigidBody.set(entityId, false);
+                    mEnemy.set(entityId, false);
+                    mState.set(entityId, false);
+                    Transform transform = mTransform.get(entityId);
+                    transform.z = 999;
+
+                    world.delete(entityId);
+                }
+                break;
+            case WALKING_LEFT:
+                state.setCurrentState("walking_left");
+                if (body.getLinearVelocity().x > -enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(-enemy.getSpeed() * body.getMass(), 0), body.getWorldCenter(), true);
+                }
+                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+            case WALKING_RIGHT:
+                state.setCurrentState("walking_right");
+                if (body.getLinearVelocity().x < enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(enemy.getSpeed() * body.getMass(), 0), body.getWorldCenter(), true);
+                }
+                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+            case WALKING_UP:
+                state.setCurrentState("walking_up");
+                if (body.getLinearVelocity().y < enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(0, enemy.getSpeed() * body.getMass()), body.getWorldCenter(), true);
+                }
+                if (hitSomethingVertical(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+            case WALKING_DOWN:
+            default:
+                state.setCurrentState("walking_down");
+                if (body.getLinearVelocity().y > -enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(0, -enemy.getSpeed() * body.getMass()), body.getWorldCenter(), true);
+                }
+                if (hitSomethingVertical(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+        }
+    }
+
+    private void handleBoss1(int entityId) {
+        Body body = rigidBody.body;
+
+        if (enemy.hp <= 0) {
+            enemy.state = Enemy.State.DYING;
+            enemy.lifetime = 0;
+        } else {
+            enemy.lifetime += world.getDelta();
+        }
+
+        switch (enemy.state) {
+            case ATTACKING_LEFT:
+                state.setCurrentState("attacking_left");
+                break;
+            case ATTACKING_RIGHT:
+                state.setCurrentState("attacking_right");
+                break;
+            case ATTACKING_UP:
+                state.setCurrentState("attacking_up");
+                break;
+            case ATTACKING_DOWN:
+                state.setCurrentState("attacking_down");
+                break;
+            case DYING:
+                state.setCurrentState("dying");
+                Filter filter = body.getFixtureList().get(0).getFilterData();
+                filter.maskBits = GameManager.NOTHING_BIT;
+                body.getFixtureList().get(0).setFilterData(filter);
+
+                if (state.getStateTime() <= 0) {
+                    GameManager.getInstance().playSound(enemy.getDieSound(), 1.0f, MathUtils.random(0.8f, 1.2f), 0);
+                }
+
+                if (state.getStateTime() > 0.6f) {
+                    // decrease enemy count
+                    GameManager.enemiesLeft--;
+
+                    // if no enemy left, create the portal
+                    if (GameManager.enemiesLeft <= 0) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPortal();
+                        GameManager.getInstance().playSound("PortalAppears.ogg");
+                    }
+
+                    // chance to create PowerUp item
+                    if (Math.random() < 0.2) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
+                    }
+
+                    body.getWorld().destroyBody(body);
+                    mRigidBody.set(entityId, false);
+                    mEnemy.set(entityId, false);
+                    mState.set(entityId, false);
+                    Transform transform = mTransform.get(entityId);
+                    transform.z = 999;
+                }
+                break;
+            case WALKING_LEFT:
+                state.setCurrentState("walking_left");
+                if (body.getLinearVelocity().x > -enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(-enemy.getSpeed() * body.getMass(), 0), body.getWorldCenter(), true);
+                }
+                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x - 0.5f, body.getPosition().y))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+            case WALKING_RIGHT:
+                state.setCurrentState("walking_right");
+                if (body.getLinearVelocity().x < enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(enemy.getSpeed() * body.getMass(), 0), body.getWorldCenter(), true);
+                }
+                if (hitSomethingHorizontal(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x + 0.5f, body.getPosition().y))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+            case WALKING_UP:
+                state.setCurrentState("walking_up");
+                if (body.getLinearVelocity().y < enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(0, enemy.getSpeed() * body.getMass()), body.getWorldCenter(), true);
+                }
+                if (hitSomethingVertical(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+            case WALKING_DOWN:
+            default:
+                state.setCurrentState("walking_down");
+                if (body.getLinearVelocity().y > -enemy.getSpeed()) {
+                    body.applyLinearImpulse(new Vector2(0, -enemy.getSpeed() * body.getMass()), body.getWorldCenter(), true);
+                }
+                if (hitSomethingVertical(body, fromVector.set(body.getPosition()), toVector.set(body.getPosition().x, body.getPosition().y - 0.5f))) {
+                    changeWalkingState(enemy);
+                }
+                break;
+        }
+    }
 }

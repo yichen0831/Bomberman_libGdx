@@ -3,73 +3,87 @@ actors.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Boss1
+  rotate: false
+  xy: 1, 95
+  size: 400, 160
+  orig: 400, 160
+  offset: 0, 0
+  index: -1
 Bomberman1
   rotate: false
-  xy: 1, 101
+  xy: 1, 69
   size: 336, 24
   orig: 336, 24
   offset: 0, 0
   index: -1
 Octopus
   rotate: false
-  xy: 1, 75
+  xy: 403, 231
   size: 256, 24
   orig: 256, 24
   offset: 0, 0
   index: -1
 Hare
   rotate: false
-  xy: 1, 1
+  xy: 403, 157
   size: 144, 72
   orig: 144, 72
   offset: 0, 0
   index: -1
 Bomberman_big
   rotate: false
-  xy: 339, 77
+  xy: 1, 19
   size: 160, 48
   orig: 160, 48
   offset: 0, 0
   index: -1
 Slime
   rotate: false
-  xy: 501, 101
+  xy: 661, 231
   size: 144, 24
   orig: 144, 24
   offset: 0, 0
   index: -1
 Items
   rotate: false
-  xy: 647, 93
+  xy: 403, 123
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
-Explosion
-  rotate: false
-  xy: 777, 13
-  size: 80, 112
-  orig: 80, 112
-  offset: 0, 0
-  index: -1
 BombEnemy
   rotate: false
-  xy: 859, 5
+  xy: 403, 1
   size: 80, 120
   orig: 80, 120
   offset: 0, 0
   index: -1
+Explosion
+  rotate: false
+  xy: 485, 9
+  size: 80, 112
+  orig: 80, 112
+  offset: 0, 0
+  index: -1
 Bomb
   rotate: false
-  xy: 147, 41
+  xy: 163, 35
   size: 80, 32
   orig: 80, 32
   offset: 0, 0
   index: -1
 MainMenuLogo
   rotate: false
-  xy: 941, 99
+  xy: 549, 203
   size: 80, 26
   orig: 80, 26
+  offset: 0, 0
+  index: -1
+Debris
+  rotate: false
+  xy: 1, 1
+  size: 32, 16
+  orig: 32, 16
   offset: 0, 0
   index: -1

@@ -54,8 +54,8 @@ public class GameManager implements Disposable {
 
     private Queue<Entity> remoteBombQueue;
 
-    private String soundPath = "sounds/";
-    private String musicPath = "music/";
+    private final String soundPath = "sounds/";
+    private final String musicPath = "music/";
 
     private String currentMusic = "";
 
@@ -80,8 +80,10 @@ public class GameManager implements Disposable {
         assetManager.load("sounds/Teleport.ogg", Sound.class);
 
         // load music
+        assetManager.load("music/SuperBomberman-Title.ogg", Music.class);
         assetManager.load("music/SuperBomberman-Area1.ogg", Music.class);
         assetManager.load("music/SuperBomberman-Area2.ogg", Music.class);
+        assetManager.load("music/SuperBomberman-Boss.ogg", Music.class);
         assetManager.load("music/GameOver.ogg", Music.class);
 
         // load maps
@@ -89,15 +91,17 @@ public class GameManager implements Disposable {
         assetManager.load("maps/level_2.png", Pixmap.class);
         assetManager.load("maps/level_3.png", Pixmap.class);
         assetManager.load("maps/level_4.png", Pixmap.class);
+        assetManager.load("maps/level_5.png", Pixmap.class);
         assetManager.load("maps/area_1_tiles.pack", TextureAtlas.class);
         assetManager.load("maps/area_2_tiles.pack", TextureAtlas.class);
+        assetManager.load("maps/area_3_tiles.pack", TextureAtlas.class);
 
         assetManager.finishLoading();
 
         playerRespawnPosition = new Vector2();
         portalPosition = new Vector2();
 
-        remoteBombQueue = new LinkedList<Entity>();
+        remoteBombQueue = new LinkedList<>();
     }
 
     public static GameManager getInstance() {

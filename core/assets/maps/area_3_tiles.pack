@@ -1,0 +1,33 @@
+
+area_3_tiles.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+breakable
+  rotate: false
+  xy: 1, 33
+  size: 160, 16
+  orig: 160, 16
+  offset: 0, 0
+  index: -1
+wall
+  rotate: false
+  xy: 163, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 1, 15
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+indestructible
+  rotate: false
+  xy: 213, 33
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

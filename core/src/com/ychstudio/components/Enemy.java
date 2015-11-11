@@ -8,7 +8,6 @@ public class Enemy extends Component {
     public static short defaultMaskBits = GameManager.INDESTRUCTIIBLE_BIT | GameManager.BREAKABLE_BIT | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
 
     public enum State {
-
         WALKING_UP,
         WALKING_DOWN,
         WALKING_LEFT,
@@ -17,6 +16,7 @@ public class Enemy extends Component {
         ATTACKING_DOWN,
         ATTACKING_LEFT,
         ATTACKING_RIGHT,
+        DAMAGED,
         DYING;
 
         public static State getRandomWalkingState() {

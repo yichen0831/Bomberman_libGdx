@@ -120,6 +120,9 @@ public class PlayScreen extends ScreenAdapter {
         b2dTimer = 0;
 
         switch (level) {
+            case 5:
+                GameManager.getInstance().playMusic("SuperBomberman-Boss.ogg", true);
+                break;
             case 4:
             case 3:
                 GameManager.getInstance().playMusic("SuperBomberman-Area2.ogg", true);
@@ -234,6 +237,7 @@ public class PlayScreen extends ScreenAdapter {
 
     @Override
     public void hide() {
+        GameManager.getInstance().stopMusic();
         dispose();
     }
 

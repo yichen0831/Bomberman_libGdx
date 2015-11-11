@@ -154,11 +154,11 @@ public class ActorBuilder {
 
         polygonShape.dispose();
 
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureRegion textureRegion = tileTextureAtlas.findRegion("breakable");
 
         Animation anim;
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         for (int i = 0; i < 4; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
         }
@@ -208,12 +208,12 @@ public class ActorBuilder {
         circleShape.dispose();
 
         // animation
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
         TextureRegion textureRegion = textureAtlas.findRegion("Octopus");
         Animation anim;
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         // walking down
         for (int i = 0; i < 4; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
@@ -292,12 +292,12 @@ public class ActorBuilder {
         circleShape.dispose();
 
         // animation
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
         TextureRegion textureRegion = textureAtlas.findRegion("Slime");
         Animation anim;
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         // walking down
         for (int i = 0; i < 6; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
@@ -373,12 +373,12 @@ public class ActorBuilder {
         circleShape.dispose();
 
         // animation
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
         TextureRegion textureRegion = textureAtlas.findRegion("Hare");
         Animation anim;
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         // walking down
         for (int i = 0; i < 9; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
@@ -456,12 +456,12 @@ public class ActorBuilder {
         circleShape.dispose();
 
         // animation
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
         TextureRegion textureRegion = textureAtlas.findRegion("BombEnemy");
         Animation anim;
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         // walking down
         for (int i = 0; i < 5; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
@@ -527,6 +527,103 @@ public class ActorBuilder {
         body.setUserData(e);
     }
 
+    public void createBoss1(float x, float y) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+        bodyDef.linearDamping = 12.0f;
+
+        Body body = b2dWorld.createBody(bodyDef);
+
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(1.6f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circleShape;
+        fixtureDef.filter.categoryBits = GameManager.ENEMY_BIT;
+        fixtureDef.filter.maskBits = GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
+        body.createFixture(fixtureDef);
+        circleShape.dispose();
+
+        // animations
+        HashMap<String, Animation> anims = new HashMap<>();
+        TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
+        TextureRegion textureRegion = textureAtlas.findRegion("Boss1");
+        Animation anim;
+
+        Array<TextureRegion> keyFrames = new Array<>();
+        // walking up
+        for (int i = 0; i < 1; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("walking_up", anim);
+
+        keyFrames.clear();
+        // walking up
+        for (int i = 0; i < 1; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("walking_down", anim);
+
+        keyFrames.clear();
+        // walking left
+        for (int i = 0; i < 1; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("walking_left", anim);
+
+        keyFrames.clear();
+        // walking right
+        for (int i = 0; i < 1; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("walking_right", anim);
+
+        keyFrames.clear();
+        // dying
+        for (int i = 0; i < 1; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("dying", anim);
+
+        keyFrames.clear();
+        // damaged
+        for (int i = 4; i < 5; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("damaged", anim);
+
+        keyFrames.clear();
+        // attacking down
+        for (int i = 1; i < 4; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 80, 0, 80, 160));
+        }
+        anim = new Animation(0.2f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("attacking_down", anim);
+
+        Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 80, 160), 80 / GameManager.PPM, 160 / GameManager.PPM);
+        renderer.setOrigin(80 / GameManager.PPM / 2, 160 / GameManager.PPM / 2);
+
+        Entity e = new EntityBuilder(world)
+                .with(
+                        new Enemy(8, 1.8f, "EnemyDie1.ogg", "boss1"),
+                        new Transform(x, y, 1, 1, 0),
+                        new RigidBody(body),
+                        new State("walking_down"),
+                        renderer,
+                        new Anim(anims)
+                )
+                .build();
+
+        body.setUserData(e);
+
+    }
+
     public void createPlayer(float x, float y, boolean resetPlayerAbilities) {
         // box2d
         BodyDef bodyDef = new BodyDef();
@@ -545,12 +642,12 @@ public class ActorBuilder {
         circleShape.dispose();
 
         // animation
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
         TextureRegion textureRegion = textureAtlas.findRegion("Bomberman1");
         Animation anim;
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         // walking up
         for (int i = 0; i < 3; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
@@ -657,11 +754,11 @@ public class ActorBuilder {
         polygonShape.dispose();
 
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureRegion textureRegion = textureAtlas.findRegion("Bomb");
 
         Animation anim;
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         if (player.bombPower >= player.MAX_BOMB_POWER) {
             for (int i = 0; i < 3; i++) {
                 keyFrames.add(new TextureRegion(textureRegion, i * 16, 16 * 1, 16, 16));
@@ -708,11 +805,11 @@ public class ActorBuilder {
         polygonShape.dispose();
 
         TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         TextureRegion textureRegion = textureAtlas.findRegion("Bomb");
 
         Animation anim;
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         if (player.bombPower >= player.MAX_BOMB_POWER) {
             for (int i = 3; i < 5; i++) {
                 keyFrames.add(new TextureRegion(textureRegion, i * 16, 16 * 1, 16, 16));
@@ -775,9 +872,9 @@ public class ActorBuilder {
         y = MathUtils.floor(y) + 0.5f;
 
         TextureRegion textureRegion = assetManager.get("img/actors.pack", TextureAtlas.class).findRegion("Explosion");
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         Animation anim;
 
         // center
@@ -834,7 +931,7 @@ public class ActorBuilder {
             explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
-            anims = new HashMap<String, Animation>();
+            anims = new HashMap<>();
 
             for (int j = 0; j < 5; j++) {
                 if (i == power - 1) {
@@ -882,7 +979,7 @@ public class ActorBuilder {
             explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
-            anims = new HashMap<String, Animation>();
+            anims = new HashMap<>();
 
             for (int j = 0; j < 5; j++) {
                 if (i == power - 1) {
@@ -930,7 +1027,7 @@ public class ActorBuilder {
             explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
-            anims = new HashMap<String, Animation>();
+            anims = new HashMap<>();
 
             for (int j = 0; j < 5; j++) {
                 if (i == power - 1) {
@@ -978,7 +1075,7 @@ public class ActorBuilder {
             explosionBody.createFixture(fixtureDef);
 
             keyFrames.clear();
-            anims = new HashMap<String, Animation>();
+            anims = new HashMap<>();
 
             for (int j = 0; j < 5; j++) {
                 if (i == power - 1) {
@@ -1091,13 +1188,13 @@ public class ActorBuilder {
         polygonShape.dispose();
 
         TextureRegion textureRegion = assetManager.get("img/actors.pack", TextureAtlas.class).findRegion("Items");
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
         for (int i = 6; i < 8; i++) {
             keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 16));
         }
         Animation anim = new Animation(0.2f, keyFrames, Animation.PlayMode.LOOP);
 
-        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        HashMap<String, Animation> anims = new HashMap<>();
         anims.put("normal", anim);
 
         Transform transform = new Transform(body.getPosition().x, body.getPosition().y, 1, 1, 0);
