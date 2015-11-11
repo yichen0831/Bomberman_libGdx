@@ -18,7 +18,8 @@ public class MapLoader {
         BREAKABLE(0, 255, 255), // cyan
         INDESTRUCTIBLE(0, 0, 255), // blue
         PLAYER(255, 0, 0), // red
-        ENEMY1(0, 255, 0); // green
+        ENEMY1(0, 255, 0), // green
+        ENEMY2(0, 128, 0); // dark green
 
         int color;
 
@@ -53,6 +54,9 @@ public class MapLoader {
 
         pixmap = assetManager.get("maps/level_" + level + ".png", Pixmap.class);
         switch (level) {
+            case 3:
+                tileTextureAtlas = assetManager.get("maps/area_2_tiles.pack", TextureAtlas.class);
+                break;
             case 2:
             case 1:
             default:
@@ -82,6 +86,22 @@ public class MapLoader {
                     GameManager.getInstance().setPlayerRespawnPosition(new Vector2(x + 0.5f, y + 0.5f));
                 } else if (BLOCK.ENEMY1.sameColor(color)) {
                     switch (level) {
+                        case 3:
+                            actorBuilder.createHare(x + 0.5f, y + 0.5f);
+                            break;
+                        case 2:
+                            actorBuilder.createOctopus(x + 0.5f, y + 0.5f);
+                            break;
+                        case 1:
+                        default:
+                            actorBuilder.createOctopus(x + 0.5f, y + 0.5f);
+                            break;
+                    }
+                } else if (BLOCK.ENEMY2.sameColor(color)) {
+                    switch (level) {
+                        case 3:
+                            actorBuilder.createHare(x + 0.5f, y + 0.5f);
+                            break;
                         case 2:
                             actorBuilder.createSlime(x + 0.5f, y + 0.5f);
                             break;

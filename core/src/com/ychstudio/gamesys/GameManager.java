@@ -15,6 +15,8 @@ public class GameManager implements Disposable {
 
     private static final GameManager instance = new GameManager();
 
+    public static final int TOTAL_LEVELS = 3;
+    
     private final AssetManager assetManager;
 
     public static final float PPM = 16.0f;
@@ -85,6 +87,7 @@ public class GameManager implements Disposable {
         // load maps
         assetManager.load("maps/level_1.png", Pixmap.class);
         assetManager.load("maps/level_2.png", Pixmap.class);
+        assetManager.load("maps/level_3.png", Pixmap.class);
         assetManager.load("maps/area_1_tiles.pack", TextureAtlas.class);
         assetManager.load("maps/area_2_tiles.pack", TextureAtlas.class);
 
