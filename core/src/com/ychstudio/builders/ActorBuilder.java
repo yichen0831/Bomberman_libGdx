@@ -437,6 +437,96 @@ public class ActorBuilder {
         body.setUserData(e);
     }
 
+    public void createBombEnemy(float x, float y) {
+        // box2d
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = 12.0f;
+        bodyDef.position.set(x, y);
+
+        Body body = b2dWorld.createBody(bodyDef);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(radius);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circleShape;
+        fixtureDef.filter.categoryBits = GameManager.ENEMY_BIT;
+        fixtureDef.filter.maskBits = Enemy.defaultMaskBits;
+        body.createFixture(fixtureDef);
+
+        circleShape.dispose();
+
+        // animation
+        HashMap<String, Animation> anims = new HashMap<String, Animation>();
+        TextureAtlas textureAtlas = assetManager.get("img/actors.pack", TextureAtlas.class);
+        TextureRegion textureRegion = textureAtlas.findRegion("BombEnemy");
+        Animation anim;
+
+        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        // walking down
+        for (int i = 0; i < 5; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
+        anims.put("walking_down", anim);
+
+        keyFrames.clear();
+        // walking up
+        for (int i = 0; i < 5; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 24, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
+        anims.put("walking_up", anim);
+
+        keyFrames.clear();
+        // walking left
+        for (int i = 0; i < 5; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 24 * 2, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
+        anims.put("walking_left", anim);
+
+        keyFrames.clear();
+        // walking right
+        for (int i = 0; i < 5; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 24 * 3, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
+        anims.put("walking_right", anim);
+
+        keyFrames.clear();
+        // dying
+        for (int i = 0; i < 1; i++) {
+            // no dying sprite
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 0, 0, 0));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.NORMAL);
+        anims.put("dying", anim);
+
+        keyFrames.clear();
+        // attacking (up)
+        for (int i = 0; i < 5; i++) {
+            keyFrames.add(new TextureRegion(textureRegion, i * 16, 24 * 4, 16, 24));
+        }
+        anim = new Animation(0.1f, keyFrames, Animation.PlayMode.LOOP_PINGPONG);
+        anims.put("attacking_up", anim);
+
+        Renderer renderer = new Renderer(new TextureRegion(textureRegion, 0, 0, 16, 24), 16 / GameManager.PPM, 24 / GameManager.PPM);
+        renderer.setOrigin(16 / GameManager.PPM / 2, 16 / GameManager.PPM / 2);
+
+        // entity
+        Entity e = new EntityBuilder(world)
+                .with(
+                        new Enemy(1, 1.0f, "EnemyDie2.ogg", "bomb"),
+                        new Transform(x, y, 1, 1, 0),
+                        new RigidBody(body),
+                        new State("walking_down"),
+                        renderer,
+                        new Anim(anims)
+                )
+                .build();
+        body.setUserData(e);
+    }
+
     public void createPlayer(float x, float y, boolean resetPlayerAbilities) {
         // box2d
         BodyDef bodyDef = new BodyDef();

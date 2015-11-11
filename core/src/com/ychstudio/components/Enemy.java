@@ -28,7 +28,10 @@ public class Enemy extends Component {
     public int hp;
     protected float speed;
 
+    public float lifetime; // total time when alive
+    
     private String dieSound;
+    public String type;
 
     public Enemy(int hp) {
         this(hp, 2);
@@ -39,11 +42,19 @@ public class Enemy extends Component {
     }
 
     public Enemy(int hp, float speed, String dieSound) {
+        this(hp, speed, dieSound, "basic");
+    }
+    
+    public Enemy(int hp, float speed, String dieSound, String type) {
         state = State.getRandomWalkingState();
         this.hp = hp;
         this.speed = speed;
-        
+
         this.dieSound = dieSound;
+        
+        this.type = type;
+        
+        this.lifetime = 0;
 
         // increase enemy count
         GameManager.enemiesLeft++;
@@ -68,5 +79,5 @@ public class Enemy extends Component {
     public void setDieSound(String dieSound) {
         this.dieSound = dieSound;
     }
-    
+
 }

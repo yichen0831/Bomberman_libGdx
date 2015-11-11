@@ -54,6 +54,7 @@ public class MapLoader {
 
         pixmap = assetManager.get("maps/level_" + level + ".png", Pixmap.class);
         switch (level) {
+            case 4:
             case 3:
                 tileTextureAtlas = assetManager.get("maps/area_2_tiles.pack", TextureAtlas.class);
                 break;
@@ -86,6 +87,9 @@ public class MapLoader {
                     GameManager.getInstance().setPlayerRespawnPosition(new Vector2(x + 0.5f, y + 0.5f));
                 } else if (BLOCK.ENEMY1.sameColor(color)) {
                     switch (level) {
+                        case 4:
+                            actorBuilder.createBombEnemy(x + 0.5f, y + 0.5f);
+                            break;
                         case 3:
                             actorBuilder.createHare(x + 0.5f, y + 0.5f);
                             break;
@@ -99,6 +103,9 @@ public class MapLoader {
                     }
                 } else if (BLOCK.ENEMY2.sameColor(color)) {
                     switch (level) {
+                        case 4:
+                            actorBuilder.createHare(x + 0.5f, y + 0.5f);
+                            break;
                         case 3:
                             actorBuilder.createHare(x + 0.5f, y + 0.5f);
                             break;

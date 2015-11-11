@@ -52,6 +52,13 @@ Explosion
   orig: 80, 112
   offset: 0, 0
   index: -1
+BombEnemy
+  rotate: false
+  xy: 859, 5
+  size: 80, 120
+  orig: 80, 120
+  offset: 0, 0
+  index: -1
 Bomb
   rotate: false
   xy: 147, 41
@@ -61,7 +68,7 @@ Bomb
   index: -1
 MainMenuLogo
   rotate: false
-  xy: 859, 99
+  xy: 941, 99
   size: 80, 26
   orig: 80, 26
   offset: 0, 0

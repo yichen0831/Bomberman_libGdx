@@ -104,6 +104,19 @@ public class EnemySystem extends IteratingSystem {
 
         if (enemy.hp <= 0) {
             enemy.state = Enemy.State.DYING;
+            enemy.lifetime = 0;
+        } else {
+            enemy.lifetime += world.getDelta();
+        }
+
+        if (enemy.type.equals("bomb")
+                && enemy.state != Enemy.State.ATTACKING_UP
+                && (int) enemy.lifetime % 20 == 19) {
+            if ((int) (enemy.lifetime * 10) % 10 == 9
+                    && GameManager.enemiesLeft < 12
+                    && MathUtils.random() < 0.05f) {
+                enemy.state = Enemy.State.ATTACKING_UP;
+            }
         }
 
         switch (enemy.state) {
@@ -115,6 +128,11 @@ public class EnemySystem extends IteratingSystem {
                 break;
             case ATTACKING_UP:
                 state.setCurrentState("attacking_up");
+                if (enemy.type.equals("bomb") && state.getStateTime() > 3f) {
+                    enemy.state = Enemy.State.getRandomWalkingState();
+                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                    actorBuilder.createBombEnemy(body.getPosition().x, body.getPosition().y);
+                }
                 break;
             case ATTACKING_DOWN:
                 state.setCurrentState("attacking_down");
