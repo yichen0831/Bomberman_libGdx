@@ -111,7 +111,7 @@ public class EnemySystem extends IteratingSystem {
 
         if (enemy.type.equals("bomb")
                 && enemy.state != Enemy.State.ATTACKING_UP
-                && (int) enemy.lifetime % 20 == 19) {
+                && (int) enemy.lifetime % 12 == 11) {
             if ((int) (enemy.lifetime * 10) % 10 == 9
                     && GameManager.enemiesLeft < 12
                     && MathUtils.random() < 0.05f) {
@@ -145,6 +145,12 @@ public class EnemySystem extends IteratingSystem {
 
                 if (state.getStateTime() <= 0) {
                     GameManager.getInstance().playSound(enemy.getDieSound(), 1.0f, MathUtils.random(0.8f, 1.2f), 0);
+
+                    if (enemy.type.equals("bomb")) {
+                        GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.6f, 0.8f), 0);
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createExplosion(body.getPosition().x, body.getPosition().y, 1);
+                    }
                 }
 
                 if (state.getStateTime() > 0.6f) {
@@ -158,17 +164,21 @@ public class EnemySystem extends IteratingSystem {
                         GameManager.getInstance().playSound("PortalAppears.ogg");
                     }
 
+                    // chance to create PowerUp item
+                    if (Math.random() < 0.2) {
+                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
+                    }
+                    
                     body.getWorld().destroyBody(body);
                     mRigidBody.set(entityId, false);
                     mEnemy.set(entityId, false);
                     mState.set(entityId, false);
                     Transform transform = mTransform.get(entityId);
                     transform.z = 999;
-
-                    // chance to create PowerUp item
-                    if (Math.random() < 0.2) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-                        actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
+                    
+                    if (enemy.type.equals("bomb")) {
+                        world.delete(entityId);
                     }
                 }
                 break;

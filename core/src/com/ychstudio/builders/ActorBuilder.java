@@ -770,7 +770,7 @@ public class ActorBuilder {
         return canExplodeThrough;
     }
 
-    public void createExplosion(Bomb bomb, float x, float y) {
+    public void createExplosion(float x, float y, int power) {
         x = MathUtils.floor(x) + 0.5f;
         y = MathUtils.floor(y) + 0.5f;
 
@@ -816,7 +816,7 @@ public class ActorBuilder {
         explosionBody.setUserData(e);
 
         // up
-        for (int i = 0; i < bomb.power; i++) {
+        for (int i = 0; i < power; i++) {
             if (!checkCanExplodeThrough(fromV.set(x, y + i), toV.set(x, y + i + 1))) {
                 break;
             }
@@ -837,7 +837,7 @@ public class ActorBuilder {
             anims = new HashMap<String, Animation>();
 
             for (int j = 0; j < 5; j++) {
-                if (i == bomb.power - 1) {
+                if (i == power - 1) {
                     keyFrames.add(new TextureRegion(textureRegion, j * 16, 0, 16, 16));
 
                 } else {
@@ -864,7 +864,7 @@ public class ActorBuilder {
         }
 
         // down
-        for (int i = 0; i < bomb.power; i++) {
+        for (int i = 0; i < power; i++) {
             if (!checkCanExplodeThrough(fromV.set(x, y - i), toV.set(x, y - i - 1))) {
                 break;
             }
@@ -885,7 +885,7 @@ public class ActorBuilder {
             anims = new HashMap<String, Animation>();
 
             for (int j = 0; j < 5; j++) {
-                if (i == bomb.power - 1) {
+                if (i == power - 1) {
                     keyFrames.add(new TextureRegion(textureRegion, j * 16, 16 * 3, 16, 16));
 
                 } else {
@@ -912,7 +912,7 @@ public class ActorBuilder {
         }
 
         // left
-        for (int i = 0; i < bomb.power; i++) {
+        for (int i = 0; i < power; i++) {
             if (!checkCanExplodeThrough(fromV.set(x - i, y), toV.set(x - i - 1, y))) {
                 break;
             }
@@ -933,7 +933,7 @@ public class ActorBuilder {
             anims = new HashMap<String, Animation>();
 
             for (int j = 0; j < 5; j++) {
-                if (i == bomb.power - 1) {
+                if (i == power - 1) {
                     keyFrames.add(new TextureRegion(textureRegion, j * 16, 16 * 6, 16, 16));
 
                 } else {
@@ -960,7 +960,7 @@ public class ActorBuilder {
         }
 
         // right
-        for (int i = 0; i < bomb.power; i++) {
+        for (int i = 0; i < power; i++) {
             if (!checkCanExplodeThrough(fromV.set(x + i, y), toV.set(x + i + 1, y))) {
                 break;
             }
@@ -981,7 +981,7 @@ public class ActorBuilder {
             anims = new HashMap<String, Animation>();
 
             for (int j = 0; j < 5; j++) {
-                if (i == bomb.power - 1) {
+                if (i == power - 1) {
                     keyFrames.add(new TextureRegion(textureRegion, j * 16, 16 * 5, 16, 16));
 
                 } else {

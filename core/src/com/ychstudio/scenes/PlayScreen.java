@@ -120,6 +120,7 @@ public class PlayScreen extends ScreenAdapter {
         b2dTimer = 0;
 
         switch (level) {
+            case 4:
             case 3:
                 GameManager.getInstance().playMusic("SuperBomberman-Area2.ogg", true);
                 break;
@@ -203,7 +204,7 @@ public class PlayScreen extends ScreenAdapter {
                             Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (level == GameManager.TOTAL_LEVELS) { // all levels cleared
+                                    if (level >= GameManager.TOTAL_LEVELS) { // all levels cleared
                                         game.setScreen(new GameOverScreen(game));
                                     } else {
                                         game.setScreen(new PlayScreen(game, level + 1));

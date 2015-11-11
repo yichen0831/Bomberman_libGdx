@@ -55,7 +55,7 @@ public class BombSystem extends IteratingSystem {
                 GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.6f, 0.8f), 0);
                 // create explosion
                 ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
-                actorBuilder.createExplosion(bomb, body.getPosition().x, body.getPosition().y);
+                actorBuilder.createExplosion(body.getPosition().x, body.getPosition().y, bomb.power);
 
                 // destroy itself
                 World b2dWorld = body.getWorld();
