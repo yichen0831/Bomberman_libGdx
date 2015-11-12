@@ -76,6 +76,7 @@ public class GameManager implements Disposable {
         assetManager.load("sounds/EnemyDie.ogg", Sound.class);
         assetManager.load("sounds/EnemyDie1.ogg", Sound.class);
         assetManager.load("sounds/EnemyDie2.ogg", Sound.class);
+        assetManager.load("sounds/Boss1Hammer.ogg", Sound.class);
         assetManager.load("sounds/PortalAppears.ogg", Sound.class);
         assetManager.load("sounds/Teleport.ogg", Sound.class);
 
@@ -85,6 +86,7 @@ public class GameManager implements Disposable {
         assetManager.load("music/SuperBomberman-Area2.ogg", Music.class);
         assetManager.load("music/SuperBomberman-Boss.ogg", Music.class);
         assetManager.load("music/GameOver.ogg", Music.class);
+        assetManager.load("music/Victory.ogg", Music.class);
 
         // load maps
         assetManager.load("maps/level_1.png", Pixmap.class);
@@ -95,7 +97,7 @@ public class GameManager implements Disposable {
         assetManager.load("maps/area_1_tiles.pack", TextureAtlas.class);
         assetManager.load("maps/area_2_tiles.pack", TextureAtlas.class);
         assetManager.load("maps/area_3_tiles.pack", TextureAtlas.class);
-
+        
         assetManager.finishLoading();
 
         playerRespawnPosition = new Vector2();
@@ -132,6 +134,7 @@ public class GameManager implements Disposable {
 
     public void playMusic(String musicName, boolean isLooping) {
         Music music = assetManager.get(musicPath + musicName);
+        music.setVolume(0.6f);
         if (currentMusic.equals(musicName)) {
             music.setLooping(isLooping);
             if (!music.isPlaying()) {

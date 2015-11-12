@@ -172,7 +172,6 @@ public class MainMenuScreen extends ScreenAdapter {
                             break;
                     }
                     GameManager.playerLives = 3;
-                    // TODO: change back before commit
                     game.setScreen(new PlayScreen(game, 1));
                 }
             });

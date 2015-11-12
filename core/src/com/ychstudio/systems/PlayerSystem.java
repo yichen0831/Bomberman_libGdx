@@ -74,7 +74,7 @@ public class PlayerSystem extends IteratingSystem {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
                 player.powerUpRemote();
             }
-
+            
             // player movement controls
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 if (player.invincible || !hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {

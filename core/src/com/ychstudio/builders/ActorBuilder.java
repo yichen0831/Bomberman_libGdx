@@ -536,7 +536,7 @@ public class ActorBuilder {
         Body body = b2dWorld.createBody(bodyDef);
 
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(1.6f);
+        circleShape.setRadius(1.2f);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.filter.categoryBits = GameManager.ENEMY_BIT;
@@ -611,7 +611,7 @@ public class ActorBuilder {
 
         Entity e = new EntityBuilder(world)
                 .with(
-                        new Enemy(8, 1.8f, "EnemyDie1.ogg", "boss1"),
+                        new Enemy(8, 1.2f, "EnemyDie1.ogg", "boss1"),
                         new Transform(x, y, 1, 1, 0),
                         new RigidBody(body),
                         new State("walking_down"),
