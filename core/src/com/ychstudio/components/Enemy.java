@@ -32,6 +32,8 @@ public class Enemy extends Component {
     
     private String dieSound;
     public String type;
+    
+    public int receivedDamage;
 
     public Enemy(int hp) {
         this(hp, 2);
@@ -49,12 +51,11 @@ public class Enemy extends Component {
         state = State.getRandomWalkingState();
         this.hp = hp;
         this.speed = speed;
-
         this.dieSound = dieSound;
-        
         this.type = type;
         
-        this.lifetime = 0;
+        lifetime = 0;
+        receivedDamage = 0;
 
         // increase enemy count
         GameManager.enemiesLeft++;

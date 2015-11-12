@@ -120,6 +120,11 @@ public class EnemySystem extends IteratingSystem {
     private void handleBasics(int entityId) {
         Body body = rigidBody.body;
 
+        if (enemy.receivedDamage > 0) {
+            enemy.damage(enemy.receivedDamage);
+            enemy.receivedDamage = 0;
+        }
+
         if (enemy.hp <= 0) {
             enemy.state = Enemy.State.DYING;
             enemy.lifetime = 0;
@@ -217,6 +222,11 @@ public class EnemySystem extends IteratingSystem {
 
     private void handleBombEnemy(int entityId) {
         Body body = rigidBody.body;
+
+        if (enemy.receivedDamage > 0) {
+            enemy.damage(enemy.receivedDamage);
+            enemy.receivedDamage = 0;
+        }
 
         if (enemy.hp <= 0) {
             enemy.state = Enemy.State.DYING;
@@ -324,6 +334,11 @@ public class EnemySystem extends IteratingSystem {
 
     private void handleBoss1(int entityId) {
         Body body = rigidBody.body;
+
+        if (enemy.receivedDamage > 0) {
+            enemy.damage(1);    // boss only take 1 damage per time
+            enemy.receivedDamage = 0;
+        }
 
         if (enemy.hp <= 0) {
             enemy.state = Enemy.State.DYING;

@@ -41,6 +41,8 @@ public class Player extends Component {
 
     public boolean invincible;
     public float invincibleCountDown;
+    
+    public int receivedDamage;
 
     public Player(boolean resetPlayerAbilities) {
         state = State.IDLING_DOWN;
@@ -63,6 +65,8 @@ public class Player extends Component {
 
         invincible = true;
         invincibleCountDown = 3.0f;
+        
+        receivedDamage = 0;
     }
 
     public void damage(int damage) {

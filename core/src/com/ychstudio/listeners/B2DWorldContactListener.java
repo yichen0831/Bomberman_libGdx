@@ -26,20 +26,20 @@ public class B2DWorldContactListener implements ContactListener {
             if (fixtureA.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
                 Entity e = (Entity) fixtureA.getBody().getUserData();
                 Player player = e.getComponent(Player.class);
-                player.damage(1);
+                player.receivedDamage++;
             } else if (fixtureB.getFilterData().categoryBits == GameManager.PLAYER_BIT) {
                 Entity e = (Entity) fixtureB.getBody().getUserData();
                 Player player = e.getComponent(Player.class);
-                player.damage(1);
+                player.receivedDamage++;
             } // explode enemy
             else if (fixtureA.getFilterData().categoryBits == GameManager.ENEMY_BIT) {
                 Entity e = (Entity) fixtureA.getBody().getUserData();
                 Enemy enemy = e.getComponent(Enemy.class);
-                enemy.damage(1);
+                enemy.receivedDamage++;
             } else if (fixtureB.getFilterData().categoryBits == GameManager.ENEMY_BIT) {
                 Entity e = (Entity) fixtureB.getBody().getUserData();
                 Enemy enemy = e.getComponent(Enemy.class);
-                enemy.damage(1);
+                enemy.receivedDamage++;
             } // explode bomb
             else if (fixtureA.getFilterData().categoryBits == GameManager.BOMB_BIT) {
                 Entity e = (Entity) fixtureA.getBody().getUserData();

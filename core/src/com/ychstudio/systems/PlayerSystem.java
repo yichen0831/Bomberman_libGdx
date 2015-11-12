@@ -234,6 +234,11 @@ public class PlayerSystem extends IteratingSystem {
             body.getFixtureList().get(0).setFilterData(filter);
             renderer.setColor(Color.WHITE);
         }
+        
+        if (player.receivedDamage > 0) {
+            player.damage(player.receivedDamage);
+            player.receivedDamage = 0;
+        }
 
         if (player.hp <= 0) {
             player.state = Player.State.DYING;
