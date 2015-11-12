@@ -399,11 +399,12 @@ public class EnemySystem extends IteratingSystem {
                 body.getFixtureList().get(0).setFilterData(filter);
 
                 if (state.getStateTime() <= 0) {
-                    // TODO: create boss explosion effect
+                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                    actorBuilder.createBoss1Explosion(body.getPosition().x, body.getPosition().y);
                     enemy.lifetime = 0;
                 }
 
-                if (enemy.lifetime > 0.4f) {
+                if (enemy.lifetime > 0.2f) {
                     GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.9f, 1.1f), 0);
                     enemy.lifetime -= 0.4f;
                 }

@@ -28,6 +28,7 @@ import com.ychstudio.systems.BombSystem;
 import com.ychstudio.systems.BreakableSystem;
 import com.ychstudio.systems.EnemySystem;
 import com.ychstudio.systems.ExplosionSystem;
+import com.ychstudio.systems.ParticleSystem;
 import com.ychstudio.systems.PhysicsSystem;
 import com.ychstudio.systems.PlayerSystem;
 import com.ychstudio.systems.PowerUpSystem;
@@ -96,7 +97,8 @@ public class PlayScreen extends ScreenAdapter {
                         new PhysicsSystem(),
                         new StateSystem(),
                         new AnimationSystem(),
-                        new RenderSystem(batch)
+                        new RenderSystem(batch),
+                        new ParticleSystem(batch)
                 )
                 .build();
 

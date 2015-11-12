@@ -22,6 +22,7 @@ import com.ychstudio.components.Bomb;
 import com.ychstudio.components.Breakable;
 import com.ychstudio.components.Enemy;
 import com.ychstudio.components.Explosion;
+import com.ychstudio.components.Particle;
 import com.ychstudio.components.Player;
 import com.ychstudio.components.PowerUp;
 import com.ychstudio.components.Renderer;
@@ -622,6 +623,13 @@ public class ActorBuilder {
 
         body.setUserData(e);
 
+    }
+    
+    public void createBoss1Explosion(float x, float y) {
+        
+        new EntityBuilder(world)
+                .with(new Particle("particles/boss1explode.particle", x, y))
+                .build();
     }
 
     public void createPlayer(float x, float y, boolean resetPlayerAbilities) {
