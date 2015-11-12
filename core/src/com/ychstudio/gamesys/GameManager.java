@@ -15,7 +15,7 @@ public class GameManager implements Disposable {
 
     private static final GameManager instance = new GameManager();
 
-    public static final int TOTAL_LEVELS = 4;
+    public static final int TOTAL_LEVELS = 5;
 
     private final AssetManager assetManager;
 

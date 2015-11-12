@@ -244,6 +244,14 @@ public class EnemySystem extends IteratingSystem {
             enemy.lifetime += world.getDelta();
         }
 
+        if (enemy.lifetime > 12f && GameManager.enemiesLeft <= 12) {
+            if (((int) enemy.lifetime) % 12 == 11 && ((int) (enemy.lifetime * 10)) % 10 == 2) {
+                if (MathUtils.random() < 0.04f) {
+                    enemy.state = Enemy.State.ATTACKING_UP;
+                }
+            }
+        }
+
         switch (enemy.state) {
             case ATTACKING_LEFT:
                 state.setCurrentState("attacking_left");
@@ -254,6 +262,7 @@ public class EnemySystem extends IteratingSystem {
             case ATTACKING_UP:
                 state.setCurrentState("attacking_up");
                 if (state.getStateTime() > 3f) {
+                    // spawn a bomb-enemy
                     enemy.state = Enemy.State.getRandomWalkingState();
                     ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createBombEnemy(body.getPosition().x, body.getPosition().y);
