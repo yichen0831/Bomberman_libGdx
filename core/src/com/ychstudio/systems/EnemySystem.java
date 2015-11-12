@@ -244,9 +244,9 @@ public class EnemySystem extends IteratingSystem {
             enemy.lifetime += world.getDelta();
         }
 
-        if (enemy.lifetime > 12f && GameManager.enemiesLeft <= 12) {
+        if (enemy.lifetime > 12f && GameManager.enemiesLeft <= 16) {
             if (((int) enemy.lifetime) % 12 == 11 && ((int) (enemy.lifetime * 10)) % 10 == 2) {
-                if (MathUtils.random() < 0.04f) {
+                if (MathUtils.random() < 0.05f) {
                     enemy.state = Enemy.State.ATTACKING_UP;
                 }
             }
@@ -378,7 +378,7 @@ public class EnemySystem extends IteratingSystem {
         enemy.lifetime += world.getDelta();
 
         // Boss1 attack
-        if (enemy.hp > 0 && MathUtils.random() < 0.002) {
+        if (enemy.hp > 0 && MathUtils.random() < 0.005) {
             enemy.state = Enemy.State.ATTACKING_DOWN;
         }
 
