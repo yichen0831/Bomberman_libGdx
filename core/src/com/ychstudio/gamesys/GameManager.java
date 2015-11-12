@@ -87,6 +87,8 @@ public class GameManager implements Disposable {
         assetManager.load("music/SuperBomberman-Boss.ogg", Music.class);
         assetManager.load("music/GameOver.ogg", Music.class);
         assetManager.load("music/Victory.ogg", Music.class);
+        assetManager.load("music/Oops.ogg", Music.class);
+        assetManager.load("music/StageCleared.ogg", Music.class);
 
         // load maps
         assetManager.load("maps/level_1.png", Pixmap.class);

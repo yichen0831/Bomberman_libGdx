@@ -66,6 +66,13 @@ Explosion
   orig: 80, 112
   offset: 0, 0
   index: -1
+Princess
+  rotate: false
+  xy: 807, 231
+  size: 96, 24
+  orig: 96, 24
+  offset: 0, 0
+  index: -1
 Bomb
   rotate: false
   xy: 163, 35

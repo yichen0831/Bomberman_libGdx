@@ -210,7 +210,7 @@ public class PlayScreen extends ScreenAdapter {
                                 @Override
                                 public void run() {
                                     if (level >= GameManager.TOTAL_LEVELS) { // all levels cleared
-                                        game.setScreen(new GameOverScreen(game));
+                                        game.setScreen(new EndingScreen(game));
                                     } else {
                                         game.setScreen(new PlayScreen(game, level + 1));
                                     }
