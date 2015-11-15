@@ -15,11 +15,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
@@ -71,7 +74,7 @@ public class PlayScreen extends ScreenAdapter {
     private int level;
 
     private boolean paused;
-    
+
     private Skin skin;
     private Stage stage2;
     private Window pauseWindow;
@@ -157,14 +160,34 @@ public class PlayScreen extends ScreenAdapter {
         stage.addAction(Actions.fadeOut(0.5f));
 
         paused = false;
-        
+
         skin = new Skin(Gdx.files.internal("uiskin/uiskin.json"));
-        
+
         stage2 = new Stage(new FitViewport(640, 480), batch);
         pauseWindow = new Window("Pause", skin);
-        pauseWindow.padTop(20);
         pauseWindow.setPosition((640 - pauseWindow.getWidth()) / 2, (480 - pauseWindow.getHeight()) / 2);
         pauseWindow.setVisible(paused);
+
+        TextButton continueButton = new TextButton("Continue", skin);
+        continueButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                paused = false;
+                GameManager.getInstance().playMusic();
+            }
+        });
+
+        TextButton exitButton = new TextButton("Exit", skin);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+
+        });
+        pauseWindow.add(continueButton).padBottom(16f);
+        pauseWindow.row();
+        pauseWindow.add(exitButton);
 
         stage2.addActor(pauseWindow);
         Gdx.input.setInputProcessor(stage2);
@@ -179,15 +202,14 @@ public class PlayScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             showB2DDebugRenderer = !showB2DDebugRenderer;
         }
-        
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             paused = !paused;
-            
+
             if (paused) {
                 GameManager.getInstance().playSound("Pause.ogg");
                 GameManager.getInstance().pauseMusic();
-            }
-            else {
+            } else {
                 GameManager.getInstance().playMusic();
             }
         }
@@ -238,7 +260,7 @@ public class PlayScreen extends ScreenAdapter {
 
         stage.draw();
         stage.act(delta);
-        
+
         pauseWindow.setVisible(paused);
         stage2.draw();
 
