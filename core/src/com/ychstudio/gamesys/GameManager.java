@@ -79,6 +79,7 @@ public class GameManager implements Disposable {
         assetManager.load("sounds/Boss1Hammer.ogg", Sound.class);
         assetManager.load("sounds/PortalAppears.ogg", Sound.class);
         assetManager.load("sounds/Teleport.ogg", Sound.class);
+        assetManager.load("sounds/Pause.ogg", Sound.class);
 
         // load music
         assetManager.load("music/SuperBomberman-Title.ogg", Music.class);
@@ -99,7 +100,7 @@ public class GameManager implements Disposable {
         assetManager.load("maps/area_1_tiles.pack", TextureAtlas.class);
         assetManager.load("maps/area_2_tiles.pack", TextureAtlas.class);
         assetManager.load("maps/area_3_tiles.pack", TextureAtlas.class);
-        
+
         assetManager.finishLoading();
 
         playerRespawnPosition = new Vector2();
@@ -151,13 +152,32 @@ public class GameManager implements Disposable {
         currentMusic = musicName;
     }
 
+    public void playMusic() {
+        if (currentMusic.isEmpty()) {
+            return;
+        }
+        Music music = assetManager.get(musicPath + currentMusic, Music.class);
+        music.play();
+    }
+
     public void stopMusic() {
         if (currentMusic.isEmpty()) {
             return;
         }
-        Music music = assetManager.get(musicPath + currentMusic);
+        Music music = assetManager.get(musicPath + currentMusic, Music.class);
         if (music.isPlaying()) {
             music.stop();
+        }
+    }
+
+    public void pauseMusic() {
+        if (currentMusic.isEmpty()) {
+            return;
+        }
+
+        Music music = assetManager.get(musicPath + currentMusic, Music.class);
+        if (music.isPlaying()) {
+            music.pause();
         }
     }
 

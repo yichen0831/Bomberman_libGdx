@@ -1,5 +1,6 @@
 package com.ychstudio.scenes;
 
+import com.artemis.BaseSystem;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.Gdx;
@@ -66,6 +67,8 @@ public class PlayScreen extends ScreenAdapter {
     private Texture fadeOutTexture;
 
     private int level;
+
+    private boolean paused;
 
     public PlayScreen(Bomberman game, int level) {
         this.game = game;
@@ -146,6 +149,8 @@ public class PlayScreen extends ScreenAdapter {
         Image image = new Image(fadeOutTexture);
         stage.addActor(image);
         stage.addAction(Actions.fadeOut(0.5f));
+
+        paused = false;
     }
 
     @Override
@@ -157,6 +162,18 @@ public class PlayScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             showB2DDebugRenderer = !showB2DDebugRenderer;
         }
+        
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            paused = !paused;
+            
+            if (paused) {
+                GameManager.getInstance().playSound("Pause.ogg");
+                GameManager.getInstance().pauseMusic();
+            }
+            else {
+                GameManager.getInstance().playMusic();
+            }
+        }
     }
 
     @Override
@@ -166,12 +183,6 @@ public class PlayScreen extends ScreenAdapter {
 
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        b2dTimer += delta;
-        if (b2dTimer > 1 / 60.0f) {
-            b2dWorld.step(1 / 60.0f, 8, 3);
-            b2dTimer -= 1 / 60.0f;
-        }
 
         batch.setProjectionMatrix(camera.combined);
 
@@ -184,6 +195,24 @@ public class PlayScreen extends ScreenAdapter {
             }
         }
         batch.end();
+
+        if (!paused) {
+            b2dTimer += delta;
+            if (b2dTimer > 1 / 60.0f) {
+                b2dWorld.step(1 / 60.0f, 8, 3);
+                b2dTimer -= 1 / 60.0f;
+            }
+
+            for (BaseSystem system : world.getSystems()) {
+                system.setEnabled(true);
+            }
+        } else {
+            for (BaseSystem system : world.getSystems()) {
+                if (!(system instanceof RenderSystem)) {
+                    system.setEnabled(false);
+                }
+            }
+        }
 
         world.setDelta(delta);
         world.process();
