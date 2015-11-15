@@ -18,6 +18,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ychstudio.Bomberman;
 import com.ychstudio.builders.WorldBuilder;
@@ -69,6 +71,10 @@ public class PlayScreen extends ScreenAdapter {
     private int level;
 
     private boolean paused;
+    
+    private Skin skin;
+    private Stage stage2;
+    private Window pauseWindow;
 
     public PlayScreen(Bomberman game, int level) {
         this.game = game;
@@ -151,6 +157,17 @@ public class PlayScreen extends ScreenAdapter {
         stage.addAction(Actions.fadeOut(0.5f));
 
         paused = false;
+        
+        skin = new Skin(Gdx.files.internal("uiskin/uiskin.json"));
+        
+        stage2 = new Stage(new FitViewport(640, 480), batch);
+        pauseWindow = new Window("Pause", skin);
+        pauseWindow.padTop(20);
+        pauseWindow.setPosition((640 - pauseWindow.getWidth()) / 2, (480 - pauseWindow.getHeight()) / 2);
+        pauseWindow.setVisible(paused);
+
+        stage2.addActor(pauseWindow);
+        Gdx.input.setInputProcessor(stage2);
     }
 
     @Override
@@ -221,6 +238,9 @@ public class PlayScreen extends ScreenAdapter {
 
         stage.draw();
         stage.act(delta);
+        
+        pauseWindow.setVisible(paused);
+        stage2.draw();
 
         if (showB2DDebugRenderer) {
             b2dRenderer.render(b2dWorld, camera.combined);
