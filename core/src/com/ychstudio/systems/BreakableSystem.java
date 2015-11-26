@@ -35,7 +35,7 @@ public class BreakableSystem extends IteratingSystem {
 
                     // chance to create PowerUp item
                     if (Math.random() < 0.2) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        ActorBuilder actorBuilder = ActorBuilder.init(body.getWorld(), world);
                         actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
                     }
                 }

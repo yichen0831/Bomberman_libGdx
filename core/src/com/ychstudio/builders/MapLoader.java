@@ -73,7 +73,7 @@ public class MapLoader {
     }
 
     public void loadMap() {
-        ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
+        ActorBuilder actorBuilder = ActorBuilder.init(b2dWorld, world);
 
         int color;
         for (int y = 0; y < mapHeight; y++) {

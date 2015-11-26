@@ -25,14 +25,14 @@ public class EnemySystem extends IteratingSystem {
     protected ComponentMapper<Transform> mTransform;
 
     private boolean hit;
-    private Vector2 fromVector;
-    private Vector2 toVector;
+    private final Vector2 fromVector;
+    private final Vector2 toVector;
 
     private Enemy enemy;
     private RigidBody rigidBody;
     private State state;
 
-    private Vector2[] boss1TargetCorners = {
+    private final Vector2[] boss1TargetCorners = {
         new Vector2(3f, 7.5f),
         new Vector2(12f, 7.5f),
         new Vector2(7.5f, 12f),
@@ -170,14 +170,14 @@ public class EnemySystem extends IteratingSystem {
 
                     // if no enemy left, create the portal
                     if (GameManager.enemiesLeft <= 0) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        ActorBuilder actorBuilder = ActorBuilder.init(body.getWorld(), world);
                         actorBuilder.createPortal();
                         GameManager.getInstance().playSound("PortalAppears.ogg");
                     }
 
                     // chance to create PowerUp item
                     if (Math.random() < 0.2) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                        ActorBuilder actorBuilder = ActorBuilder.init(body.getWorld(), world);
                         actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
                     }
 
@@ -231,6 +231,7 @@ public class EnemySystem extends IteratingSystem {
 
     private void handleBombEnemy(int entityId) {
         Body body = rigidBody.body;
+        ActorBuilder actorBuilder = ActorBuilder.init(body.getWorld(), world);
 
         if (enemy.receivedDamage > 0) {
             enemy.damage(enemy.receivedDamage);
@@ -264,7 +265,6 @@ public class EnemySystem extends IteratingSystem {
                 if (state.getStateTime() > 3f) {
                     // spawn a bomb-enemy
                     enemy.state = Enemy.State.getRandomWalkingState();
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createBombEnemy(body.getPosition().x, body.getPosition().y);
                 }
                 break;
@@ -279,7 +279,6 @@ public class EnemySystem extends IteratingSystem {
 
                 if (state.getStateTime() <= 0) {
                     GameManager.getInstance().playSound("Explosion.ogg", 1.0f, MathUtils.random(0.6f, 0.8f), 0);
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createExplosion(body.getPosition().x, body.getPosition().y, 1);
                 }
 
@@ -289,14 +288,12 @@ public class EnemySystem extends IteratingSystem {
 
                     // if no enemy left, create the portal
                     if (GameManager.enemiesLeft <= 0) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                         actorBuilder.createPortal();
                         GameManager.getInstance().playSound("PortalAppears.ogg");
                     }
 
                     // chance to create PowerUp item
                     if (Math.random() < 0.2) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                         actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y);
                     }
 
@@ -352,6 +349,7 @@ public class EnemySystem extends IteratingSystem {
 
     private void handleBoss1(int entityId) {
         Body body = rigidBody.body;
+        ActorBuilder actorBuilder = ActorBuilder.init(body.getWorld(), world);
 
         if (boss1TargetCorners[boss1CurrentTarget].dst2(body.getPosition()) < 0.1f) {
             boss1CurrentTarget = MathUtils.random(0, 3);
@@ -363,7 +361,6 @@ public class EnemySystem extends IteratingSystem {
 
                 // chance to create PowerUp item
                 if (Math.random() < 0.2) {
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createPowerUp(body.getPosition().x, body.getPosition().y - 2f);
                 }
             }
@@ -389,7 +386,6 @@ public class EnemySystem extends IteratingSystem {
             case ATTACKING_DOWN:
                 state.setCurrentState("attacking_down");
                 if (state.getStateTime() > 0.6f) {
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createExplosion(body.getPosition().x, body.getPosition().y - 4f, 1);
                     GameManager.getInstance().playSound("Boss1Hammer.ogg");
                     changeWalkingState(enemy);
@@ -408,7 +404,6 @@ public class EnemySystem extends IteratingSystem {
                 body.getFixtureList().get(0).setFilterData(filter);
 
                 if (state.getStateTime() <= 0) {
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                     actorBuilder.createBoss1Explosion(body.getPosition().x, body.getPosition().y);
                     enemy.lifetime = 0;
                 }
@@ -424,7 +419,6 @@ public class EnemySystem extends IteratingSystem {
 
                     // if no enemy left, create the portal
                     if (GameManager.enemiesLeft <= 0) {
-                        ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
                         actorBuilder.createPortal();
                         GameManager.getInstance().playSound("PortalAppears.ogg");
                         GameManager.getInstance().playMusic("Victory.ogg", false);

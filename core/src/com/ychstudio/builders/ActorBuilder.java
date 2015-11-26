@@ -34,24 +34,28 @@ import java.util.HashMap;
 
 public class ActorBuilder {
 
+    private static final ActorBuilder instance = new ActorBuilder();
+
     protected final float radius = 0.45f;
 
-    private final World b2dWorld;
-    private final com.artemis.World world;
+    private World b2dWorld;
+    private com.artemis.World world;
 
-    private final AssetManager assetManager;
+    private AssetManager assetManager;
 
-    private final Vector2 fromV;
-    private final Vector2 toV;
+    private final Vector2 fromV = new Vector2();
+    private final Vector2 toV = new Vector2();
     private boolean canExplodeThrough;
 
-    public ActorBuilder(World b2dWorld, com.artemis.World world) {
-        this.b2dWorld = b2dWorld;
-        this.world = world;
-        this.assetManager = GameManager.getInstance().getAssetManager();
+    private ActorBuilder() {
+    }
 
-        fromV = new Vector2();
-        toV = new Vector2();
+    public static ActorBuilder init(World b2dWorld, com.artemis.World world) {
+        instance.b2dWorld = b2dWorld;
+        instance.world = world;
+        instance.assetManager = GameManager.getInstance().getAssetManager();
+
+        return instance;
     }
 
     public void createWall(float x, float y, float mapWidth, float mapHeight, TextureAtlas tileTextureAtlas) {
@@ -624,9 +628,9 @@ public class ActorBuilder {
         body.setUserData(e);
 
     }
-    
+
     public void createBoss1Explosion(float x, float y) {
-        
+
         new EntityBuilder(world)
                 .with(new Particle("particles/boss1explode.particle", x, y))
                 .build();

@@ -74,7 +74,7 @@ public class PlayerSystem extends IteratingSystem {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
                 player.powerUpRemote();
             }
-            
+
             // player movement controls
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 if (player.invincible || !hitBombVertical(body, fromV.set(body.getPosition()), toV.set(body.getPosition().x, body.getPosition().y + 0.5f))) {
@@ -153,7 +153,7 @@ public class PlayerSystem extends IteratingSystem {
 
                 if (!kicking && player.bombLeft > 0) {
                     // create bomb
-                    ActorBuilder actorBuilder = new ActorBuilder(body.getWorld(), world);
+                    ActorBuilder actorBuilder = ActorBuilder.init(body.getWorld(), world);
 
                     if (player.remoteBomb) {
                         GameManager.getInstance().getRemoteBombDeque().offer(
@@ -234,7 +234,7 @@ public class PlayerSystem extends IteratingSystem {
             body.getFixtureList().get(0).setFilterData(filter);
             renderer.setColor(Color.WHITE);
         }
-        
+
         if (player.receivedDamage > 0) {
             player.damage(player.receivedDamage);
             player.receivedDamage = 0;
@@ -243,7 +243,7 @@ public class PlayerSystem extends IteratingSystem {
         if (player.hp <= 0) {
             player.state = Player.State.DYING;
         }
-        
+
         switch (player.state) {
             case DYING:
                 state.setCurrentState("dying");
@@ -268,7 +268,7 @@ public class PlayerSystem extends IteratingSystem {
                     if (!GameManager.infiniteLives && GameManager.playerLives <= 0) {
                         GameManager.gameOver = true;
                     } else {
-                        ActorBuilder actorBuilder = new ActorBuilder(b2dWorld, world);
+                        ActorBuilder actorBuilder = ActorBuilder.init(b2dWorld, world);
                         Vector2 respawnPosition = GameManager.getInstance().getPlayerRespawnPosition();
                         actorBuilder.createPlayer(respawnPosition.x, respawnPosition.y, GameManager.resetPlayerAbilities);
                     }
