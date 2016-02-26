@@ -6,7 +6,7 @@ Using [Artemis-odb](https://github.com/junkdog/artemis-odb) Entity-Component-Sys
 
 ![https://github.com/yichen0831/Bomberman_libGdx/raw/master/screenshot.png](https://github.com/yichen0831/Bomberman_libGdx/raw/master/screenshot.png)
 
-Java excutable [download link](https://mega.nz/#!UpQCmbJK!OjFsULyyEIYi4TFgNURgLdd1PdNBvH8-rHQEfnKNm_I) (MEGA)
+Java excutable [download link](https://github.com/yichen0831/Bomberman_libGdx/releases/download/v1.0/Bomberman_libGdx-1.0.jar)
 
 ## Controls:
 
