@@ -9,25 +9,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.ychstudio.builders.ActorBuilder;
-import com.ychstudio.components.Bomb;
-import com.ychstudio.components.Player;
-import com.ychstudio.components.Renderer;
-import com.ychstudio.components.RigidBody;
-import com.ychstudio.components.State;
+import com.ychstudio.components.*;
 import com.ychstudio.components.Transform;
 import com.ychstudio.gamesys.GameManager;
+
 import java.util.Queue;
 
 public class PlayerSystem extends IteratingSystem {
 
     protected ComponentMapper<Player> mPlayer;
-    protected ComponentMapper<Transform> mTransform;
     protected ComponentMapper<RigidBody> mRigidBody;
     protected ComponentMapper<State> mState;
     protected ComponentMapper<Renderer> mRenderer;
@@ -58,7 +50,7 @@ public class PlayerSystem extends IteratingSystem {
         float maxSpeed = player.maxSpeed;
 
         if (player.hp > 0 && player.state != Player.State.TELEPORTING) {
-            // TODO: cheat code...
+            // cheat code...
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
                 player.powerUpAmmo();
             }
@@ -172,7 +164,7 @@ public class PlayerSystem extends IteratingSystem {
             if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && player.remoteBomb) {
                 Queue<Entity> remoteBombQueue = GameManager.getInstance().getRemoteBombDeque();
 
-                // clean those bomes which have already exploded
+                // clean those bombs which have already exploded
                 while (!remoteBombQueue.isEmpty() && remoteBombQueue.peek().getComponent(Bomb.class) == null) {
                     remoteBombQueue.remove();
                 }
@@ -258,11 +250,12 @@ public class PlayerSystem extends IteratingSystem {
                 if (state.getStateTime() > 0.65f) {
                     World b2dWorld = body.getWorld();
                     b2dWorld.destroyBody(body);
-                    mPlayer.set(entityId, false);
-                    mRigidBody.set(entityId, false);
-                    mState.set(entityId, false);
-                    Transform transform = mTransform.get(entityId);
-                    transform.z = 999;
+                    world.delete(entityId);
+//                    mPlayer.set(entityId, false);
+//                    mRigidBody.set(entityId, false);
+//                    mState.set(entityId, false);
+//                    Transform transform = mTransform.get(entityId);
+//                    transform.z = 999;
 
                     GameManager.playerLives--;
                     if (!GameManager.infiniteLives && GameManager.playerLives <= 0) {
